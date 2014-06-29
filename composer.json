@@ -8,7 +8,8 @@
         }
     ],
     "require": {
-        "twig/twig": "1.*"
+        "twig/twig": "1.*",
+	"codeception/codeception": "*"
     },
     "autoload": {
         "psr-0": {
