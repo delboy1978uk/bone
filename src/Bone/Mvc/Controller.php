@@ -55,6 +55,7 @@ class Controller
         $this->_twig->addExtension(new Twig_Extension_Debug());
         $this->view = new stdClass();
         $this->layout_enabled = true;
+        $this->view_enabled = true;
     }
 
     /**
