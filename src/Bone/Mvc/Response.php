@@ -6,7 +6,11 @@ use Bone\Filter;
 
 class Response
 {
-    protected $body;
+    private $headers;
+
+    /** @var mixed */
+    private $body;
+
 
     /**
      *  Load the cannons darn ye!
@@ -15,6 +19,7 @@ class Response
      */
     public function __construct(Request $request)
     {
+
         // what be we talkin about?
         $filtered = Filter::filterString($request->getController(),'DashToCamelCase');
         $controller_name = '\App\Controller\\'.ucwords($filtered).'Controller';
@@ -55,17 +60,33 @@ class Response
             $dispatch->$action_name();
             $dispatch->postDispatch();
 
+            $this->headers = $dispatch->getHeaders();
+
             /** @var \stdClass $view_vars  */
             $view_vars = (array) $dispatch->view;
-            $view = $controller.'/'.$action.'.twig';
-            $response_body = $dispatch->getTwig()->render($view, $view_vars);
-            //check we be usin' th' templates in th' config
-            $templates = Registry::ahoy()->get('templates');
-            $template = ($templates != null) ? $templates[0] : null;
-            if($template)
+
+            if($dispatch->hasViewEnabled())
             {
-                $response_body = $dispatch->getTwig()->render('layouts/'.$template.'.twig',array('content' => $response_body));
+                $view = $controller.'/'.$action.'.twig';
+                $response_body = $dispatch->getTwig()->render($view, $view_vars);
             }
+            else
+            {
+                $response_body = $dispatch->getBody();
+            }
+            if($dispatch->hasLayoutEnabled())
+            {
+
+                //check we be usin' th' templates in th' config
+                $templates = Registry::ahoy()->get('templates');
+                $template = ($templates != null) ? $templates[0] : null;
+                if($template)
+                {
+                    $response_body = $dispatch->getTwig()->render('layouts/'.$template.'.twig',array('content' => $response_body));
+                }
+            }
+
+
         }
         catch(Exception $e)
         {
@@ -97,6 +118,7 @@ class Response
      */
     public function send()
     {
-        return $this->body;
+        $this->headers->dispatch();
+        echo $this->body;
     }
 }

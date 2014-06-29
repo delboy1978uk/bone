@@ -2,11 +2,11 @@
 
 namespace Bone\Mvc;
 use Bone\Db\Adapter\MySQL;
+use Bone\Mvc\Response\Headers;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use stdClass;
-use \Exception;
 
 class Controller
 {
@@ -21,7 +21,23 @@ class Controller
 
     protected $action;
 
+    private  $headers;
+
     public $view;
+
+    private $body;
+
+    /**
+     * @var bool
+     */
+    private $layout_enabled;
+
+    /**
+     * @var bool
+     */
+    private $view_enabled;
+
+
 
     /**
      * @var \Bone\Db\Adapter\MySQL
@@ -33,10 +49,12 @@ class Controller
         $this->_request = $request;
         $config = Registry::ahoy()->get('db');
         $this->_db = new MySQL($config);
+        $this->headers = new Headers();
         $loader = new Twig_Loader_Filesystem(APPLICATION_PATH.'/src/App/View/');
         $this->_twig = new Twig_Environment($loader,array('debug' => true));
         $this->_twig->addExtension(new Twig_Extension_Debug());
         $this->view = new stdClass();
+        $this->layout_enabled = true;
     }
 
     /**
@@ -84,6 +102,61 @@ class Controller
     public function postDispatch()
     {
         // extend this t' run code after yer controller is finished
+    }
+
+    /**
+     *  For loadin' th' cannon, so to speak
+     *
+     * @return Headers
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    public function hasLayoutEnabled()
+    {
+        return ($this->layout_enabled == true) ? true : false;
+    }
+
+    public function enableLayout()
+    {
+        $this->layout_enabled= true;
+    }
+
+    public function disableLayout()
+    {
+        $this->layout_enabled= false;
+    }
+
+    public function hasViewEnabled()
+    {
+        return ($this->layout_enabled == true) ? true : false;
+    }
+
+    public function enableView()
+    {
+        $this->layout_enabled= true;
+    }
+
+    public function disableView()
+    {
+        $this->layout_enabled= false;
+    }
+
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     *  Only used if Layout & View disabled
+     *
+     * @param $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
     }
 
 }

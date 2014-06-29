@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Derek.mclean
- * Date: 29/05/14
- * Time: 13:53
- * To change this template use File | Settings | File Templates.
- */
+
 
 namespace Bone\Mvc;
 
@@ -55,7 +49,7 @@ class Application
         $this->request = new Request();
         $this->router = new Router($this->request);
         $response =  $this->router->dispatch();
-        echo $response->send();
+        $response->send();
     }
 
 
