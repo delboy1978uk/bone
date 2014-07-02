@@ -14,6 +14,7 @@ return array(
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Symfony\\Component\\BrowserKit\\' => array($vendorDir . '/symfony/browser-kit'),
+    'Pimple' => array($vendorDir . '/delboy1978uk/barnacle/src'),
     'Codeception' => array($vendorDir . '/codeception/codeception/src'),
     'Bone' => array($baseDir . '/src'),
 );
