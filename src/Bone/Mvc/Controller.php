@@ -21,7 +21,7 @@ class Controller
 
     protected $action;
 
-    private  $headers;
+    private $headers;
 
     public $view;
 
