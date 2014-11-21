@@ -16,5 +16,4 @@ return array(
     'Symfony\\Component\\BrowserKit\\' => array($vendorDir . '/symfony/browser-kit'),
     'Pimple' => array($vendorDir . '/delboy1978uk/barnacle/src'),
     'Codeception' => array($vendorDir . '/codeception/codeception/src'),
-    'Bone' => array($baseDir . '/src'),
 );

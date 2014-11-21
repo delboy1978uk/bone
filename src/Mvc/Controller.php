@@ -1,6 +1,7 @@
 <?php
 
 namespace Bone\Mvc;
+
 use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\Response\Headers;
 use Twig_Loader_Filesystem;
@@ -106,7 +107,7 @@ class Controller
     }
 
     /**
-     *  For loadin' th' cannon, so to speak
+     *  For loadin' th' cannon, so t' speak
      *
      * @return Headers
      */
@@ -117,7 +118,7 @@ class Controller
 
     public function hasLayoutEnabled()
     {
-        return ($this->layout_enabled == true) ? true : false;
+        return ($this->layout_enabled == true);
     }
 
     public function enableLayout()
@@ -132,17 +133,17 @@ class Controller
 
     public function hasViewEnabled()
     {
-        return ($this->layout_enabled == true) ? true : false;
+        return ($this->view_enabled == true);
     }
 
     public function enableView()
     {
-        $this->layout_enabled= true;
+        $this->view_enabled= true;
     }
 
     public function disableView()
     {
-        $this->layout_enabled= false;
+        $this->view_enabled= false;
     }
 
     public function getBody()

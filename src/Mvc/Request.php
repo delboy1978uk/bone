@@ -2,6 +2,10 @@
 
 namespace Bone\Mvc;
 
+/**
+ * Class Request
+ * @package Bone\Mvc
+ */
 class Request
 {
     /**
@@ -37,11 +41,11 @@ class Request
 
 
     /**
-     * This be the uri of the address
+     * This be the $_SERVER superglobal
      *
-     * @var string
+     * @var string $_server
      */
-    protected $_request_uri;
+    protected $_server;
 
     private $controller;
     private $action;
@@ -56,13 +60,13 @@ class Request
      *                   Blustering barnacles, Prepare th' crew!
      *  Aye aye, cap'n!
      */
-    public function __construct()
+    public function __construct(array $request, array $get, array $post, array $cookie, array $server)
     {
-        $this->_data = array_merge($this->_data, $_REQUEST);
-        $this->_get = array_merge($this->_get, $_GET);
-        $this->_post = array_merge($this->_post, $_POST);
-        $this->_cookie = array_merge($this->_cookie, $_COOKIE);
-        $this->_request_uri = $_SERVER['REQUEST_URI'];
+        $this->_data = $request;
+        $this->_get =  $get;
+        $this->_post = $post;
+        $this->_cookie = $cookie;
+        $this->_server = $server;
         $this->_clean();
     }
 
@@ -93,7 +97,7 @@ class Request
 
 
     /**
-     * Allow access to data stored in GET, POST and COOKIE super globals.
+     * Allow access t' data stored in GET, POST and COOKIE super globals.
      *
      * @param string $var
      * @param string $key
@@ -126,7 +130,7 @@ class Request
     }
 
     /**
-     * Internally clean request data by handling magic_quotes_gpc and then adding slashes.
+     * Internally clean request data by handlin' magic_quotes_gpc and then addin' slashes.
      *
      */
     protected function _clean()

@@ -1,6 +1,7 @@
 <?php
 
 namespace Bone;
+
 use Bone\Filter\String;
 use Bone\Filter\Exception;
 

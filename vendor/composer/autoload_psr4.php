@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
+    'Bone\\' => array($baseDir . '/src'),
 );
