@@ -22,7 +22,7 @@ class BoneMvcRequestTest extends \Codeception\TestCase\Test
     {
         $request = new Request($_REQUEST,$_GET,$_POST,$_COOKIE,$_SERVER);
 
-//        $this->assertTrue($request->);
+        $this->assertTrue(true);
 
     }
 
