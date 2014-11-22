@@ -8,12 +8,6 @@ namespace Bone\Mvc;
  */
 class Request
 {
-    /**
-     * This be a treasure chest of request data
-     *
-     * @var array
-     */
-    public $_data = array();
 
 
     /**
@@ -60,42 +54,14 @@ class Request
      *                   Blustering barnacles, Prepare th' crew!
      *  Aye aye, cap'n!
      */
-    public function __construct(array $request, array $get, array $post, array $cookie, array $server)
+    public function __construct(array $get, array $post, array $cookie, array $server)
     {
-        $this->_data = $request;
         $this->_get =  $get;
         $this->_post = $post;
         $this->_cookie = $cookie;
         $this->_server = $server;
         $this->_clean();
     }
-
-
-    /**
-     * We be setting arrays here by key
-     *
-     * @param $key
-     * @param $value
-     */
-    public function set($key, $value)
-    {
-        $this->_data[$key] = $value;
-    }
-
-
-    /**
-     * What be the value of this here key?
-     *
-     * @param string $key
-     * @return mixed
-     */
-    public function get($key)
-    {
-        return isset($this->_data[$key]) ? $this->_data[$key] : null;
-    }
-
-
-
     /**
      * Allow access t' data stored in GET, POST and COOKIE super globals.
      *
@@ -118,6 +84,10 @@ class Request
                 $array = $this->_cookie;
                 break;
 
+            case 'server':
+                $array = $this->_server;
+                break;
+
             default:
                 $array = array();
                 break;
@@ -136,7 +106,6 @@ class Request
     protected function _clean()
     {
         if(get_magic_quotes_gpc()) {
-            $this->_data = $this->_stripSlashes($this->_data);
             $this->_post = $this->_stripSlashes($this->_post);
             $this->_get = $this->_stripSlashes($this->_get);
         }
@@ -164,7 +133,7 @@ class Request
      */
     public function getURI()
     {
-        return $this->_request_uri;
+        return $this->_server['REQUEST_URI'];
     }
 
     /**
@@ -174,6 +143,28 @@ class Request
     public function getGet()
     {
         return $this->_get;
+    }
+
+
+
+    /**
+     *  We be wantin' the COOKIE variables
+     * @return array
+     */
+    public function getCookie()
+    {
+        return $this->_cookie;
+    }
+
+
+
+    /**
+     *  We be wantin' the SERVER variables
+     * @return array
+     */
+    public function getServer()
+    {
+        return $this->_server;
     }
 
 

@@ -13,14 +13,12 @@ class BoneMvcRequestTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-
-        $request = array();
         $get = array('getParam1' => 'getParam1Value');
         $post = array('postParam1' => 'postParam1Value');
-        $cookie = array();
-        $server = array();
+        $cookie = array('cookieParam1' => 'cookieParam1Value');
+        $server = array('serverParam1' => 'serverParam1Value');
 
-        $this->request = new Request($request, $get, $post, $cookie, $server);
+        $this->request = new Request( $get, $post, $cookie, $server);
 
     }
 
@@ -33,6 +31,8 @@ class BoneMvcRequestTest extends \Codeception\TestCase\Test
     {
         $this->tester->assertNotEmpty($this->request->getGet());
         $this->tester->assertNotEmpty($this->request->getPost());
+        $this->tester->assertNotEmpty($this->request->getCookie());
+        $this->tester->assertNotEmpty($this->request->getServer());
     }
 
     public function testRequestGetData()
@@ -43,6 +43,16 @@ class BoneMvcRequestTest extends \Codeception\TestCase\Test
     public function testRequestPostData()
     {
         $this->tester->assertEquals($this->request->getRawData('post', 'postParam1'), 'postParam1Value');
+    }
+
+    public function testRequestCookieData()
+    {
+        $this->tester->assertEquals($this->request->getRawData('cookie', 'cookieParam1'), 'cookieParam1Value');
+    }
+
+    public function testRequestServerData()
+    {
+        $this->tester->assertEquals($this->request->getRawData('server', 'serverParam1'), 'serverParam1Value');
     }
 
 }

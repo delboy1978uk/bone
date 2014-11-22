@@ -41,7 +41,7 @@ class Router
         // which way be we goin' ?
         $path = $this->uri;
 
-        // Has th'route been set?
+        // Has th' route been set?
         if ($path != '/')
         {
             // we be checkin' our instruction fer configgered routes
@@ -56,6 +56,7 @@ class Router
 
             // try an' match each route with th' uri
             $match = false;
+
             /** @var \Bone\Mvc\Router\Route $route */
             foreach($this->routes as $route)
             {

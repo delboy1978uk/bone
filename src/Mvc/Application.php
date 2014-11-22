@@ -46,7 +46,7 @@ class Application
      */
     public function setSail()
     {
-        $this->request = new Request($_REQUEST,$_GET,$_POST,$_COOKIE,$_SERVER);
+        $this->request = new Request($_GET,$_POST,$_COOKIE,$_SERVER);
         $this->router = new Router($this->request);
         $response =  $this->router->dispatch();
         $response->send();
