@@ -153,7 +153,7 @@ class Router
     /**
      *  Garrr, we be makin' sure what they says
      *
-     * @return Response
+     * @return Request
      */
     public function dispatch()
     {
@@ -165,7 +165,7 @@ class Router
         $this->request->setAction($action);
         $this->request->setParams($this->params);
 
-        return new Response($this->request);
+        return $this->request;
     }
 
 }

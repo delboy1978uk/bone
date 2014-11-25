@@ -37,7 +37,7 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
     // tests
     public function testParseReturnsResponse()
     {
-        $this->assertInstanceOf('Bone\Mvc\Response',$this->router->dispatch());
+        $this->assertInstanceOf('Bone\Mvc\Request',$this->router->dispatch());
     }
 
 }
