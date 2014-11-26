@@ -11,6 +11,9 @@ class Response
     /** @var mixed */
     private $body;
 
+    // Garrrr! An arrrray!
+    private $config = array();
+
 
     /**
      *  Load the cannons darn ye!
@@ -20,34 +23,36 @@ class Response
     public function __construct(Request $request)
     {
 
-        // what be we talkin about?
-        $filtered = Filter::filterString($request->getController(),'DashToCamelCase');
-        $controller_name = '\App\Controller\\'.ucwords($filtered).'Controller';
 
+        // what controller be we talkin about?
+        $filtered = Filter::filterString($request->getController(),'DashToCamelCase');
+        $this->config['controller_name'] = '\App\Controller\\'.ucwords($filtered).'Controller';
+
+        // whit be yer action ?
         $filtered = Filter::filterString($request->getAction(),'DashToCamelCase');
-        $action_name = $filtered.'Action';
-        $controller = $request->getController();
-        $action = $request->getAction();
+        $this->config['action_name'] = $filtered.'Action';
+        $this->config['controller'] = $request->getController();
+        $this->config['action'] = $request->getAction();
 
         // can we find th' darned controller?
-        if(!class_exists($controller_name))
+        if(!class_exists($this->config['controller_name']))
         {
-            $controller_name = '\App\Controller\ErrorController';
-            $action_name = 'notFoundAction';
-            $controller = 'error';
+            $this->config['controller_name'] = '\App\Controller\ErrorController';
+            $this->config['action_name'] = 'notFoundAction';
+            $this->config['controller'] = 'error';
             $action = 'not-found';
-            $dispatch = new $controller_name($request);
+            $dispatch = new $this->config['controller_name']($request);
         }
         else
         {
-            $dispatch = new $controller_name($request);
-            if(!method_exists($dispatch,$action_name))
+            $dispatch = new $this->config['controller_name']($request);
+            if(!method_exists($dispatch,$this->config['action_name']))
             {
-                $controller_name = '\App\Controller\ErrorController';
-                $action_name = 'notFoundAction';
+                $this->config['controller_name'] = '\App\Controller\ErrorController';
+                $this->config['action_name'] = 'notFoundAction';
                 /** @var Controller $dispatch  */
-                $dispatch = new $controller_name($request);
-                $controller = 'error';
+                $dispatch = new $this->config['controller_name']($request);
+                $this->config['controller'] = 'error';
                 $action = 'not-found';
             }
         }
@@ -57,7 +62,7 @@ class Response
             // run th' controller action
 
             $dispatch->init();
-            $dispatch->$action_name();
+            $dispatch->$this->config['action_name']();
             $dispatch->postDispatch();
 
             $this->headers = $dispatch->getHeaders();
@@ -67,7 +72,7 @@ class Response
 
             if($dispatch->hasViewEnabled())
             {
-                $view = $controller.'/'.$action.'.twig';
+                $view = $this->config['controller'].'/'.$action.'.twig';
                 $response_body = $dispatch->getTwig()->render($view, $view_vars);
             }
             else

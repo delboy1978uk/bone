@@ -7,9 +7,6 @@ namespace Bone\Mvc;
 class Application
 {
     private $registry;
-    private $router;
-    private $request;
-    private $response;
 
     /**
      *  There be nay feckin wi' constructors on board this ship
@@ -46,9 +43,9 @@ class Application
      */
     public function setSail()
     {
-        $this->request = new Request($_GET,$_POST,$_COOKIE,$_SERVER);
-        $this->router = new Router($this->request);
-        $response = new Response($this->router->dispatch()); 
+        $request = new Request($_GET,$_POST,$_COOKIE,$_SERVER);
+        $router = new Router($request);
+        $response = new Response($router->dispatch());
         $response->send();
     }
 
