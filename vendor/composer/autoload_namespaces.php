@@ -15,5 +15,6 @@ return array(
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Symfony\\Component\\BrowserKit\\' => array($vendorDir . '/symfony/browser-kit'),
     'Pimple' => array($vendorDir . '/delboy1978uk/barnacle/src'),
+    'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src'),
     'Codeception' => array($vendorDir . '/codeception/codeception/src'),
 );

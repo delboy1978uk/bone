@@ -72,7 +72,7 @@ class Response
 
             if($dispatch->hasViewEnabled())
             {
-                $view = $this->config['controller'].'/'.$action.'.twig';
+                $view = $this->config['controller'].'/'.$this->config['action'].'.twig';
                 $response_body = $dispatch->getTwig()->render($view, $view_vars);
             }
             else
