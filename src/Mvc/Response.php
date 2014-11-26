@@ -60,9 +60,9 @@ class Response
         try
         {
             // run th' controller action
-
+            $action = $this->config['action_name'];
             $dispatch->init();
-            $dispatch->$this->config['action_name']();
+            $dispatch->$action();
             $dispatch->postDispatch();
 
             $this->headers = $dispatch->getHeaders();
