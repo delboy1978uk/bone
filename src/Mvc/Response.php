@@ -40,7 +40,7 @@ class Response
             $this->config['controller_name'] = '\App\Controller\ErrorController';
             $this->config['action_name'] = 'notFoundAction';
             $this->config['controller'] = 'error';
-            $action = 'not-found';
+            $this->config['action'] = 'not-found';
             $dispatch = new $this->config['controller_name']($request);
         }
         else
@@ -53,7 +53,7 @@ class Response
                 /** @var Controller $dispatch  */
                 $dispatch = new $this->config['controller_name']($request);
                 $this->config['controller'] = 'error';
-                $action = 'not-found';
+                $this->config['action'] = 'not-found';
             }
         }
 
