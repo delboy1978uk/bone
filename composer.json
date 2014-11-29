@@ -12,6 +12,10 @@
         "twig/twig": "1.*",
 	"codeception/codeception": "*"
     },
+    "require-dev": {
+        "phpmd/phpmd" : "@stable",
+        "squizlabs/php_codesniffer": "1.*"
+    },
     "autoload": {
         "psr-4": {
             "Bone\\": "src/"

@@ -1,4 +1,4 @@
-Bone
+Bone [![Build Status](https://travis-ci.org/delboy1978uk/bone.png?branch=master)](https://travis-ci.org/delboy1978uk/bone)
 ====
 
 Bone MVC Framework library files.<br />

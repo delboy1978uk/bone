@@ -119,11 +119,11 @@ class Request
      */
     protected function _stripSlashes($value)
     {
-        if(is_array($value)) {
+        if(is_array($value))
+        {
             return array_map(array($this,'_stripSlashes'), $value);
-        } else {
-            return stripslashes($value);
         }
+        return stripslashes($value);
     }
 
     /**

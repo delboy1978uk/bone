@@ -137,16 +137,14 @@ class Router
                 $this->params = array_merge($this->params, $this->request->getPost());
             }
             $this->params = array_merge($this->params, $this->request->getGet());
+            return;
         }
-        else
-        {
-            //it be the home page
-            $routes = Registry::ahoy()->get('routes');
-            $home_page = $routes['/'];
-            $this->controller = $home_page['controller'];
-            $this->action = $home_page['action'];
-            $this->params = $home_page['params'];
-        }
+        //it be the home page
+        $routes = Registry::ahoy()->get('routes');
+        $home_page = $routes['/'];
+        $this->controller = $home_page['controller'];
+        $this->action = $home_page['action'];
+        $this->params = $home_page['params'];
     }
 
 
