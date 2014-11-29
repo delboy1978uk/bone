@@ -17,7 +17,7 @@ class BoneMvcResponseTest extends \Codeception\TestCase\Test
     }
 
     // tests
-    public function testMe()
+    public function testAll()
     {
 
     }

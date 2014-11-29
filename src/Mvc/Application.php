@@ -45,8 +45,9 @@ class Application
     {
         $request = new Request($_GET,$_POST,$_COOKIE,$_SERVER);
         $router = new Router($request);
-        $response = new Response($router->dispatch());
-        $response->send();
+        $response = new Response();
+        $dispatcher = new Dispatcher($router->dispatch(),$response);
+        $dispatcher->fireCannons();
     }
 
 
