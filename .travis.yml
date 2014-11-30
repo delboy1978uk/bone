@@ -23,7 +23,6 @@ install:
 
 
 before_script:
-  - beanstalkd -d -l 127.0.0.1 -p 11300
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - sleep 5
