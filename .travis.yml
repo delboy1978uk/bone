@@ -60,14 +60,14 @@ before_script:
   - frameworks-symfony/app/console doctrine:schema:create
   - pwd
   - ls -Flash
-  - php vendor/bin/codecept build -c frameworks-yii-basic/tests
-  - php vendor/bin/codecept build -c frameworks-phalcon
-  - php vendor/bin/codecept build -c frameworks-laravel
-  - php vendor/bin/codecept build -c frameworks-symfony
+  - vendor/bin/codecept build -c frameworks-yii-basic/tests
+  - vendor/bin/codecept build -c frameworks-phalcon
+  - vendor/bin/codecept build -c frameworks-laravel
+  - vendor/bin/codecept build -c frameworks-symfony
 
 script:
-  - php vendor/bin/codecept run  # self tests
-  - php vendor/bin/codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
-  - php vendor/bin/codecept run -c frameworks-laravel # Laravel4 Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || php vendor/bin/codecept run functional -c frameworks-phalcon'
+  - vendor/bin/codecept run  # self tests
+  - vendor/bin/codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
+  - vendor/bin/codecept run -c frameworks-laravel # Laravel4 Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || vendor/bin/codecept run functional -c frameworks-phalcon'
   - php vendor/bin/codecept run functional -c frameworks-symfony # Symfony Tests
