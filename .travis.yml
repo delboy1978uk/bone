@@ -35,11 +35,6 @@ before_script:
   - sleep 5
   - java -jar selenium-server-standalone-2.42.2.jar -port 4444 &
   - "mysql -e 'create database codeception_test;'"
-  - psql -c 'create database codeception_test;' -U postgres
-  - php -S localhost:8000 -t tests/data/app &
-  - php -S localhost:8010 -t tests/data &
-  - "mysql -e 'CREATE DATABASE forum;'"
-  - cat frameworks-phalcon/schemas/forum.sql | mysql forum
 
 script:
   - php vendor/bin/codecept run  # self tests
