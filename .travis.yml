@@ -58,13 +58,15 @@ before_script:
   # Symfony
   - frameworks-symfony/app/console doctrine:database:create
   - frameworks-symfony/app/console doctrine:schema:create
+  - pwd
+  - ls -Flash
   - php codecept build -c frameworks-yii-basic/tests
   - php codecept build -c frameworks-phalcon
   - php codecept build -c frameworks-laravel
   - php codecept build -c frameworks-symfony
 
 script:
-  - php codecept run  # self tests
+  - php vendor/bin/codecept run  # self tests
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || php codecept run functional -c frameworks-phalcon'
