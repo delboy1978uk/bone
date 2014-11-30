@@ -25,18 +25,6 @@ install:
   # Queue (Beanstalkd)
   - sudo apt-get update -qq
   - sudo apt-get install -qq beanstalkd
-  # Yii2
-  - composer create-project --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic
-  - 'git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4'
-  # Phalcon
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --enable-phalcon  &> /dev/null && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
-  - 'git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon'
-  # Laravel
-  - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
-  - composer install -d frameworks-laravel --no-dev
-  # Symfony
-  - git clone https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
-  - composer install -d frameworks-symfony --no-dev
 
 
 before_script:
@@ -52,14 +40,6 @@ before_script:
   - php -S localhost:8010 -t tests/data &
   - "mysql -e 'CREATE DATABASE forum;'"
   - cat frameworks-phalcon/schemas/forum.sql | mysql forum
-  # Laravel
-  - "mysql -e 'create database `l4-module`;'"
-  - php frameworks-laravel/artisan migrate --seed -n
-  # Symfony
-  - frameworks-symfony/app/console doctrine:database:create
-  - frameworks-symfony/app/console doctrine:schema:create
-  - pwd
-  - ls -Flash
 
 script:
   - php vendor/bin/codecept run  # self tests
