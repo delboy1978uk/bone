@@ -31,3 +31,5 @@ before_script:
 
 script:
   - php vendor/bin/codecept run --coverage-xml
+after_script:
+  - php vendor/bin/coveralls -v
