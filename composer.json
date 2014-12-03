@@ -3,18 +3,18 @@
     "description": "Bone MVC Framework Library",
     "authors": [
         {
-            "name": "Derek McLean",
+            "name": "Derek Stephen McLean",
             "email": "delboy1978uk@gmail.com"
         }
     ],
     "require": {
-	"delboy1978uk/barnacle": "*",
-        "twig/twig": "1.*",
-	"codeception/codeception": "*"
+	    "delboy1978uk/barnacle": "*",
+        "twig/twig": "1.*"
     },
     "require-dev": {
         "phpmd/phpmd" : "@stable",
-        "squizlabs/php_codesniffer": "1.*"
+        "squizlabs/php_codesniffer": "1.*",
+        "codeception/codeception": "*"
     },
     "autoload": {
         "psr-4": {
