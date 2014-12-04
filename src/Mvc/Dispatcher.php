@@ -114,7 +114,7 @@ class Dispatcher
      *  @param string $content
      *  @return string
      */
-    private function templateCheck($content, $controller)
+    private function templateCheck($controller,$content)
     {
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
