@@ -3,7 +3,7 @@
 namespace Bone;
 
 use Bone\Filter\String;
-use Bone\Filter\Exception;
+use Bone\Filter\Exception as FilterException;
 
 abstract class Filter
 {
@@ -15,6 +15,6 @@ abstract class Filter
             $filter = new $filter_name();
             return $filter->filter($string);
         }
-        throw new Exception(Exception::NO_FILTER);
+        throw new FilterException(FilterException::NO_FILTER);
     }
 }

@@ -155,7 +155,7 @@ class Route
         {
             // check if it matches the pattern
             $this->regex->setPattern($expression);
-            if($matches = $this->regex->getMatches($uri))
+            if($this->regex->getMatches($uri))
             {
                 $this->matched_uri_parts = explode('/',$uri);
                 return true;

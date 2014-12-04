@@ -7,6 +7,7 @@ use Bone\Regex;
 class Router
 {
     private $request;
+    private $uri;
     private $controller;
     private $action;
     private $params;
