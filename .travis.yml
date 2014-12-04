@@ -30,7 +30,7 @@ before_script:
   - "mysql -e 'create database codeception_test;'"
 
 script:
-  - php vendor/bin/codecept run  # self tests
+  - php vendor/bin/codecept run  --coverage-xml
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
