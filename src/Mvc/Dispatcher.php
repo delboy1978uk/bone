@@ -60,6 +60,7 @@ class Dispatcher
 
     public function fireCannons()
     {
+        $response_body = '';
         try
         {
             // Check we can call the controller
@@ -86,7 +87,7 @@ class Dispatcher
 
             if($this->controller->hasLayoutEnabled())
             {
-                $response_body = $this->templateCheck($response_body);
+                $response_body = $this->templateCheck($this->controller,$response_body);
             }
         }
         catch(Exception $e)
@@ -99,7 +100,7 @@ class Dispatcher
             $view_vars = array_merge($view_vars,array('error' => $e));
             $view = 'error/error.twig';
             $response_body = $dispatch->getTwig()->render($view, $view_vars);
-            $response_body = $this->templateCheck($response_body);
+            $response_body = $this->templateCheck($dispatch,$response_body);
             
         }
 
@@ -113,14 +114,14 @@ class Dispatcher
      *  @param string $content
      *  @return string
      */
-    private function templateCheck($content)
+    private function templateCheck($content, $controller)
     {
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
         $template = ($templates != null) ? $templates[0] : null;
         if($template)
         {
-            $response_body = $dispatch->getTwig()->render('layouts/'.$template.'.twig',array('content' => $content));
+            $response_body = $controller->getTwig()->render('layouts/'.$template.'.twig',array('content' => $content));
         }
         return $response_body;
     }
