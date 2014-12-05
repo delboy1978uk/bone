@@ -110,18 +110,12 @@ class Request
     }
 
     /**
-     * Strip slashes code from php.net website.
-     *
-     * @param array|string $value
+     * @param string $value
      * @return array
      */
     protected function _stripSlashes($value)
     {
-        if(is_array($value))
-        {
-            return array_map(array($this,'_stripSlashes'), $value);
-        }
-        return stripslashes($value);
+        return array_map(array($this,'_stripSlashes'), $value);
     }
 
     /**
