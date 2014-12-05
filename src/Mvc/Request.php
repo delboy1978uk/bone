@@ -99,14 +99,11 @@ class Request
         return null;
     }
 
-    /**
-     * Internally clean request data by handlin' magic_quotes_gpc and then addin' slashes.
-     *
-     */
+
     protected function _clean()
     {
-        $this->_post = $this->_stripSlashes($this->_post);
-        $this->_get = $this->_stripSlashes($this->_get);
+        $this->_post = $this->_stripSlashes((array) $this->_post);
+        $this->_get = $this->_stripSlashes((array) $this->_get);
     }
 
     /**
