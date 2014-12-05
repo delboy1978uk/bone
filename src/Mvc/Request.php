@@ -110,12 +110,12 @@ class Request
     }
 
     /**
-     * @param string $value
-     * @return array
+     * @param $value
+     * @return array|string
      */
     protected function _stripSlashes($value)
     {
-        return array_map(array($this,'_stripSlashes'), $value);
+        return (is_array($value)) ? array_map(array($this,'_stripSlashes'), $value) : stripslashes($value) ;
     }
 
     /**
