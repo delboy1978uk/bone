@@ -17,5 +17,6 @@ modules:
             dump: tests/_data/dump.sql
 coverage:
     enabled: true
+    remote: false
     include:
         - src/*
