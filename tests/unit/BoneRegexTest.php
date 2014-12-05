@@ -21,7 +21,7 @@ class BoneRegexTest extends \Codeception\TestCase\Test
     public function testCanConstructRegexObject()
     {
     	$regex = new Regex('^\/(?<controller>[^\/]+)\/(?<action>[^\/]+)\/(?<varvalpairs>(?:[^\/]+\/[^\/]+\/?)*)');
-        $this->assertTrue($this->regex);
+        $this->assertInstanceOf('Bone\Regex',$regex);
     }
 
 
@@ -48,6 +48,7 @@ class BoneRegexTest extends \Codeception\TestCase\Test
     public function testGetMatches()
     {
     	$regex = new Regex('^\/(?<controller>[^\/]+)\/(?<action>[^\/]+)\/(?<varvalpairs>(?:[^\/]+\/[^\/]+\/?)*)');
-        $this->assertTrue($regex->getMatches('/controller/action/param/value/next-param/next-value'));
+    	$matches = $regex->getMatches('/controller/action/param/value/next-param/next-value') ? true : false;
+        $this->assertTrue($matches);
     }
 }
