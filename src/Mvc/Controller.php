@@ -86,7 +86,7 @@ class Controller
 
     public function getParams()
     {
-        return new stdClass($this->_request->getParams());
+        return (object) $this->_request->getParams();
     }
 
     /**

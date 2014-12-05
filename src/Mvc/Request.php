@@ -37,7 +37,7 @@ class Request
     /**
      * This be the $_SERVER superglobal
      *
-     * @var string $_server
+     * @var array $_server
      */
     protected $_server;
 
@@ -105,16 +105,14 @@ class Request
      */
     protected function _clean()
     {
-        if(get_magic_quotes_gpc()) {
-            $this->_post = $this->_stripSlashes($this->_post);
-            $this->_get = $this->_stripSlashes($this->_get);
-        }
+        $this->_post = $this->_stripSlashes($this->_post);
+        $this->_get = $this->_stripSlashes($this->_get);
     }
 
     /**
      * Strip slashes code from php.net website.
      *
-     * @param mixed $value
+     * @param array|string $value
      * @return array
      */
     protected function _stripSlashes($value)
