@@ -43,24 +43,38 @@ class Dispatcher
     public function validateDestination()
     {
         // can we find th' darned controller?
-        if(!class_exists($this->config['controller_name']))
+        if(!$this->checkControllerExists())
         {
             $this->setNotFound();
-            $this->controller = new $this->config['controller_name']($this->request);
             return;
         }
         $this->controller = new $this->config['controller_name']($this->request);
-        if(!method_exists($this->controller,$this->config['action_name']))
+        if(!$this->checkActionExists())
         {
             $this->setNotFound();
-            /** @var Controller $dispatch  */
-            $this->controller = new $this->config['controller_name']($this->request);
         }
     }
 
+    /**
+     * @return bool
+     */
+    private function checkControllerExists()
+    {
+        return class_exists($this->config['controller_name']);
+    }
+
+    /**
+     * @return bool
+     */
+    private function checkActionExists()
+    {
+        return method_exists($this->controller,$this->config['action_name']);
+    }
+
+
+
     public function fireCannons()
     {
-        $response_body = '';
         try
         {
             // Check we can call the controller
@@ -109,13 +123,14 @@ class Dispatcher
         $this->response->send();
     }
 
-
-    /** 
+    /**
+     *  @param Controller $controller
      *  @param string $content
      *  @return string
      */
     private function templateCheck($controller,$content)
     {
+        $response_body = '';
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
         $template = ($templates != null) ? $templates[0] : null;
@@ -136,6 +151,7 @@ class Dispatcher
         $this->config['action_name'] = 'notFoundAction';
         $this->config['controller'] = 'error';
         $this->config['action'] = 'not-found';
+        $this->controller = new $this->config['controller_name']($this->request);
     }
 
 
