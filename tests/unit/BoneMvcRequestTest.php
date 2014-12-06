@@ -55,4 +55,44 @@ class BoneMvcRequestTest extends \Codeception\TestCase\Test
         $this->tester->assertEquals($this->request->getRawData('server', 'serverParam1'), 'serverParam1Value');
     }
 
+    public function testGetAndSetParam()
+    {
+        $this->request->setParam('testing','hello');
+        $this->tester->assertEquals($this->request->getParam('testing'), 'hello');
+    }
+
+    public function testGetAndSetParams()
+    {
+        $this->request->setParams(array(
+            'name' => 'LeChuck',
+            'occupation' => 'Ghost Pirate',
+        ));
+        $params = $this->request->getParams();
+        $this->tester->assertTrue(is_array($params));
+        $this->tester->assertTrue(count($params) == 2);
+        $this->tester->assertEquals($params['name'],'LeChuck');
+    }
+
+    public function testGetAndSetController()
+    {
+        $this->request->setController('PirateController');
+        $this->tester->assertTrue($this->request->getController(),'PirateController');
+    }
+
+    public function testGetAndSetAction()
+    {
+        $this->request->setAction('non-stop-action');
+        $this->tester->assertTrue($this->request->getAction(),'non-stop-action');
+    }
+
+    public function testInvalidGetRawDataKey()
+    {
+        $this->tester->assertNull($this->request->getRawData('whats-all-this-then', 'non existent'));
+    }
+
+    public function testInvalidGetRawDataValue()
+    {
+        $this->tester->assertNull($this->request->getRawData('get', 'non existent value'));
+    }
+
 }
