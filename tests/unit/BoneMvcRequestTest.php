@@ -82,7 +82,7 @@ class BoneMvcRequestTest extends \Codeception\TestCase\Test
     public function testGetAndSetAction()
     {
         $this->request->setAction('non-stop-action');
-        $this->tester->assertTrue($this->request->getAction(),'non-stop-action');
+        $this->tester->assertEquals($this->request->getAction(),'non-stop-action');
     }
 
     public function testInvalidGetRawDataKey()
