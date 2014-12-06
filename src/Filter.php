@@ -8,9 +8,10 @@ use Bone\Filter\Exception as FilterException;
 abstract class Filter
 {
     /**
+     * @param string $string
      * @param string $filter_type
-     *
      * @return string
+     * @throws Filter\Exception
      */
     public static function filterString($string, $filter_type)
     {

@@ -20,7 +20,7 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
         $get = array('getParam1' => 'getParam1Value');
         $post = array('postParam1' => 'postParam1Value');
         $cookie = array('cookieParam1' => 'cookieParam1Value');
-        $server = array('REQUEST_URI' => '/',
+        $server = array('REQUEST_URI' => '/test',
                         'REQUEST_METHOD' => 'POST');
 
         $this->request = new Request( $get, $post, $cookie, $server);
@@ -30,7 +30,15 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
                 'controller' => 'index',
                 'action' => 'index',
                 'params' => array(),
-            )
+            ),
+            '/test' => array(
+                'controller' => 'index',
+                'action' => 'test',
+                'params' => array(
+                    'drink' => 'grog',
+                    'speak' => 'pirate',
+                ),
+            ),
         ));
         $this->router = new Router($this->request);
 
