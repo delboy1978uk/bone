@@ -71,7 +71,8 @@ class Request
      */
     public function getRawData($var, $key)
     {
-        switch(strtolower($var)) {
+        switch(strtolower($var))
+        {
             case 'get':
                 $array = $this->_get;
                 break;
@@ -89,11 +90,12 @@ class Request
                 break;
 
             default:
-                $array = array();
+                return null;
                 break;
         }
 
-        if(isset($array[$key])) {
+        if(isset($array[$key]))
+        {
             return $array[$key];
         }
         return null;
