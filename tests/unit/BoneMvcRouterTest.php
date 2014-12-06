@@ -20,12 +20,18 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
         $get = array('getParam1' => 'getParam1Value');
         $post = array('postParam1' => 'postParam1Value');
         $cookie = array('cookieParam1' => 'cookieParam1Value');
-        $server = array('REQUEST_URI' => 'http://someweb.net/random/url/',
-                        'REQUEST_METHOD' => 'get');
+        $server = array('REQUEST_URI' => '/',
+                        'REQUEST_METHOD' => 'POST');
 
         $this->request = new Request( $get, $post, $cookie, $server);
         $this->registry = Registry::ahoy();
-        $this->registry->set('routes', array());
+        $this->registry->set('routes', array(
+            '/' => array(
+                'controller' => 'index',
+                'action' => 'index',
+                'params' => array(),
+            )
+        ));
         $this->router = new Router($this->request);
 
     }
@@ -38,6 +44,11 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
     public function testParseReturnsResponse()
     {
         $this->assertInstanceOf('Bone\Mvc\Request',$this->router->dispatch());
+    }
+
+    public function test()
+    {
+
     }
 
 }

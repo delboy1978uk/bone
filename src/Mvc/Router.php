@@ -57,26 +57,55 @@ class Router
     }
 
 
+    private function regexMatch($regex_string)
+    {
+        $regex = new Regex($regex_string);
+        return $regex->getMatches($this->uri);
+    }
+
+    /**
+     * @param array $matches
+     */
+    private function setController(array $matches)
+    {
+        $this->action = $matches['controller'];
+    }
+
+    /**
+     * @param array $matches
+     */
+    private function setAction(array $matches)
+    {
+        $this->action = $matches['action'];
+    }
+
+    /**
+     * @param array $matches
+     */
+    private function setVarValPairs(array $matches)
+    {
+        $ex = explode('/',$matches['varvalpairs']);
+        for($x = 0; $x <= count($ex)-1 ; $x += 2)
+        {
+            if(isset($ex[$x+1]))
+            {
+                $this->params[$ex[$x]] = $ex[$x+1];
+            }
+        }
+    }
+
+
     /**
      *  @return bool
      */
     private function matchControllerActionParamsRoute()
     {
-        $regex = new Regex(Regex\Url::CONTROLLER_ACTION_VARS);
-        if($matches = $regex->getMatches($this->uri))
+        if($matches = $this->regexMatch(Regex\Url::CONTROLLER_ACTION_VARS))
         {
             // we have a controller action var val match Cap'n!
-            // settin' the destination controller and action and params
-            $this->controller = $matches['controller'];
-            $this->action = $matches['action'];
-            $ex = explode('/',$matches['varvalpairs']);
-            for($x = 0; $x <= count($ex)-1 ; $x += 2)
-            {
-                if(isset($ex[$x+1]))
-                {
-                    $this->params[$ex[$x]] = $ex[$x+1];
-                }
-            }
+            $this->setController($matches);
+            $this->setAction($matches);
+            $this->setVarValPairs($matches);
             return true;
         }
         return false;
@@ -88,13 +117,11 @@ class Router
      */
     private function matchControllerActionRoute()
     {
-        $regex = new Regex(Regex\Url::CONTROLLER_ACTION);
-        if($matches = $regex->getMatches($this->uri))
+        if($matches = $this->regexMatch(Regex\Url::CONTROLLER_ACTION))
         {
             // we have a controller action match Cap'n!
-            // settin' the destination controller and action and params
-            $this->controller = $matches['controller'];
-            $this->action = $matches['action'];
+            $this->setController($matches);
+            $this->setAction($matches);
             return true;
         }
         return false;
@@ -106,13 +133,11 @@ class Router
      */
     private function matchControllerRoute()
     {
-        $regex = new Regex(Regex\Url::CONTROLLER);
-        if($matches = $regex->getMatches($this->uri))
+        if($matches = $this->regexMatch(Regex\Url::CONTROLLER))
         {
             // we have a controller action match Cap'n!
             // settin' the destination controller and action and params
-            $match = true;
-            $this->controller = $matches['controller'];
+            $this->setController($matches);
             $this->action = 'index';
             return true;
         }
@@ -152,6 +177,30 @@ class Router
     /**
      *  Tells the Navigator to go to the / route
      */
+    private function matchRoute()
+    {
+        // Get th' navigator!
+        if(!$this->matchCustomRoute())
+        {
+            if(!$this->matchControllerActionParamsRoute())
+            {
+                if(!$this->matchControllerActionRoute())
+                {
+                    if(!$this->matchControllerRoute())
+                    {
+                        // there be nay route that matches cap'n
+                        // settin' the destination controller and action and params
+                        $this->controller = 'error';
+                        $this->action = 'not-found';
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     *  Tells the Navigator to go to the / route
+     */
     private function sailHome()
     {
         $routes = Registry::ahoy()->get('routes');
@@ -168,6 +217,10 @@ class Router
      */
     private function parseRoute()
     {
+
+        // start at the home page
+        $this->sailHome();
+
         // which way be we goin' ?
         $path = $this->uri;
 
@@ -177,31 +230,14 @@ class Router
             // Set the routes configgerd in th' config.php
             $this->setCustomRoutesFromConfig();
 
-            // Get th' navigator!
-            if(!$this->matchCustomRoute())
-            {
-                if(!$this->matchControllerActionParamsRoute())
-                {
-                    if(!$this->matchControllerActionRoute())
-                    {
-                        if(!$this->matchControllerRoute())
-                        {
-                            // there be nay route that matches cap'n
-                            // settin' the destination controller and action and params
-                            $this->controller = 'error';
-                            $this->action = 'not-found';
-                        }
-                    }
-                }
-            }
+            // Match the feckin' route ya blubberin' seadog!
+            $this->matchRoute();
 
             // Merge th' GET POST and config params
             $this->setParams();
 
             return;
         }
-        //it be the home page
-       $this->sailHome();
     }
 
 
