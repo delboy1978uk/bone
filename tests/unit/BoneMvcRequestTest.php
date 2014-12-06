@@ -76,7 +76,7 @@ class BoneMvcRequestTest extends \Codeception\TestCase\Test
     public function testGetAndSetController()
     {
         $this->request->setController('PirateController');
-        $this->tester->assertTrue($this->request->getController(),'PirateController');
+        $this->tester->assertEquals($this->request->getController(),'PirateController');
     }
 
     public function testGetAndSetAction()
