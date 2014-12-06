@@ -91,7 +91,6 @@ class Request
 
             default:
                 return null;
-                break;
         }
 
         if(isset($array[$key]))
