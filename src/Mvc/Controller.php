@@ -146,6 +146,9 @@ class Controller
         $this->view_enabled= false;
     }
 
+    /**
+     * @return string
+     */
     public function getBody()
     {
         return $this->body;

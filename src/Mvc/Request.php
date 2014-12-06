@@ -169,7 +169,7 @@ class Request
 
     /**
      *  Set the action name
-     * @param $action
+     * @param string $action
      * @return $this
      */
     public function setAction($action)
@@ -190,7 +190,7 @@ class Request
     /**
      * set the controls for th' heart of the sun
      *
-     * @param $controller
+     * @param string $controller
      * @return $this
      */
     public function setController($controller)
@@ -221,8 +221,8 @@ class Request
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param Exception $value
      * @return $this
      */
     public function setParam($key, $value)

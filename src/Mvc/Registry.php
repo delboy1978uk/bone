@@ -54,7 +54,7 @@ class Registry
 
     /**
      * You would like t' remember somethin'?
-     * @param $index
+     * @param string $index
      * @return mixed
      */
     public function get($index)
