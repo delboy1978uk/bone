@@ -1,7 +1,6 @@
 <?php
 
 namespace Bone;
-use Bone\Regex\Pattern;
 
 class Regex
 {
