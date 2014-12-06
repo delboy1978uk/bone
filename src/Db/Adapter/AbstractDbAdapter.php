@@ -46,21 +46,33 @@ abstract class AbstractDbAdapter implements DbAdapterInterface
         return $this->connection;
     }
 
+    /**
+     * @return string|null
+     */
     protected  function getDatabase()
     {
         return $this->database;
     }
 
+    /**
+     * @return string|null
+     */
     protected function getHost()
     {
         return $this->host;
     }
 
+    /**
+     * @return string|null
+     */
     protected function getPass()
     {
         return $this->pass;
     }
 
+    /**
+     * @return string|null
+     */
     protected function getUser()
     {
         return $this->user;

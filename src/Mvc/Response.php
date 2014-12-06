@@ -3,7 +3,6 @@
 namespace Bone\Mvc;
 
 use Bone\Mvc\Response\Headers;
-use Bone\Filter;
 
 class Response
 {

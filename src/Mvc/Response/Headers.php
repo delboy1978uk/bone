@@ -18,8 +18,8 @@ class Headers
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param string $value
      * @return $this
      */
     public function setHeader($key,$value)
