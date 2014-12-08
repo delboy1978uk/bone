@@ -24,6 +24,11 @@ class Dispatcher
     private $response;
 
 
+
+
+
+
+
     public function __construct(Request $request,Response $response)
     {
         $this->request = $request;
@@ -40,6 +45,11 @@ class Dispatcher
         $this->config['action'] = $this->request->getAction();
     }
 
+
+
+
+
+
     public function validateDestination()
     {
         // can we find th' darned controller?
@@ -55,6 +65,12 @@ class Dispatcher
         }
     }
 
+
+
+
+
+
+
     /**
      * @return bool
      */
@@ -63,6 +79,13 @@ class Dispatcher
         return class_exists($this->config['controller_name']);
     }
 
+
+
+
+
+
+
+
     /**
      * @return bool
      */
@@ -70,6 +93,14 @@ class Dispatcher
     {
         return method_exists($this->controller,$this->config['action_name']);
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -123,6 +154,16 @@ class Dispatcher
         $this->response->send();
     }
 
+
+
+
+
+
+
+
+
+
+
     /**
      *  @param Controller $controller
      *  @param string $content
@@ -140,6 +181,13 @@ class Dispatcher
         }
         return $response_body;
     }
+
+
+
+
+
+
+
 
     /**
      * Sets controller to error and action to not found 
