@@ -30,6 +30,7 @@ before_script:
   - sleep 5
   - java -jar selenium-server-standalone-2.42.2.jar -port 4444 &
   - "mysql -e 'create database bone_db;'"
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('drinkgrog') WHERE user='travis';\nFLUSH PRIVILEGES;\n" | mysql -u root
   - nohup php -S bone:8000 public/index.php &
 
 script:

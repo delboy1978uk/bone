@@ -21,7 +21,7 @@ class BoneMvcDbAdapterMySQLTest extends \Codeception\TestCase\Test
         $credentials = array(
             'host' => 'localhost',
             'user' => 'travis',
-            'pass' => '',
+            'pass' => 'drinkgrog',
             'database' => 'bone_db',
         );
         $this->db = new MySQL($credentials);
