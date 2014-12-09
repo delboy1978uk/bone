@@ -3,6 +3,7 @@
 use \Bone\Mvc\Dispatcher;
 use \Bone\Mvc\Request;
 use \Bone\Mvc\Response;
+use Codeception\Util\Stub;
 
 class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 {
@@ -28,7 +29,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $cookie = array('cookieParam1' => 'cookieParam1Value');
         $server = array('serverParam1' => 'serverParam1Value');
         $this->request = new Request( $get, $post, $cookie, $server);
-        $this->response = new Response();
+        $this->response = Stub::make('\Bone\Mvc\Response');
     }
 
     protected function _after()
