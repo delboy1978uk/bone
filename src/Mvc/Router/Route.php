@@ -145,12 +145,6 @@ class Route
      */
     public function checkRoute($uri)
     {
-        // is the uri the same?
-        if($uri == $this->strings[0])
-        {
-            $this->matched_uri_parts = explode('/',$uri);
-            return true;
-        }
         foreach($this->strings as $expression)
         {
             // check if it matches the pattern

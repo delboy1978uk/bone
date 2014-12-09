@@ -36,7 +36,7 @@ class BoneMvcResponseTest extends \Codeception\TestCase\Test
         $this->assertEquals('All hands on deck!',$this->response->getBody());
     }
 
-    // th' last point in the app
+    // th' feckin' end point in the app
     public function testSend()
     {
         $this->assertNull($this->response->send());

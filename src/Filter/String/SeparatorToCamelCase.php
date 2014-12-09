@@ -6,7 +6,7 @@ class SeparatorToCamelCase extends AbstractSeparator
 {
     public function filter($value)
     {
-        // garr! convert to \x00\x00 notation
+        // garr! backslash any regex letters an' symbols
         $quote = preg_quote($this->separator, '#');
 
         // create some feckin' voodoo black magic regex
@@ -18,7 +18,7 @@ class SeparatorToCamelCase extends AbstractSeparator
         $replace = array(
             function ($matches)
             {
-                return $matches[2];
+                return ucwords($matches[2]);
             },
             function ($matches)
             {

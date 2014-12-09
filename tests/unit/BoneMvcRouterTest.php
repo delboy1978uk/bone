@@ -42,6 +42,14 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
                     'speak' => 'pirate',
                 ),
             ),
+            '/custom/:mandatory/[:optional]' => array(
+                'controller' => 'index',
+                'action' => 'test',
+                'params' => array(
+                    'drink' => 'grog',
+                    'speak' => 'pirate',
+                ),
+            ),
         );
 
         $this->registry = Registry::ahoy();
@@ -92,6 +100,24 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
     public function testHomePageMatch()
     {
         $this->server['REQUEST_URI'] = '/';
+        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->router = new Router($this->request);
+        $request = $this->router->dispatch();
+        $this->assertInstanceOf('Bone\Mvc\Request', $request);
+    }
+
+    public function testMandatoryParamsMatch()
+    {
+        $this->server['REQUEST_URI'] = '/custom/cutlass';
+        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->router = new Router($this->request);
+        $request = $this->router->dispatch();
+        $this->assertInstanceOf('Bone\Mvc\Request', $request);
+    }
+
+    public function testOptionalParamsMatch()
+    {
+        $this->server['REQUEST_URI'] = '/custom/eye/patch';
         $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
         $this->router = new Router($this->request);
         $request = $this->router->dispatch();

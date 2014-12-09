@@ -26,7 +26,7 @@ class BoneMvcResponseHeadersTest extends \Codeception\TestCase\Test
     }
 
     // test non existent keys return false 
-    public function testGetNonExistentHeaderReturnsFalse()
+    public function testGetEmptyHeaderReturnsFalse()
     {
     	$headers = new Headers();
         $this->assertFalse($headers->getHeader('Content-Type'));
