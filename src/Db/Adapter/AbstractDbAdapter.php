@@ -4,17 +4,36 @@ namespace Bone\Db\Adapter;
 use Bone\Db\Adapter\DbAdapterInterface;
 use PDO;
 
+/**
+ * Class AbstractDbAdapter
+ * @package Bone\Db\Adapter
+ */
 abstract class AbstractDbAdapter implements DbAdapterInterface
 {
     /**
      * @var PDO $connection
      */
     protected  $connection;
+    /**
+     * @var
+     */
     private   $host;
+    /**
+     * @var
+     */
     private   $database;
+    /**
+     * @var
+     */
     private   $user;
+    /**
+     * @var
+     */
     private   $pass;
 
+    /**
+     * @param $credentials
+     */
     public function __construct($credentials)
     {
         $this->host = $credentials['host'];
@@ -23,20 +42,41 @@ abstract class AbstractDbAdapter implements DbAdapterInterface
         $this->pass = $credentials['pass'];
     }
 
+    /**
+     * @return mixed
+     */
     public abstract function openConnection();
 
+    /**
+     * @return mixed
+     */
     public abstract function closeConnection();
 
+    /**
+     * @return bool
+     */
     public function isConnected()
     {
-        // TODO: Implement isConnected() method.
+        if(!$this->connection)
+        {
+            return false;
+        }
+        return true;
     }
 
-    public function executeQuery()
+    /**
+     * @param $sql
+     * @return mixed|null
+     */
+    public function executeQuery($sql)
     {
-        // TODO: Implement executeQuery() method.
+        // @todo: Implement executeQuery() method.
+        return null;
     }
 
+    /**
+     * @return PDO
+     */
     public function getConnection()
     {
         if(!$this->connection)

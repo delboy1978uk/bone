@@ -5,19 +5,21 @@ namespace Bone\Db\Adapter;
 interface DbAdapterInterface
 {
     /**
-     * @return void
+     * @param $credentials
      */
     public function __construct($credentials);
+
     public function openConnection();
     public function closeConnection();
 
     /**
-     * @return void
+     * @return bool
      */
     public function isConnected();
 
     /**
-     * @return void
+     * @param $sql
+     * @return mixed
      */
-    public function executeQuery();
+    public function executeQuery($sql);
 }
