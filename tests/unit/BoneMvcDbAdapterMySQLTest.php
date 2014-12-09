@@ -2,8 +2,7 @@
 
 
 use Bone\Db\Adapter\MySQL;
-use Bone\Db\Adapter\AbstractDbAdapter;
-use Codeception\Util\Stub;
+
 
 class BoneMvcDbAdapterMySQLTest extends \Codeception\TestCase\Test
 {

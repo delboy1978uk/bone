@@ -41,4 +41,8 @@ class BoneMvcApplicationTest extends \Codeception\TestCase\Test
         $this->assertInstanceOf('\Bone\Mvc\Application',Application::ahoy($config));
     }
 
+
+
 }
+
+
