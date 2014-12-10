@@ -96,6 +96,32 @@ class Dispatcher
 
 
     /**
+     * @return string
+     */
+    private function getResponseBody()
+    {
+        /** @var \stdClass $view_vars  */
+        $view_vars = $this->controller->view;
+
+        $response_body = $this->controller->getBody();
+
+        if($this->controller->hasViewEnabled())
+        {
+            $view = $this->config['controller'].'/'.$this->config['action'].'.twig';
+            $response_body = $this->controller->getTwig()->render($view, (array) $view_vars);
+        }
+
+        if($this->controller->hasLayoutEnabled())
+        {
+            $response_body = $this->templateCheck($this->controller,$response_body);
+        }
+        return $response_body;
+    }
+
+
+
+
+    /**
      *
      */
     public function fireCannons()
@@ -113,21 +139,9 @@ class Dispatcher
 
             $this->response->setHeaders($this->controller->getHeaders());
 
-            /** @var \stdClass $view_vars  */
-            $view_vars = $this->controller->view;
+            $response_body = $this->getResponseBody();
 
-            $response_body = $this->controller->getBody();
 
-            if($this->controller->hasViewEnabled())
-            {
-                $view = $this->config['controller'].'/'.$this->config['action'].'.twig';
-                $response_body = $this->controller->getTwig()->render($view, (array) $view_vars);
-            }
-
-            if($this->controller->hasLayoutEnabled())
-            {
-                $response_body = $this->templateCheck($this->controller,$response_body);
-            }
         }
         catch(Exception $e)
         {
@@ -189,7 +203,7 @@ class Dispatcher
      */
     private function setNotFound()
     {
-        $this->config['controller_name'] = '\App\Controller\ErrorController';
+        $this->config['controller_name'] = class_exists('\App\Controller\ErrorController') ? '\App\Controller\ErrorController' : '\Bone\Mvc\Controller';
         $this->config['action_name'] = 'notFoundAction';
         $this->config['controller'] = 'error';
         $this->config['action'] = 'not-found';

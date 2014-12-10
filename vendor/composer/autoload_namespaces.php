@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
+    'TokenReflection' => array($vendorDir . '/andrewsville/php-token-reflection'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
     'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
@@ -20,6 +21,11 @@ return array(
     'Pimple' => array($vendorDir . '/delboy1978uk/barnacle/src'),
     'PHPMD\\' => array($vendorDir . '/phpmd/phpmd/src/main/php'),
     'PDepend\\' => array($vendorDir . '/pdepend/pdepend/src/main/php'),
+    'Go' => array($vendorDir . '/lisachenko/go-aop-php/src'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src'),
+    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
+    'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib'),
+    'Dissect' => array($vendorDir . '/jakubledl/dissect/src'),
     'Codeception' => array($vendorDir . '/codeception/codeception/src'),
+    'AspectMock' => array($vendorDir . '/codeception/aspect-mock/src'),
 );

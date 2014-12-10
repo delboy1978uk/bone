@@ -7,11 +7,10 @@
 
 namespace Bone\Mvc;
 
-use Bone\ObjectFactory;
 use Bone\Exception as Insult;
 
 
-class ControllerFactory extends ObjectFactory
+class ControllerFactory
 {
     /**
      * @param $controller_name

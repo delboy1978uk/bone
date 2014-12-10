@@ -9,12 +9,13 @@
     ],
     "require": {
 	"delboy1978uk/barnacle": "*",
-        "twig/twig": "1.*",
-	"codeception/codeception": "*"
+        "twig/twig": "1.*"
     },
     "require-dev": {
+	"codeception/codeception": "*",
         "phpmd/phpmd" : "@stable",
-        "squizlabs/php_codesniffer": "1.*"
+        "squizlabs/php_codesniffer": "1.*",
+	"codeception/aspect-mock": "*"
     },
     "autoload": {
         "psr-4": {

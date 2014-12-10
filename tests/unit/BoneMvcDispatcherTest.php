@@ -3,7 +3,8 @@
 use \Bone\Mvc\Dispatcher;
 use \Bone\Mvc\Request;
 use \Bone\Mvc\Response;
-use Codeception\Util\Stub;
+use \Bone\Mvc\Response\Headers;
+use AspectMock\Test;
 
 class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 {
@@ -23,34 +24,28 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
+        Test::spec('\App\Controller\ErrorController');
 
-        $get = array('getParam1' => 'getParam1Value');
-        $post = array('postParam1' => 'postParam1Value');
-        $cookie = array('cookieParam1' => 'cookieParam1Value');
-        $server = array('serverParam1' => 'serverParam1Value');
-        $this->request = new Request( $get, $post, $cookie, $server);
-        $this->response = Stub::make('\Bone\Mvc\Response');
+
+        $this->request = Test::double('\Bone\Mvc\Request', array('getController' => 'index','getAction' => 'index'))->make();
+        $this->response = Test::double('\Bone\Mvc\Response')->make();
+//        $this->dispatcher = new Dispatcher($this->request,$this->response);
     }
 
     protected function _after()
     {
+        Test::clean();
     }
 
-    /**
-     *  @todo how the feck do we test this?
-     */
-    public function testDispatcherInstantiation()
-    {
-//        $this->dispatcher = new Dispatcher($this->request,$this->response); // this throws an exception?!
-//        $this->assertInstanceOf('Bone\Mvc\Dispatcher',$this->dispatcher);
-    }
 
     /**
-     *  @todo how the feck do we test this?
+     *  check it be runnin through setting the destination
      */
     public function testValidateDestination()
     {
-
+        Test::double('\Bone\Mvc\Request', array('getController' => 'index','getAction' => 'index'));
+        Test::spec('\App\Controller\ErrorController');
+//        $this->assertNull($this->dispatcher->validateDestination());
     }
 
 
@@ -59,7 +54,6 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
      */
     public function testFireCannons()
     {
-
     }
 
 }

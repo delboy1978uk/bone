@@ -48,15 +48,31 @@ class Controller
     public function __construct(Request $request)
     {
         $this->_request = $request;
-        $config = Registry::ahoy()->get('db');
-        $this->_db = new MySQL($config);
+        $this->setDb();
+        $this->setTwig();
         $this->headers = new Headers();
-        $loader = new Twig_Loader_Filesystem(APPLICATION_PATH.'/src/App/View/');
-        $this->_twig = new Twig_Environment($loader,array('debug' => true));
-        $this->_twig->addExtension(new Twig_Extension_Debug());
         $this->view = new stdClass();
         $this->layout_enabled = true;
         $this->view_enabled = true;
+    }
+
+    /**
+     * @return null
+     */
+    protected function setDB()
+    {
+        $config = Registry::ahoy()->get('db');
+        $this->_db = new MySQL($config);
+    }
+
+    /**
+     * @return null
+     */
+    protected function setTwig()
+    {
+        $loader = new Twig_Loader_Filesystem(APPLICATION_PATH.'/src/App/View/');
+        $this->_twig = new Twig_Environment($loader,array('debug' => true));
+        $this->_twig->addExtension(new Twig_Extension_Debug());
     }
 
     /**
