@@ -71,33 +71,35 @@ class Request
      */
     public function getRawData($var, $key)
     {
-        switch(strtolower($var))
-        {
-            case 'get':
-                $array = $this->_get;
-                break;
-
-            case 'post':
-                $array = $this->_post;
-                break;
-
-            case 'cookie':
-                $array = $this->_cookie;
-                break;
-
-            case 'server':
-                $array = $this->_server;
-                break;
-
-            default:
-                return null;
-        }
+        $array = $this->getRawType($var);
 
         if(isset($array[$key]))
         {
             return $array[$key];
         }
         return null;
+    }
+
+
+    private function getRawType($var)
+    {
+        switch(strtolower($var))
+        {
+            case 'get':
+                return $this->_get;
+
+            case 'post':
+                return $this->_post;
+
+            case 'cookie':
+                return $this->_cookie;
+
+            case 'server':
+                return $this->_server;
+
+            default:
+                return null;
+        }
     }
 
 
