@@ -78,7 +78,7 @@ class Controller
     /**
      * @return \PDO
      */
-    protected function getDbAdapter()
+    public function getDbAdapter()
     {
         return $this->_db->getConnection();
     }
