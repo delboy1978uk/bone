@@ -145,7 +145,7 @@ class Route
 
 
     /**
-     *
+     *  break the url t' smithereens! garrr!
      */
     private function setStrings()
     {
@@ -154,29 +154,40 @@ class Route
          */
         foreach($this->parts as $part)
         {
-            /*
-             *  look fer a colon
-             */
-            if($part && strstr($part,':'))
-            {
-                /*
-                 * Make it look fer /something
-                 */
-                $this->strings[0] .= Url::SLASH_WORD;
-            }
-            elseif($part)
-            {
-                /*
-                 * make it look fer /part
-                 */
-                $this->strings[0] .= '\/'.$part;
-            }
+            $this->checkPart($part);
         }
+
         /*
-         *  if there's nuthin', we must be on the feckin' home page
+         *  if there's still nuthin', we must be on the feckin' home page
          */
         $this->strings[0] = ($this->strings[0] == '') ? '\/' : $this->strings[0];
     }
+
+
+    /**
+     * @param string $part
+     */
+    private function checkPart($part)
+    {
+        /*
+         *  look fer a colon
+         */
+        if($part && strstr($part,':'))
+        {
+            /*
+             * Make it look fer /something
+             */
+            $this->strings[0] .= Url::SLASH_WORD;
+        }
+        elseif($part)
+        {
+            /*
+             * make it look fer /part
+             */
+            $this->strings[0] .= '\/'.$part;
+        }
+    }
+
 
 
     /**
