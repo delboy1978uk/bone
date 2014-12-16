@@ -71,9 +71,25 @@ class Route
             0 => '',
         );
 
-        /**
-         *  Check fer an optional var [/:var] in the configgered route
-         */
+        $name = $this->removeOptionalFromName($name);
+
+        $this->setParts($name);
+
+        $this->setStrings();
+
+        $this->setOptionalStrings();
+
+
+    }
+
+
+    /**
+     * Check fer an optional var [/:var] in the configgered route
+     * @param string $name
+     * @return string
+     */
+    private function removeOptionalFromName($name)
+    {
         $this->regex = new Regex(Url::SQUARE_BRACKETS);
         if($matches = $this->regex->getMatches($name))
         {
@@ -84,50 +100,7 @@ class Route
             $this->optional = str_replace('/','',$matches[1]);
             $name = str_replace('[/'.$this->optional.']','', $name);
         }
-
-        /**
-         *  blow the feckin' route to smithereens
-         */
-        $this->parts = explode('/',$name);
-
-
-        /**
-         * Sift through the wreckage
-         */
-        foreach($this->parts as $part)
-        {
-            /**
-             *  look fer a colon
-             */
-            if($part && strstr($part,':'))
-            {
-                /**
-                 * Make it look fer /something
-                 */
-                $this->strings[0] .= Url::SLASH_WORD;
-            }
-            elseif($part)
-            {
-                /**
-                 * make it look fer /part
-                 */
-                $this->strings[0] .= '\/'.$part;
-            }
-        }
-        /**
-         *  if there's nuthin', we must be on the feckin' home page
-         */
-        $this->strings[0] = ($this->strings[0] == '') ? '\/' : $this->strings[0];
-
-        /**
-         *  Make another string t' check fer
-         */
-        if($this->optional)
-        {
-            $this->strings[1] = $this->strings[0].Url::SLASH_WORD;
-            //reverse the fecker, if the longer one matches first, good!
-            $this->strings = array_reverse($this->strings);
-        }
+        return $name;
     }
 
 
@@ -159,12 +132,68 @@ class Route
     }
 
 
+    /**
+     * @param $name
+     */
+    private function setParts($name)
+    {
+        /**
+         *  blow the feckin' route to smithereens
+         */
+        $this->parts = explode('/',$name);
+    }
 
 
+    /**
+     *
+     */
+    private function setStrings()
+    {
+        /*
+         * Sift through the wreckage
+         */
+        foreach($this->parts as $part)
+        {
+            /*
+             *  look fer a colon
+             */
+            if($part && strstr($part,':'))
+            {
+                /*
+                 * Make it look fer /something
+                 */
+                $this->strings[0] .= Url::SLASH_WORD;
+            }
+            elseif($part)
+            {
+                /*
+                 * make it look fer /part
+                 */
+                $this->strings[0] .= '\/'.$part;
+            }
+        }
+        /*
+         *  if there's nuthin', we must be on the feckin' home page
+         */
+        $this->strings[0] = ($this->strings[0] == '') ? '\/' : $this->strings[0];
+    }
 
 
-
-
+    /**
+     *  checks fer the optional stuff
+     */
+    private function setOptionalStrings()
+    {
+        /*
+         *  Make another string t' check fer
+         */
+        if($this->optional)
+        {
+            $this->strings[1] = $this->strings[0].Url::SLASH_WORD;
+            //reverse the fecker, if the longer one matches first, good!
+            $this->strings = array_reverse($this->strings);
+        }
+    }
 
 
 
