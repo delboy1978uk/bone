@@ -46,11 +46,10 @@ class Dispatcher
     }
 
 
-
-
-
-
-    public function validateDestination()
+    /**
+     *  Gaaarrr! Check the Navigator be readin' the map!
+     */
+    public function checkNavigator()
     {
         // can we find th' darned controller?
         if(!$this->checkControllerExists())
@@ -58,7 +57,11 @@ class Dispatcher
             $this->setNotFound();
             return;
         }
+
+        // gaaarr! there be the controller!
         $this->controller = new $this->config['controller_name']($this->request);
+
+        // where's the bloody action?
         if(!$this->checkActionExists())
         {
             $this->setNotFound();
@@ -128,38 +131,54 @@ class Dispatcher
     {
         try
         {
-            // Check we can call the controller
-            $this->validateDestination();
+            // Where be the navigator? Be we on course?
+            $this->checkNavigator();
 
-            // run th' controller action
-            $action = $this->config['action_name'];
-            $this->controller->init();
-            $this->controller->$action();
-            $this->controller->postDispatch();
+            // boom! direct hit Cap'n! Be gettin' the booty!
+            $this->plunderEnemyShip();
 
+            // report back to th' cap'n
             $this->response->setHeaders($this->controller->getHeaders());
 
-            $response_body = $this->getResponseBody();
-
-
+            // show th' cap'n th' booty
+            $booty = $this->getResponseBody();
         }
         catch(Exception $e)
         {
-            $this->request->setParam('error',$e);
-            $dispatch = new \App\Controller\ErrorController($this->request);
-            $dispatch->errorAction();
-            /** @var \stdClass $view_vars  */
-            $view_vars = (array) $dispatch->view;
-            $view_vars = array_merge($view_vars,array('error' => $e));
-            $view = 'error/error.twig';
-            $response_body = $dispatch->getTwig()->render($view, $view_vars);
-            $response_body = $this->templateCheck($dispatch,$response_body);
-            
+            // Feck! We be sinking Cap'n!
+            $booty = $this->sinkingShip();
         }
 
-        $this->response->setBody($response_body);
-
+        $this->response->setBody($booty);
         $this->response->send();
+    }
+
+
+
+
+    private function plunderEnemyShip()
+    {
+        // run th' controller action
+        $action = $this->config['action_name'];
+        $this->controller->init();
+        $this->controller->$action();
+        $this->controller->postDispatch();
+    }
+
+
+
+
+    public function sinkingShip()
+    {
+        $this->request->setParam('error',$e);
+        $dispatch = new \App\Controller\ErrorController($this->request);
+        $dispatch->errorAction();
+        /** @var \stdClass $view_vars  */
+        $view_vars = (array) $dispatch->view;
+        $view_vars = array_merge($view_vars,array('error' => $e));
+        $view = 'error/error.twig';
+        $response_body = $dispatch->getTwig()->render($view, $view_vars);
+        return $this->templateCheck($dispatch,$response_body);
     }
 
 
