@@ -146,7 +146,7 @@ class Dispatcher
         catch(Exception $e)
         {
             // Feck! We be sinking Cap'n!
-            $booty = $this->sinkingShip();
+            $booty = $this->sinkingShip($e);
         }
 
         $this->response->setBody($booty);
@@ -168,7 +168,7 @@ class Dispatcher
 
 
 
-    public function sinkingShip()
+    public function sinkingShip($e)
     {
         $this->request->setParam('error',$e);
         $dispatch = new \App\Controller\ErrorController($this->request);
