@@ -3,6 +3,7 @@
 use AspectMock\Test;
 use Bone\Mvc\Controller;
 use Bone\Mvc\Request;
+use Bone\Mvc\Response\Headers;
 
 class BoneMvcControllerTest extends \Codeception\TestCase\Test
 {
@@ -18,17 +19,18 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        Test::double('\Bone\Mvc\Request', ['getParams' => new StdClass(),'getParam' => 'rum']);
-        Test::double('PDO');
-        Test::double('\Twig_Loader_Filesystem',['setPaths' => null]);
-        Test::double('\Twig_Environment');
-        Test::double('\Twig_Extension_Debug');
-        $this->controller = Test::double(new Controller(new Request(array(),array(),array(),array())) );
+        Test::double(new Request([],[],[],[]), ['getParams' => new StdClass(),'getParam' => 'rum']);
+        test::double('Bone\Db\Adapter\AbstractDbAdapter',['__construct' => null]);
+        Test::double(new PDO('mysql:host=localhost;database=bone_db'),['__construct' => null]);
+        Test::double(new Twig_Loader_Filesystem(),['__construct' => null]);
+        Test::double(new Twig_Environment(),['__construct' => null, 'addExtension' => null]);
+        Test::double('Twig_Extension_Debug');
+        $this->controller = new Controller(new Request([],[],[],[])) ;
     }
 
     protected function _after()
     {
-
+        Test::clean();
     }
 
 
@@ -46,13 +48,14 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetDbAdapter()
     {
-//        $this->assertInstanceOf('PDO',$this->controller->getDbAdapter());
+        $this->assertInstanceOf('PDO',$this->controller->getDbAdapter());
     }
+
 
 
     public function testGetTwig()
     {
-//        $this->assertInstanceOf('\Twig_Environment',$this->controller->getTwig());
+        $this->assertInstanceOf('Twig_Environment',$this->controller->getTwig());
     }
 
 

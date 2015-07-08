@@ -48,7 +48,6 @@ class Controller
     public function __construct(Request $request)
     {
         $this->_request = $request;
-        $this->setDb();
         $this->setTwig();
         $this->headers = new Headers();
         $this->view = new stdClass();
@@ -71,7 +70,7 @@ class Controller
     protected function setTwig()
     {
         $loader = new Twig_Loader_Filesystem(APPLICATION_PATH.'/src/App/View/');
-        $this->_twig = new Twig_Environment($loader,array('debug' => true));
+        $this->_twig = new Twig_Environment($loader,array('debug' => true));die('ok');
         $this->_twig->addExtension(new Twig_Extension_Debug());
     }
 
@@ -80,6 +79,10 @@ class Controller
      */
     public function getDbAdapter()
     {
+        if(!$this->_db)
+        {
+            $this->setDB();
+        }
         return $this->_db->getConnection();
     }
 

@@ -23,6 +23,7 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
 
     protected function _after()
     {
+        Test::clean();
     }
 
     // test object can be created 

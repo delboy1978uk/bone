@@ -29,7 +29,6 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
         $this->request = Test::double('\Bone\Mvc\Request', array('getController' => 'index','getAction' => 'index'))->make();
         $this->response = Test::double('\Bone\Mvc\Response')->make();
-//        $this->dispatcher = new Dispatcher($this->request,$this->response);
     }
 
     protected function _after()
@@ -54,6 +53,9 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
      */
     public function testFireCannons()
     {
+//        $this->dispatcher = new Dispatcher($this->request,$this->response);
+
+//        $this->dispatcher = null;
     }
 
 }
