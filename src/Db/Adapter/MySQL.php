@@ -10,7 +10,7 @@ class MySQL extends AbstractDbAdapter
         $host = $this->getHost();
         $db = $this->getDatabase();
         $user = $this->getUser();
-        $pass = $this->getPass();
+        $pass = $this->getPass();die('mysql:host='.$host.';dbname='.$db. $user. $pass);
         $this->connection = new PDO('mysql:host='.$host.';dbname='.$db, $user, $pass);
     }
 
