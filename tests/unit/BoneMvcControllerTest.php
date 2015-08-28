@@ -46,8 +46,18 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetDbAdapter()
     {
-        try{$db = $this->controller->getDbAdapter();die(var_dump($db));}catch(\Exception $e){die(var_dump($e));}
-        $this->assertInstanceOf('PDO',$db);
+        Test::double('Bone\Registry',['get' => [
+            'host'     => '127.0.0.1',
+            'database' => 'bone_db',
+            'user'     => 'travis',
+            'pass'     => 'drinkgrog',
+        ]]);
+        try{
+            $db = $this->controller->getDbAdapter();
+            die(var_dump($db));
+            $this->assertInstanceOf('PDO',$db);
+        }catch(\Exception $e){die(var_dump($e));}
+
     }
 
 
