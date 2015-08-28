@@ -138,7 +138,7 @@ class Controller
 
     public function hasLayoutEnabled()
     {
-        return ($this->layout_enabled == true);
+        return ($this->layout_enabled === true);
     }
 
     public function enableLayout()
@@ -153,7 +153,7 @@ class Controller
 
     public function hasViewEnabled()
     {
-        return ($this->view_enabled == true);
+        return ($this->view_enabled === true);
     }
 
     public function enableView()

@@ -15,5 +15,5 @@ abstract class AbstractSeparator
         $this->separator = $separator;
     }
 
-    public abstract function filter($value);
+    abstract public function filter($value);
 }

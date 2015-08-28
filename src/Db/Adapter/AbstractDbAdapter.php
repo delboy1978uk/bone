@@ -44,12 +44,12 @@ abstract class AbstractDbAdapter implements DbAdapterInterface
     /**
      * @return mixed
      */
-    public abstract function openConnection();
+    abstract public function openConnection();
 
     /**
      * @return mixed
      */
-    public abstract function closeConnection();
+    abstract public function closeConnection();
 
     /**
      * @return bool

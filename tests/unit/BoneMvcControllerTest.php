@@ -20,8 +20,9 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        Test::double(new Request([],[],[],[]), ['getParams' => new StdClass(),'getParam' => 'rum']);
-        $this->controller = new Controller(new Request([],[],[],[])) ;
+        $request = new Request([],[],[],[]);
+        $request->setParam('drink','rum');
+        $this->controller = new Controller($request) ;
     }
 
     protected function _after()
