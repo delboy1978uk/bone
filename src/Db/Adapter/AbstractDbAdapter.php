@@ -78,7 +78,7 @@ abstract class AbstractDbAdapter implements DbAdapterInterface
      */
     public function getConnection()
     {
-        if(!$this->connection)
+        if(!$this->isConnected())
         {
             $this->openConnection();
         }

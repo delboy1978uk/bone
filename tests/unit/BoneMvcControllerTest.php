@@ -2,6 +2,7 @@
 
 use AspectMock\Test;
 use Bone\Mvc\Controller;
+use Bone\Mvc\Registry;
 use Bone\Mvc\Request;
 use Bone\Mvc\Response\Headers;
 
@@ -46,12 +47,12 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetDbAdapter()
     {
-        Test::double('Bone\MVC\Registry',['get' => [
-            'host'     => '127.0.0.1',
-            'database' => 'bone_db',
-            'user'     => 'travis',
-            'pass'     => 'drinkgrog',
-        ]]);
+        Test::double('Bone\Db\Adapter\MySQL',[
+            'getHost' => '127.0.0.1',
+            'getDatabase' => 'bone_db',
+            'getUser'     => 'travis',
+            'getPass'     => 'drinkgrog',
+        ]);
         try{
             $db = $this->controller->getDbAdapter();
             $this->assertInstanceOf('PDO',$db);

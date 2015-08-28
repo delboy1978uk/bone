@@ -70,7 +70,7 @@ class Controller
     protected function setTwig()
     {
         $loader = new Twig_Loader_Filesystem(APPLICATION_PATH.'/src/App/View/');
-        $this->_twig = new Twig_Environment($loader,array('debug' => true));die('ok');
+        $this->_twig = new Twig_Environment($loader,array('debug' => true));
         $this->_twig->addExtension(new Twig_Extension_Debug());
     }
 
