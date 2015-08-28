@@ -1,7 +1,7 @@
 <?php
 // This is global bootstrap for autoloading
 
-//include __DIR__.'/../vendor/autoload.php'; // composer autoload
+include __DIR__.'/../vendor/autoload.php'; // composer autoload
 
 define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
 
