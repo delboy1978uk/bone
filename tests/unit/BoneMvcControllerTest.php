@@ -21,9 +21,6 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     protected function _before()
     {
         Test::double(new Request([],[],[],[]), ['getParams' => new StdClass(),'getParam' => 'rum']);
-        Test::double(new Twig_Loader_Filesystem(),['__construct' => null]);
-        Test::double(new Twig_Environment(),['__construct' => null, 'addExtension' => null]);
-        Test::double('Twig_Extension_Debug');
         $this->controller = new Controller(new Request([],[],[],[])) ;
     }
 
@@ -53,10 +50,8 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
             'getUser'     => 'travis',
             'getPass'     => 'drinkgrog',
         ]);
-        try{
-            $db = $this->controller->getDbAdapter();
-            $this->assertInstanceOf('PDO',$db);
-        }catch(\Exception $e){die(var_dump($e));}
+        $db = $this->controller->getDbAdapter();
+        $this->assertInstanceOf('PDO',$db);
 
     }
 
@@ -64,7 +59,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetTwig()
     {
-//        $this->assertInstanceOf('Twig_Environment',$this->controller->getTwig());
+        $this->assertInstanceOf('Twig_Environment',$this->controller->getTwig());
     }
 
 
@@ -95,7 +90,8 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetHeaders()
     {
-//        $this->assertInstanceOf('\Bone\Mvc\Response\Headers',$this->controller->getHeaders());
+        $head = $this->controller->getHeaders();
+        $this->assertInstanceOf('Bone\Mvc\Response\Headers',$head);
     }
 
 
