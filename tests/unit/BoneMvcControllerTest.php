@@ -46,7 +46,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetDbAdapter()
     {
-        Test::double('Bone\Registry',['get' => [
+        Test::double('Bone\MVC\Registry',['get' => [
             'host'     => '127.0.0.1',
             'database' => 'bone_db',
             'user'     => 'travis',
@@ -54,7 +54,6 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         ]]);
         try{
             $db = $this->controller->getDbAdapter();
-            die(var_dump($db));
             $this->assertInstanceOf('PDO',$db);
         }catch(\Exception $e){die(var_dump($e));}
 
