@@ -20,8 +20,6 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     protected function _before()
     {
         Test::double(new Request([],[],[],[]), ['getParams' => new StdClass(),'getParam' => 'rum']);
-        Test::double('Bone\Db\Adapter\AbstractDbAdapter',['__construct' => null]);
-        Test::double(new PDO('mysql:host=localhost;database=bone_db','travis','drinkgrog'),['__construct' => null]);
         Test::double(new Twig_Loader_Filesystem(),['__construct' => null]);
         Test::double(new Twig_Environment(),['__construct' => null, 'addExtension' => null]);
         Test::double('Twig_Extension_Debug');
