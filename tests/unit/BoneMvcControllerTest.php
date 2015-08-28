@@ -46,7 +46,8 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetDbAdapter()
     {
-        $this->assertInstanceOf('PDO',$this->controller->getDbAdapter());
+        try{$db = $this->controller->getDbAdapter();die(var_dump($db));}catch(\Exception $e){die(var_dump($e));}
+        $this->assertInstanceOf('PDO',$db);
     }
 
 
