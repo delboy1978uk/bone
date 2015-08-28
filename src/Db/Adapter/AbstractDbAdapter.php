@@ -15,21 +15,20 @@ abstract class AbstractDbAdapter implements DbAdapterInterface
      */
     protected  $connection;
     /**
-     * @var
+     * @var string
      */
     private   $host;
     /**
-     * @var
+     * @var string
      */
     private   $database;
     /**
-     * @var
+     * @var string
      */
     private   $user;
-    /**
-     * @var
-     */
-    private   $pass;
+
+    /** @var string $pass */
+    private $pass;
 
     /**
      * @param $credentials
