@@ -79,6 +79,23 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     }
 
 
+    public function testPlunderEnemyShip()
+    {
+        $loader = new Twig_Loader_String();
+        $twig = new Twig_Environment($loader);
+        Registry::ahoy()->set('templates','blah');
+
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $this->setPrivateProperty($dispatcher,'config',[
+            'action_name' => 'init',
+        ]);
+        $controller = new Controller($this->request);
+        $this->setPrivateProperty($controller,'_twig',$twig);
+        $this->setPrivateProperty($dispatcher,'controller',$controller);
+        $this->assertNull($this->invokeMethod($dispatcher,'plunderEnemyShip'));
+    }
+
+
     /**
      *  check it be runnin through setting the destination
      */
