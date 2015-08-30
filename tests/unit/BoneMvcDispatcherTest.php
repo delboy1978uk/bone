@@ -1,8 +1,10 @@
 <?php
 
 use Bone\Mvc\Dispatcher;
+use Bone\Mvc\Controller;
 use Bone\Mvc\Request;
 use Bone\Mvc\Response;
+use Bone\Mvc\Registry;
 use Bone\Mvc\Response\Headers;
 use AspectMock\Test;
 
@@ -48,7 +50,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testCheckActionExists()
     {
-        // check for an obviouslly existant class
+        // check for an obviously existent class
         $dispatcher = new Dispatcher($this->request,$this->response);
         $this->setPrivateProperty($dispatcher,'controller',new DateTime());
         $this->setPrivateProperty($dispatcher,'config',[
@@ -62,6 +64,18 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     {
         $dispatcher = new Dispatcher($this->request,$this->response);
         $this->assertNull($this->invokeMethod($dispatcher,'setNotFound'));
+    }
+
+
+    public function testTemplateCheck()
+    {
+        $loader = new Twig_Loader_String();
+        $twig = new Twig_Environment($loader);
+        Registry::ahoy()->set('templates','blah');
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $controller = new Controller($this->request);
+        $this->setPrivateProperty($controller,'_twig',$twig);
+        $this->assertEquals('layouts/b.twig',$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
     }
 
 
