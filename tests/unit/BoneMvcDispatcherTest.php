@@ -58,6 +58,13 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     }
 
 
+    public function testSetNotFound()
+    {
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $this->assertNull($this->invokeMethod($dispatcher,'setNotFound'));
+    }
+
+
     /**
      *  check it be runnin through setting the destination
      */
