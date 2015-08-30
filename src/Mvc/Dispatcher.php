@@ -171,14 +171,22 @@ class Dispatcher
     public function sinkingShip($e)
     {
         $this->request->setParam('error',$e);
-        $dispatch = new \App\Controller\ErrorController($this->request);
-        $dispatch->errorAction();
-        /** @var \stdClass $view_vars  */
-        $view_vars = (array) $dispatch->view;
-        $view_vars = array_merge($view_vars,array('error' => $e));
-        $view = 'error/error.twig';
-        $response_body = $dispatch->getTwig()->render($view, $view_vars);
-        return $this->templateCheck($dispatch,$response_body);
+//        $dispatch = new \App\Controller\ErrorController($this->request);
+//        $dispatch->errorAction();
+//        /** @var \stdClass $view_vars  */
+//        $view_vars = (array) $dispatch->view;
+//        $view_vars = array_merge($view_vars,array('error' => $e));
+//        $view = 'error/error.twig';
+//        $response_body = $dispatch->getTwig()->render($view, $view_vars);
+//        return $this->templateCheck($dispatch,$response_body);
+
+        // @todo this needs testing manually with bonemvc skeleton
+        $this->config['controller_name'] = class_exists('\App\Controller\ErrorController') ? '\App\Controller\ErrorController' : '\Bone\Mvc\Controller';
+        $this->config['action_name'] = 'errorAction';
+        $this->config['controller'] = 'error';
+        $this->config['action'] = 'error';
+        $this->controller = new $this->config['controller_name']($this->request);
+
     }
 
 

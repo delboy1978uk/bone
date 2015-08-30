@@ -99,6 +99,16 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     /**
      *  check it be runnin through setting the destination
      */
+    public function testSinkingShip()
+    {
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $this->assertNull($this->invokeMethod($dispatcher,'sinkingShip',['argh']));
+    }
+
+
+    /**
+     *  check it be runnin through setting the destination
+     */
     public function testValidateDestination()
     {
         Test::double('\Bone\Mvc\Request', array('getController' => 'index','getAction' => 'index'));
