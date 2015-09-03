@@ -109,11 +109,38 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     /**
      *  check it be runnin through setting the destination
      */
-    public function testValidateDestination()
+    public function testCheckNavigator()
     {
-        Test::double('\Bone\Mvc\Request', array('getController' => 'index','getAction' => 'index'));
-        Test::spec('\App\Controller\ErrorController');
-//        $this->assertNull($this->dispatcher->validateDestination());
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $this->setPrivateProperty($dispatcher,'config',[
+            'controller_name' => 'no controller',
+            'action_name' => 'and no action',
+        ]);
+        $this->assertNull($dispatcher->checkNavigator());
+        $this->setPrivateProperty($dispatcher,'config',[
+            'controller_name' => '\Bone\Mvc\Controller',
+            'action_name' => 'and no action',
+        ]);
+        $this->assertNull($dispatcher->checkNavigator());
+        $this->setPrivateProperty($dispatcher,'config',[
+            'controller_name' => '\Bone\Mvc\Controller',
+            'action_name' => 'init',
+        ]);
+    }
+
+
+    public function testGetResponseBody()
+    {
+        $loader = new Twig_Loader_String();
+        $twig = new Twig_Environment($loader);
+        Registry::ahoy()->set('templates','blah');
+        $controller = new Controller($this->request);
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $this->setPrivateProperty($dispatcher,'controller',$controller);
+        $this->setPrivateProperty($controller,'_twig',$twig);
+        $body = $this->invokeMethod($dispatcher,'getResponseBody');
+        $this->assertTrue(is_string($body));
+        $this->assertEquals('layouts/b.twig',$body);
     }
 
 
