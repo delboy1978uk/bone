@@ -108,4 +108,29 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     }
 
 
+    public function testNotFoundAction()
+    {
+        $this->assertNull($this->invokeMethod($this->controller, 'notFoundAction', []));
+    }
+
+
+    /**
+     * This method allows us to test protected and private methods without
+     * having to go through everything using public methods
+     *
+     * @param object &$object
+     * @param string $methodName
+     * @param array  $parameters
+     *
+     * @return mixed could return anything!.
+     */
+    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
+        $reflection = new ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+        return $method->invokeArgs($object, $parameters);
+    }
+
+
 }

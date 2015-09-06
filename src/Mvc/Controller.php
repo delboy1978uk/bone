@@ -184,4 +184,17 @@ class Controller
         $this->body = $body;
     }
 
+    private function errorAction()
+    {
+        $this->disableView();
+        $this->disableLayout();
+        $this->body = '500 Page Error.';
+    }
+
+    private function notFoundAction()
+    {
+        $this->disableView();
+        $this->disableLayout();
+        $this->body = '404 Page Not Found.';
+    }
 }

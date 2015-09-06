@@ -101,8 +101,10 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
      */
     public function testSinkingShip()
     {
+        Registry::ahoy()->set('templates', null);
+        Test::double(new Bone\Mvc\Controller($this->request),[ 'errorAction' => null, 'notFoundAction' => null]);
         $dispatcher = new Dispatcher($this->request,$this->response);
-        $this->assertNull($this->invokeMethod($dispatcher,'sinkingShip',['argh']));
+        $this->assertEquals('500 Page Error.',$this->invokeMethod($dispatcher,'sinkingShip',['argh']));
     }
 
 
