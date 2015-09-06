@@ -5,6 +5,7 @@ namespace Bone\Mvc;
 use Bone\Mvc\Request;
 use Bone\Mvc\Response;
 use Bone\Filter;
+use Exception;
 
 
 /**
@@ -100,6 +101,7 @@ class Dispatcher
 
     /**
      * @return string
+     * @throws \Exception
      */
     private function getResponseBody()
     {
@@ -111,7 +113,11 @@ class Dispatcher
         if($this->controller->hasViewEnabled())
         {
             $view = $this->config['controller'].'/'.$this->config['action'].'.twig';
-            $response_body = $this->controller->getTwig()->render($view, (array) $view_vars);
+            try{
+                $response_body = $this->controller->getTwig()->render($view, (array) $view_vars);
+            } catch (\Exception $e) {
+                throw $e;
+            }
         }
 
         if($this->controller->hasLayoutEnabled())

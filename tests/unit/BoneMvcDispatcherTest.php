@@ -144,14 +144,37 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     }
 
 
-    /**
-     *  @todo how the feck do we test this?
-     */
     public function testFireCannons()
     {
-//        $this->dispatcher = new Dispatcher($this->request,$this->response);
+        $loader = new Twig_Loader_String();
+        $twig = new Twig_Environment($loader);
+        Registry::ahoy()->set('templates','blah');
 
-//        $this->dispatcher = null;
+        Test::double('Bone\Mvc\Dispatcher',['checkNavigator' => null,'sinkingShip' => 'glurg']);
+
+        $headers = new Headers();
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $controller = new Controller($this->request);
+
+        $this->setPrivateProperty($controller,'headers',$headers);
+        $this->setPrivateProperty($controller,'_twig',$twig);
+        $this->setPrivateProperty($dispatcher,'controller',$controller);
+        $config = [
+            'controller_name' => 'Bone\Mvc\Controller',
+            'action_name' => 'init',
+            'controller' => 'controller',
+            'action' => 'init',
+        ];
+        $this->setPrivateProperty($dispatcher,'config',$config);
+        $this->assertNull($dispatcher->fireCannons());
+
+
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $controller = new Controller($this->request);
+        $this->setPrivateProperty($dispatcher,'controller',$controller);
+        $this->setPrivateProperty($dispatcher,'config',$config);
+
+        $dispatcher->fireCannons();
     }
 
 

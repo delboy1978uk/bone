@@ -143,12 +143,12 @@ class Controller
 
     public function enableLayout()
     {
-        $this->layout_enabled= true;
+        $this->layout_enabled = true;
     }
 
     public function disableLayout()
     {
-        $this->layout_enabled= false;
+        $this->layout_enabled = false;
     }
 
     public function hasViewEnabled()
@@ -158,12 +158,12 @@ class Controller
 
     public function enableView()
     {
-        $this->view_enabled= true;
+        $this->view_enabled = true;
     }
 
     public function disableView()
     {
-        $this->view_enabled= false;
+        $this->view_enabled = false;
     }
 
     /**
