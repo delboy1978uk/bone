@@ -153,6 +153,7 @@ class Dispatcher
         catch(Exception $e)
         {
             // Feck! We be sinking Cap'n!
+            $this->response->setHeaders($this->controller->getHeaders());
             $booty = $this->sinkingShip($e);
         }
 
