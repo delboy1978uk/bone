@@ -123,7 +123,7 @@ class Dispatcher
 
         if($this->controller->hasLayoutEnabled())
         {
-            $response_body = $this->templateCheck($this->controller,$response_body);
+            $response_body = $this->templateCheck($this->controller,$response_body, (array) $view_vars);
         }
         return $response_body;
     }
@@ -206,7 +206,7 @@ class Dispatcher
      *  @param string $content
      *  @return string
      */
-    private function templateCheck($controller,$content)
+    private function templateCheck($controller, $content, array $view_vars = [])
     {
         $response_body = '';
         //check we be usin' th' templates in th' config
@@ -214,7 +214,8 @@ class Dispatcher
         $template = ($templates != null) ? $templates[0] : null;
         if($template)
         {
-            $response_body = $controller->getTwig()->render('layouts/'.$template.'.twig',array('content' => $content));
+            $view_vars['content'] = $content;
+            $response_body = $controller->getTwig()->render('layouts/'.$template.'.twig',$view_vars);
         }
         return $response_body;
     }
@@ -227,7 +228,7 @@ class Dispatcher
 
 
     /**
-     * Sets controller to error and action to not found 
+     * Sets controller to error and action to not found
      * @return null
      */
     private function setNotFound()
