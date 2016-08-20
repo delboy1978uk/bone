@@ -2,7 +2,6 @@
 
 use Bone\Mvc\Dispatcher;
 use Bone\Mvc\Controller;
-use Bone\Mvc\Request;
 use Bone\Mvc\Response;
 use Bone\Mvc\Registry;
 use Bone\Mvc\Response\Headers;
@@ -29,7 +28,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         Test::spec('\App\Controller\ErrorController');
 
 
-        $this->request = Test::double('\Bone\Mvc\Request', array('getController' => 'index','getAction' => 'index'))->make();
+        $this->request = Test::double('\Zend\Diactoros\ServerRequest')->make();
         $this->response = Test::double('\Bone\Mvc\Response')->make();
     }
 
@@ -74,7 +73,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         Registry::ahoy()->set('templates','blah');
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
-        $this->setPrivateProperty($controller,'_twig',$twig);
+        $this->setPrivateProperty($controller,'twig',$twig);
         $this->assertEquals('layouts/b.twig',$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
     }
 
@@ -90,7 +89,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
             'action_name' => 'init',
         ]);
         $controller = new Controller($this->request);
-        $this->setPrivateProperty($controller,'_twig',$twig);
+        $this->setPrivateProperty($controller,'twig',$twig);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $this->assertNull($this->invokeMethod($dispatcher,'plunderEnemyShip'));
     }
@@ -139,7 +138,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $controller = new Controller($this->request);
         $dispatcher = new Dispatcher($this->request,$this->response);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
-        $this->setPrivateProperty($controller,'_twig',$twig);
+        $this->setPrivateProperty($controller,'twig',$twig);
         $body = $this->invokeMethod($dispatcher,'getResponseBody');
         $this->assertTrue(is_string($body));
         $this->assertEquals('layouts/b.twig',$body);
@@ -159,7 +158,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $controller = new Controller($this->request);
 
         $this->setPrivateProperty($controller,'headers',$headers);
-        $this->setPrivateProperty($controller,'_twig',$twig);
+        $this->setPrivateProperty($controller,'twig',$twig);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $config = [
             'controller_name' => 'Bone\Mvc\Controller',

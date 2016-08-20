@@ -1,7 +1,6 @@
 <?php
 
 use Bone\Mvc\ControllerFactory;
-use Bone\Mvc\Controller;
 use Codeception\Util\Stub;
 use AspectMock\Test;
 
@@ -17,8 +16,7 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        $this->request = Stub::make('\Bone\Mvc\Request');
-
+        $this->request = Stub::make('\Zend\Diactoros\ServerRequest');
     }
 
     protected function _after()
@@ -31,11 +29,11 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
         Test::double('\Twig_Loader_Filesystem');
         Test::double('\Twig_Environment');
         Test::double('\Twig_Extension_Debug');
-        Test::double('\Bone\Mvc\Controller',array('setTwig' => null));
+        Test::double('\Bone\Mvc\Controller', array('setTwig' => null));
 
         $factory = new ControllerFactory();
-        $controller = $factory->create('\Bone\Mvc\Controller',$this->request);
-        $this->assertInstanceOf('\Bone\Mvc\Controller',$controller);
+        $controller = $factory->create('\Bone\Mvc\Controller', $this->request);
+        $this->assertInstanceOf('\Bone\Mvc\Controller', $controller);
     }
 
     // test throws a feckin' wobbly
@@ -43,13 +41,10 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
     {
 
         $factory = new ControllerFactory();
-        try
-        {
-            $factory->create('\Some\Inferior\Controller',$this->request);
+        try {
+            $factory->create('\Some\Inferior\Controller', $this->request);
             $this->assertTrue(false);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             $this->assertTrue(true);
         }
 

@@ -1,7 +1,6 @@
 <?php
 
 use Bone\Mvc\ControllerFactory;
-use Bone\Mvc\Controller;
 use Codeception\Util\Stub;
 use AspectMock\Test;
 
@@ -17,7 +16,7 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        $this->request = Stub::make('\Bone\Mvc\Request');
+        $this->request = Stub::make('\Zend\Diactoros\ServerRequest');
 
     }
 

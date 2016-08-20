@@ -8,15 +8,16 @@ use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use stdClass;
+use Zend\Diactoros\ServerRequest as Request;
 
 class Controller
 {
     /**
      * @var Request
      */
-    protected $_request;
+    protected $request;
 
-    protected $_twig;
+    protected $twig;
 
     protected $controller;
 
@@ -47,7 +48,9 @@ class Controller
 
     public function __construct(Request $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
+        $this->params = (object) $this->request->getQueryParams();
+
         $this->setTwig();
         $this->headers = new Headers();
         $this->view = new stdClass();
@@ -71,8 +74,8 @@ class Controller
     {
         $view_path = file_exists(APPLICATION_PATH.'/src/App/View/') ? APPLICATION_PATH.'/src/App/View/' : '.' ;
         $loader = new Twig_Loader_Filesystem($view_path);
-        $this->_twig = new Twig_Environment($loader,array('debug' => true));
-        $this->_twig->addExtension(new Twig_Extension_Debug());
+        $this->twig = new Twig_Environment($loader,array('debug' => true));
+        $this->twig->addExtension(new Twig_Extension_Debug());
     }
 
     /**
@@ -92,7 +95,7 @@ class Controller
      */
     public function getTwig()
     {
-        return $this->_twig;
+        return $this->twig;
     }
 
 
@@ -106,7 +109,7 @@ class Controller
 
     public function getParams()
     {
-        return (object) $this->_request->getParams();
+        return (object) $this->params;
     }
 
     /**
@@ -115,7 +118,19 @@ class Controller
      */
     public function getParam($param)
     {
-        return $this->_request->getParam($param);
+        $params = $this->getParams();
+        return isset($params->$param) ? $params->$param : null;
+    }
+
+    /**
+     * @param $key
+     * @param $val
+     * @return $this
+     */
+    public function setParam($key, $val)
+    {
+        $this->params->$key = $val;
+        return $this;
     }
 
     /**

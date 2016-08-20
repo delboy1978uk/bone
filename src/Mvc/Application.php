@@ -3,6 +3,7 @@
 
 namespace Bone\Mvc;
 
+use Zend\Diactoros\ServerRequestFactory;
 
 class Application
 {
@@ -43,13 +44,9 @@ class Application
      */
     public function setSail()
     {
-        $request = new Request($_GET,$_POST,$_COOKIE,$_SERVER);
-        $router = new Router($request);
+        $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $response = new Response();
-        $dispatcher = new Dispatcher($router->dispatch(),$response);
+        $dispatcher = new Dispatcher($request, $response);
         $dispatcher->fireCannons();
     }
-
-
-
 }
