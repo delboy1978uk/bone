@@ -2,13 +2,14 @@
 
 namespace Bone\Mvc;
 
-
 use Bone\Filter;
 use Exception;
 use ReflectionClass;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\SapiEmitter;
+use Zend\Diactoros\Stream;
 
 /**
  * Class Dispatcher
@@ -103,7 +104,7 @@ class Dispatcher
             $view = $this->config['controller'] . '/' . $this->config['action'] . '.twig';
             try {
                 $response_body = $this->controller->getTwig()->render($view, (array)$view_vars);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw $e;
             }
         }
@@ -127,18 +128,17 @@ class Dispatcher
             // boom! direct hit Cap'n! Be gettin' the booty!
             $this->plunderEnemyShip();
 
-            // report back to th' cap'n
-            $this->setHeaders();
-
             // show th' cap'n th' booty
             $booty = $this->getResponseBody();
         } catch (Exception $e) {
-            // Feck! We be sinking Cap'n!
-            $this->setHeaders();
             $booty = $this->sinkingShip($e);
         }
 
         $this->response->getBody()->write($booty);
+
+        // report back to th' cap'n
+        $this->setHeaders();
+
         $emitter = new SapiEmitter();
         return $emitter->emit($this->response);
     }
@@ -146,7 +146,7 @@ class Dispatcher
     private function setHeaders()
     {
         foreach ($this->controller->getHeaders() as $key => $value) {
-            $this->response->withHeader($key, $value);
+            $this->response = $this->response->withHeader($key, $value);
         }
     }
 

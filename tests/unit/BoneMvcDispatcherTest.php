@@ -6,6 +6,7 @@ use Bone\Mvc\Registry;
 use Psr\Http\Message\ServerRequestInterface ;
 use Psr\Http\Message\ResponseInterface;
 use AspectMock\Test;
+use Zend\Diactoros\Response;
 
 class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 {
@@ -29,7 +30,8 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
 
         $this->request = Test::double('\Zend\Diactoros\ServerRequest')->make();
-        $this->response = Test::double('\Zend\Diactoros\Response')->make();
+//        $this->response = Test::double('\Zend\Diactoros\Response')->make();
+        $this->response = new Response();
     }
 
     protected function _after()
