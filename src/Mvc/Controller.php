@@ -3,26 +3,26 @@
 namespace Bone\Mvc;
 
 use Bone\Db\Adapter\MySQL;
-use Bone\Mvc\Response\Headers;
+use PDO;
+use Psr\Http\Message\RequestInterface;;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use stdClass;
+use Zend\Diactoros\Response;
 
 class Controller
 {
     /**
-     * @var Request
+     * @var RequestInterface
      */
-    protected $_request;
+    protected $request;
 
-    protected $_twig;
+    protected $twig;
 
     protected $controller;
 
     protected $action;
-
-    private $headers;
 
     public $view;
 
@@ -45,18 +45,19 @@ class Controller
      */
     protected $_db;
 
-    public function __construct(Request $request)
+    public function __construct(RequestInterface $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
+        $this->params = (object) $this->request->getQueryParams();
+
         $this->setTwig();
-        $this->headers = new Headers();
         $this->view = new stdClass();
         $this->layout_enabled = true;
         $this->view_enabled = true;
     }
 
     /**
-     * @return null
+     * @return void
      */
     protected function setDB()
     {
@@ -65,18 +66,18 @@ class Controller
     }
 
     /**
-     * @return null
+     * @return void
      */
     protected function setTwig()
     {
         $view_path = file_exists(APPLICATION_PATH.'/src/App/View/') ? APPLICATION_PATH.'/src/App/View/' : '.' ;
         $loader = new Twig_Loader_Filesystem($view_path);
-        $this->_twig = new Twig_Environment($loader,array('debug' => true));
-        $this->_twig->addExtension(new Twig_Extension_Debug());
+        $this->twig = new Twig_Environment($loader,array('debug' => true));
+        $this->twig->addExtension(new Twig_Extension_Debug());
     }
 
     /**
-     * @return \PDO
+     * @return PDO
      */
     public function getDbAdapter()
     {
@@ -92,7 +93,7 @@ class Controller
      */
     public function getTwig()
     {
-        return $this->_twig;
+        return $this->twig;
     }
 
 
@@ -106,7 +107,7 @@ class Controller
 
     public function getParams()
     {
-        return (object) $this->_request->getParams();
+        return (object) $this->params;
     }
 
     /**
@@ -115,7 +116,19 @@ class Controller
      */
     public function getParam($param)
     {
-        return $this->_request->getParam($param);
+        $params = $this->getParams();
+        return isset($params->$param) ? $params->$param : null;
+    }
+
+    /**
+     * @param $key
+     * @param $val
+     * @return $this
+     */
+    public function setParam($key, $val)
+    {
+        $this->params->$key = $val;
+        return $this;
     }
 
     /**
@@ -129,11 +142,11 @@ class Controller
     /**
      *  For loadin' th' cannon, so t' speak
      *
-     * @return Headers
+     * @return array
      */
     public function getHeaders()
     {
-        return $this->headers;
+        return $this->request->getHeaders();
     }
 
     public function hasLayoutEnabled()
