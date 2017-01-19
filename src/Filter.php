@@ -2,7 +2,6 @@
 
 namespace Bone;
 
-use Bone\Filter\String;
 use Bone\Filter\Exception as FilterException;
 
 abstract class Filter

@@ -2,8 +2,7 @@
 
 
 use Bone\Mvc\Application;
-use Bone\Mvc\Response;
-use Bone\Mvc\Response\Headers;
+use Zend\Diactoros\Response;
 use AspectMock\Test;
 
 class BoneMvcApplicationTest extends \Codeception\TestCase\Test
@@ -19,8 +18,7 @@ class BoneMvcApplicationTest extends \Codeception\TestCase\Test
     protected function _before()
     {
         $this->response = new Response();
-        $this->response->setBody('All hands on deck!');
-        $this->response->setHeaders(new Headers());
+        $this->response->getBody()->write('All hands on deck!');
     }
 
     protected function _after()

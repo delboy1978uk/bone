@@ -2,12 +2,13 @@
 
 namespace Bone\Mvc;
 
-use Bone\Mvc\Response;
-use Bone\Mvc\Router;
+
 use Bone\Filter;
 use Exception;
 use ReflectionClass;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\Response\SapiEmitter;
 
 /**
  * Class Dispatcher
@@ -18,17 +19,17 @@ class Dispatcher
     // Garrrr! An arrrray!
     private $config = array();
 
-    /** @var Request $request */
+    /** @var RequestInterface $request */
     private $request;
 
     /** @var Controller */
     private $controller;
 
-    /** @var Response $response */
+    /** @var ResponseInterface $response */
     private $response;
 
 
-    public function __construct(RequestInterface $request, Response $response)
+    public function __construct(RequestInterface $request, ResponseInterface $response)
     {
         $this->request = $request;
         $this->response = $response;
@@ -127,18 +128,26 @@ class Dispatcher
             $this->plunderEnemyShip();
 
             // report back to th' cap'n
-            $this->response->setHeaders($this->controller->getHeaders());
+            $this->setHeaders();
 
             // show th' cap'n th' booty
             $booty = $this->getResponseBody();
         } catch (Exception $e) {
             // Feck! We be sinking Cap'n!
-            $this->response->setHeaders($this->controller->getHeaders());
+            $this->setHeaders();
             $booty = $this->sinkingShip($e);
         }
 
-        $this->response->setBody($booty);
-        $this->response->send();
+        $this->response->getBody()->write($booty);
+        $emitter = new SapiEmitter();
+        return $emitter->emit($this->response);
+    }
+
+    private function setHeaders()
+    {
+        foreach ($this->controller->getHeaders() as $key => $value) {
+            $this->response->withHeader($key, $value);
+        }
     }
 
 
@@ -188,7 +197,7 @@ class Dispatcher
 
     /**
      * Sets controller to error and action to not found
-     * @return null
+     * @return void
      */
     private function setNotFound()
     {

@@ -4,6 +4,7 @@
 namespace Bone\Mvc;
 
 use Zend\Diactoros\ServerRequestFactory;
+use Zend\Diactoros\Response;
 
 class Application
 {

@@ -2,9 +2,9 @@
 
 use Bone\Mvc\Dispatcher;
 use Bone\Mvc\Controller;
-use Bone\Mvc\Response;
 use Bone\Mvc\Registry;
-use Bone\Mvc\Response\Headers;
+use Psr\Http\Message\ServerRequestInterface ;
+use Psr\Http\Message\ResponseInterface;
 use AspectMock\Test;
 
 class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
@@ -14,10 +14,10 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     */
     protected $tester;
 
-    /** @var Request */
+    /** @var ServerRequestInterface  */
     protected $request;
 
-    /** @var Response */
+    /** @var ResponseInterface */
     protected $response;
 
     /** @var Dispatcher */
@@ -29,7 +29,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
 
         $this->request = Test::double('\Zend\Diactoros\ServerRequest')->make();
-        $this->response = Test::double('\Bone\Mvc\Response')->make();
+        $this->response = Test::double('\Zend\Diactoros\Response')->make();
     }
 
     protected function _after()
@@ -153,11 +153,9 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
         Test::double('Bone\Mvc\Dispatcher',['checkNavigator' => null,'sinkingShip' => 'glurg']);
 
-        $headers = new Headers();
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
 
-        $this->setPrivateProperty($controller,'headers',$headers);
         $this->setPrivateProperty($controller,'twig',$twig);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $config = [

@@ -90,7 +90,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     public function testGetHeaders()
     {
         $head = $this->controller->getHeaders();
-        $this->assertInstanceOf('Bone\Mvc\Response\Headers',$head);
+        $this->assertTrue(is_array($head));
     }
 
 

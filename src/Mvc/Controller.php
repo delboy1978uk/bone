@@ -3,17 +3,18 @@
 namespace Bone\Mvc;
 
 use Bone\Db\Adapter\MySQL;
-use Bone\Mvc\Response\Headers;
+use PDO;
+use Psr\Http\Message\RequestInterface;;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_Extension_Debug;
 use stdClass;
-use Zend\Diactoros\ServerRequest as Request;
+use Zend\Diactoros\Response;
 
 class Controller
 {
     /**
-     * @var Request
+     * @var RequestInterface
      */
     protected $request;
 
@@ -22,8 +23,6 @@ class Controller
     protected $controller;
 
     protected $action;
-
-    private $headers;
 
     public $view;
 
@@ -46,20 +45,19 @@ class Controller
      */
     protected $_db;
 
-    public function __construct(Request $request)
+    public function __construct(RequestInterface $request)
     {
         $this->request = $request;
         $this->params = (object) $this->request->getQueryParams();
 
         $this->setTwig();
-        $this->headers = new Headers();
         $this->view = new stdClass();
         $this->layout_enabled = true;
         $this->view_enabled = true;
     }
 
     /**
-     * @return null
+     * @return void
      */
     protected function setDB()
     {
@@ -68,7 +66,7 @@ class Controller
     }
 
     /**
-     * @return null
+     * @return void
      */
     protected function setTwig()
     {
@@ -79,7 +77,7 @@ class Controller
     }
 
     /**
-     * @return \PDO
+     * @return PDO
      */
     public function getDbAdapter()
     {
@@ -144,11 +142,11 @@ class Controller
     /**
      *  For loadin' th' cannon, so t' speak
      *
-     * @return Headers
+     * @return array
      */
     public function getHeaders()
     {
-        return $this->headers;
+        return $this->request->getHeaders();
     }
 
     public function hasLayoutEnabled()
