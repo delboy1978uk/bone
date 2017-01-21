@@ -182,25 +182,14 @@ class Dispatcher
      * @param string $content
      * @return string
      */
-<<<<<<< HEAD
-    private function templateCheck($controller, $content, array $view_vars = [])
-=======
     private function templateCheck($controller, $content)
->>>>>>> psr7
     {
         $response_body = '';
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
         $template = ($templates != null) ? $templates[0] : null;
-<<<<<<< HEAD
-        if($template)
-        {
-            $view_vars['content'] = $content;
-            $response_body = $controller->getTwig()->render('layouts/'.$template.'.twig',$view_vars);
-=======
         if ($template) {
             $response_body = $controller->getTwig()->render('layouts/' . $template . '.twig', array('content' => $content));
->>>>>>> psr7
         }
         return $response_body;
     }
@@ -208,11 +197,7 @@ class Dispatcher
 
     /**
      * Sets controller to error and action to not found
-<<<<<<< HEAD
-     * @return null
-=======
      * @return void
->>>>>>> psr7
      */
     private function setNotFound()
     {
@@ -222,11 +207,4 @@ class Dispatcher
         $this->config['action'] = 'not-found';
         $this->controller = new $this->config['controller_name']($this->request);
     }
-
-
-<<<<<<< HEAD
-
 }
-=======
-}
->>>>>>> psr7
