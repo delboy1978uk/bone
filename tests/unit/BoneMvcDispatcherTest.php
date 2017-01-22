@@ -82,6 +82,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testPlunderEnemyShip()
     {
+        $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
         Registry::ahoy()->set('templates','blah');
 
         $dispatcher = new Dispatcher($this->request,$this->response);
@@ -89,7 +90,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
             'action_name' => 'init',
         ]);
         $controller = new Controller($this->request);
-        $this->setPrivateProperty($controller,'twig',$twig);
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $this->assertNull($this->invokeMethod($dispatcher,'plunderEnemyShip'));
     }
@@ -132,11 +133,12 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testGetResponseBody()
     {
+        $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
         Registry::ahoy()->set('templates','blah');
         $controller = new Controller($this->request);
         $dispatcher = new Dispatcher($this->request,$this->response);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
-        $this->setPrivateProperty($controller,'twig',$twig);
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
         $body = $this->invokeMethod($dispatcher,'getResponseBody');
         $this->assertTrue(is_string($body));
         $this->assertEquals('layouts/b.twig',$body);
@@ -145,6 +147,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testFireCannons()
     {
+        $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
         Registry::ahoy()->set('templates','blah');
 
         Test::double('Bone\Mvc\Dispatcher',['checkNavigator' => null,'sinkingShip' => 'glurg']);
@@ -152,7 +155,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
 
-        $this->setPrivateProperty($controller,'twig',$twig);
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $config = [
             'controller_name' => 'Bone\Mvc\Controller',

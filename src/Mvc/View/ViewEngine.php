@@ -22,5 +22,5 @@ interface ViewEngine
      * @param $vars
      * @return mixed
      */
-    public function render($view, $vars);
+    public function render($view, array $vars = []);
 }
