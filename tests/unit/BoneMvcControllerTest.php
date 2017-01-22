@@ -56,9 +56,9 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
 
 
-    public function testGetTwig()
+    public function testGetViewEngine()
     {
-        $this->assertInstanceOf('Twig_Environment',$this->controller->getTwig());
+        $this->assertInstanceOf('Bone\Mvc\View\ViewEngine',$this->controller->getViewEngine());
     }
 
 

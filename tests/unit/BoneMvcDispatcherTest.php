@@ -3,6 +3,7 @@
 use Bone\Mvc\Dispatcher;
 use Bone\Mvc\Controller;
 use Bone\Mvc\Registry;
+use Bone\Mvc\View\PlatesEngine;
 use Psr\Http\Message\ServerRequestInterface ;
 use Psr\Http\Message\ResponseInterface;
 use AspectMock\Test;
@@ -70,20 +71,17 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testTemplateCheck()
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
+        $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
         Registry::ahoy()->set('templates','blah');
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
-        $this->setPrivateProperty($controller,'twig',$twig);
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
         $this->assertEquals('layouts/b.twig',$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
     }
 
 
     public function testPlunderEnemyShip()
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
         Registry::ahoy()->set('templates','blah');
 
         $dispatcher = new Dispatcher($this->request,$this->response);
@@ -134,8 +132,6 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testGetResponseBody()
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
         Registry::ahoy()->set('templates','blah');
         $controller = new Controller($this->request);
         $dispatcher = new Dispatcher($this->request,$this->response);
@@ -149,8 +145,6 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testFireCannons()
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
         Registry::ahoy()->set('templates','blah');
 
         Test::double('Bone\Mvc\Dispatcher',['checkNavigator' => null,'sinkingShip' => 'glurg']);

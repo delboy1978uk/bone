@@ -103,7 +103,7 @@ class Dispatcher
         if ($this->controller->hasViewEnabled()) {
             $view = $this->config['controller'] . '/' . $this->config['action'] . '.twig';
             try {
-                $response_body = $this->controller->getTwig()->render($view, (array)$view_vars);
+                $response_body = $this->controller->getViewEngine()->render($view, (array) $view_vars);
             } catch (Exception $e) {
                 throw $e;
             }
@@ -189,7 +189,7 @@ class Dispatcher
         $templates = Registry::ahoy()->get('templates');
         $template = ($templates != null) ? $templates[0] : null;
         if ($template) {
-            $response_body = $controller->getTwig()->render('layouts/' . $template . '.twig', array('content' => $content));
+            $response_body = $controller->getViewEngine()->render('layouts/' . $template . '.twig', array('content' => $content));
         }
         return $response_body;
     }

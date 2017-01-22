@@ -27,9 +27,6 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
     // test object can be created 
     public function testCreateController()
     {
-        Test::double('\Twig_Loader_Filesystem');
-        Test::double('\Twig_Environment');
-        Test::double('\Twig_Extension_Debug');
         Test::double('\Bone\Mvc\Controller',array('setTwig' => null));
 
         $factory = new ControllerFactory();

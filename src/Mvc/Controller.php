@@ -3,40 +3,37 @@
 namespace Bone\Mvc;
 
 use Bone\Db\Adapter\MySQL;
+use Bone\Mvc\View\ViewEngine;
+use Bone\Mvc\View\PlatesEngine;
 use PDO;
 use Psr\Http\Message\RequestInterface;;
-use Twig_Loader_Filesystem;
-use Twig_Environment;
-use Twig_Extension_Debug;
 use stdClass;
-use Zend\Diactoros\Response;
 
 class Controller
 {
-    /**
-     * @var RequestInterface
-     */
+    /** @var RequestInterface */
     protected $request;
 
-    protected $twig;
+    /** @var ViewEngine $plates */
+    protected $viewEngine;
 
+    /** @var string $controller */
     protected $controller;
 
+    /** @var string $action  */
     protected $action;
 
+    /** @var stdClass $view */
     public $view;
 
+    /** @var string $body */
     private $body;
 
-    /**
-     * @var bool
-     */
-    private $layout_enabled;
+    /** @var bool */
+    private $layoutEnabled;
 
-    /**
-     * @var bool
-     */
-    private $view_enabled;
+    /** @var bool */
+    private $viewEnabled;
 
 
 
@@ -50,10 +47,10 @@ class Controller
         $this->request = $request;
         $this->params = (object) $this->request->getQueryParams();
 
-        $this->setTwig();
+        $this->initViewEngine();
         $this->view = new stdClass();
-        $this->layout_enabled = true;
-        $this->view_enabled = true;
+        $this->layoutEnabled = true;
+        $this->viewEnabled = true;
     }
 
     /**
@@ -68,12 +65,11 @@ class Controller
     /**
      * @return void
      */
-    protected function setTwig()
+    protected function initViewEngine()
     {
-        $view_path = file_exists(APPLICATION_PATH.'/src/App/View/') ? APPLICATION_PATH.'/src/App/View/' : '.' ;
-        $loader = new Twig_Loader_Filesystem($view_path);
-        $this->twig = new Twig_Environment($loader,array('debug' => true));
-        $this->twig->addExtension(new Twig_Extension_Debug());
+        $viewPath = file_exists(APPLICATION_PATH.'/src/App/View/') ? APPLICATION_PATH.'/src/App/View/' : '.' ;
+        $engine = new PlatesEngine($viewPath);
+        $this->viewEngine = $engine;
     }
 
     /**
@@ -89,11 +85,11 @@ class Controller
     }
 
     /**
-     * @return Twig_Environment
+     * @return ViewEngine
      */
-    public function getTwig()
+    public function getViewEngine()
     {
-        return $this->twig;
+        return $this->viewEngine;
     }
 
 
@@ -151,32 +147,32 @@ class Controller
 
     public function hasLayoutEnabled()
     {
-        return ($this->layout_enabled === true);
+        return ($this->layoutEnabled === true);
     }
 
     public function enableLayout()
     {
-        $this->layout_enabled = true;
+        $this->layoutEnabled = true;
     }
 
     public function disableLayout()
     {
-        $this->layout_enabled = false;
+        $this->layoutEnabled = false;
     }
 
     public function hasViewEnabled()
     {
-        return ($this->view_enabled === true);
+        return ($this->viewEnabled === true);
     }
 
     public function enableView()
     {
-        $this->view_enabled = true;
+        $this->viewEnabled = true;
     }
 
     public function disableView()
     {
-        $this->view_enabled = false;
+        $this->viewEnabled = false;
     }
 
     /**
