@@ -11,7 +11,7 @@
     "php": ">5.4",
     "delboy1978uk/barnacle": "*",
     "zendframework/zend-diactoros": "1.*",
-    "twig/twig": "1.*"
+    "league/plates": "*"
   },
   "require-dev": {
     "codeception/codeception": "*",
