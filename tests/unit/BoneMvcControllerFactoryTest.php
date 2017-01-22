@@ -1,7 +1,6 @@
 <?php
 
 use Bone\Mvc\ControllerFactory;
-use Bone\Mvc\Controller;
 use Codeception\Util\Stub;
 use AspectMock\Test;
 
@@ -17,8 +16,7 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        $this->request = Stub::make('\Bone\Mvc\Request');
-
+        $this->request = Stub::make('\Zend\Diactoros\ServerRequest');
     }
 
     protected function _after()
@@ -44,17 +42,7 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
     {
 
         $factory = new ControllerFactory();
-        try
-        {
-            $factory->create('\Some\Inferior\Controller',$this->request);
-            $this->assertTrue(false);
-        }
-        catch(Exception $e)
-        {
-            $this->assertTrue(true);
-        }
-
+        $this->expectException('Exception');
+        $factory->create('\Some\Inferior\Controller',$this->request);
     }
-
-
 }

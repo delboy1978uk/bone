@@ -2,9 +2,7 @@
 
 use AspectMock\Test;
 use Bone\Mvc\Controller;
-use Bone\Mvc\Registry;
-use Bone\Mvc\Request;
-use Bone\Mvc\Response\Headers;
+use Zend\Diactoros\ServerRequest as Request;
 
 class BoneMvcControllerTest extends \Codeception\TestCase\Test
 {
@@ -14,15 +12,15 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     protected $tester;
 
     /**
-     * @var Controller
+     * @var Controller $controller
      */
     protected $controller;
 
     protected function _before()
     {
-        $request = new Request([],[],[],[]);
-        $request->setParam('drink','rum');
+        $request = new Request();
         $this->controller = new Controller($request) ;
+        $this->controller->setParam('drink','rum');
     }
 
     protected function _after()
@@ -92,7 +90,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     public function testGetHeaders()
     {
         $head = $this->controller->getHeaders();
-        $this->assertInstanceOf('Bone\Mvc\Response\Headers',$head);
+        $this->assertTrue(is_array($head));
     }
 
 

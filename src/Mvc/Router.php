@@ -1,8 +1,10 @@
 <?php
 
 namespace Bone\Mvc;
+
 use Bone\Mvc\Router\Route;
 use Bone\Regex;
+use Psr\Http\Message\RequestInterface;
 
 class Router
 {
@@ -18,7 +20,7 @@ class Router
      *  We be needin' t' look at th' map
      *  @param Request $request
      */
-    public function __construct(Request $request)
+    public function __construct(RequestInterface $request)
     {
         $this->request = $request;
         $this->uri = $request->getURI();
@@ -179,9 +181,9 @@ class Router
         $method = $this->request->getMethod();
         if($method == "POST")
         {
-            $this->params = array_merge($this->params, $this->request->getPost());
+            $this->params = array_merge($this->params, $this->request->getServerParams());
         }
-        $this->params = array_merge($this->params, $this->request->getGet());
+        $this->params = array_merge($this->params, $this->request->getQueryParams());
     }
 
 
@@ -241,7 +243,7 @@ class Router
     /**
      *  Figger out where we be goin'
      */
-    private function parseRoute()
+    public function parseRoute()
     {
 
         // start at the home page
@@ -266,23 +268,18 @@ class Router
         }
     }
 
-
-    /**
-     *  Garrr, we be makin' sure what they says
-     *
-     * @return Request
-     */
-    public function dispatch()
+    public function getController()
     {
-        $this->parseRoute();
-        $controller = $this->controller;
-        $action = $this->action;
-
-        $this->request->setController($controller);
-        $this->request->setAction($action);
-        $this->request->setParams($this->params);
-
-        return $this->request;
+        return $this->controller;
     }
 
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    public function getParams()
+    {
+        return $this->params;
+    }
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Bone\Mvc\Request;;
 use Bone\Mvc\Router;
 use Bone\Mvc\Registry;
+use Zend\Diactoros\ServerRequest as Request;
 
 class BoneMvcRouterTest extends \Codeception\TestCase\Test
 {
@@ -55,7 +55,7 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
         $this->registry = Registry::ahoy();
         $this->registry->set('routes', $this->routes);
 
-        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->request = new Request();
 
     }
 
@@ -63,65 +63,59 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
     {
     }
 
-    // tests
-    public function testParseReturnsResponse()
-    {
-        $this->router = new Router($this->request);
-        $this->assertInstanceOf('Bone\Mvc\Request',$this->router->dispatch());
-    }
 
     public function testControllerMatch()
     {
         $this->server['REQUEST_URI'] = '/the-lone-pirate';
-        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->request = new Request();
         $this->router = new Router($this->request);
-        $request = $this->router->dispatch();
-        $this->assertInstanceOf('Bone\Mvc\Request', $request);
+        $this->router->parseRoute();
+        $this->assertEquals('error', $this->router->getController());
     }
 
     public function testControllerActionMatch()
     {
         $this->server['REQUEST_URI'] = '/treasure/chest';
-        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->request = new Request( );
         $this->router = new Router($this->request);
-        $request = $this->router->dispatch();
-        $this->assertInstanceOf('Bone\Mvc\Request', $request);
+        $this->router->parseRoute();
+        $this->assertEquals('error', $this->router->getController());
     }
 
     public function testControllerActionParamsMatch()
     {
         $this->server['REQUEST_URI'] = '/treasure/chest/value/100/contents/gold';
-        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->request = new Request();
         $this->router = new Router($this->request);
-        $request = $this->router->dispatch();
-        $this->assertInstanceOf('Bone\Mvc\Request', $request);
+        $this->router->parseRoute();
+        $this->assertEquals('error', $this->router->getController());
     }
 
     public function testHomePageMatch()
     {
         $this->server['REQUEST_URI'] = '/';
-        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->request = new Request();
         $this->router = new Router($this->request);
-        $request = $this->router->dispatch();
-        $this->assertInstanceOf('Bone\Mvc\Request', $request);
+        $this->assertEquals('index', $this->router->getController());
+        $this->assertEquals('index', $this->router->getAction());
     }
 
     public function testMandatoryParamsMatch()
     {
         $this->server['REQUEST_URI'] = '/custom/cutlass';
-        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->request = new Request();
         $this->router = new Router($this->request);
-        $request = $this->router->dispatch();
-        $this->assertInstanceOf('Bone\Mvc\Request', $request);
+        $this->router->parseRoute();
+        $this->assertEquals('error', $this->router->getController());
     }
 
     public function testOptionalParamsMatch()
     {
         $this->server['REQUEST_URI'] = '/custom/eye/patch';
-        $this->request = new Request( $this->get, $this->post, $this->cookie, $this->server);
+        $this->request = new Request();
         $this->router = new Router($this->request);
-        $request = $this->router->dispatch();
-        $this->assertInstanceOf('Bone\Mvc\Request', $request);
+        $this->router->parseRoute();
+        $this->assertEquals('error', $this->router->getController());
     }
 
 }

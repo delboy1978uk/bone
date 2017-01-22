@@ -2,12 +2,14 @@
 
 namespace Bone\Mvc;
 
-use Bone\Mvc\Request;
-use Bone\Mvc\Response;
 use Bone\Filter;
 use Exception;
 use ReflectionClass;
-
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\SapiEmitter;
+use Zend\Diactoros\Stream;
 
 /**
  * Class Dispatcher
@@ -18,33 +20,33 @@ class Dispatcher
     // Garrrr! An arrrray!
     private $config = array();
 
+    /** @var RequestInterface $request */
     private $request;
 
     /** @var Controller */
     private $controller;
 
+    /** @var ResponseInterface $response */
     private $response;
 
 
-
-
-
-
-
-    public function __construct(Request $request,Response $response)
+    public function __construct(RequestInterface $request, ResponseInterface $response)
     {
         $this->request = $request;
         $this->response = $response;
 
+        $router = new Router($request);
+        $router->parseRoute();
+
         // what controller be we talkin' about?
-        $filtered = Filter::filterString($this->request->getController(),'DashToCamelCase');
-        $this->config['controller_name'] = '\App\Controller\\'.ucwords($filtered).'Controller';
+        $filtered = Filter::filterString($router->getController(), 'DashToCamelCase');
+        $this->config['controller_name'] = '\App\Controller\\' . ucwords($filtered) . 'Controller';
 
         // whit be yer action ?
-        $filtered = Filter::filterString($this->request->getAction(),'DashToCamelCase');
-        $this->config['action_name'] = $filtered.'Action';
-        $this->config['controller'] = $this->request->getController();
-        $this->config['action'] = $this->request->getAction();
+        $filtered = Filter::filterString($router->getAction(), 'DashToCamelCase');
+        $this->config['action_name'] = $filtered . 'Action';
+        $this->config['controller'] = $router->getController();
+        $this->config['action'] = $router->getAction();
     }
 
 
@@ -54,8 +56,7 @@ class Dispatcher
     public function checkNavigator()
     {
         // can we find th' darned controller?
-        if(!$this->checkControllerExists())
-        {
+        if (!$this->checkControllerExists()) {
             $this->setNotFound();
             return;
         }
@@ -64,16 +65,10 @@ class Dispatcher
         $this->controller = new $this->config['controller_name']($this->request);
 
         // where's the bloody action?
-        if(!$this->checkActionExists())
-        {
+        if (!$this->checkActionExists()) {
             $this->setNotFound();
         }
     }
-
-
-
-
-
 
 
     /**
@@ -85,18 +80,12 @@ class Dispatcher
     }
 
 
-
-
-
-
-
-
     /**
      * @return bool
      */
     private function checkActionExists()
     {
-        return method_exists($this->controller,$this->config['action_name']);
+        return method_exists($this->controller, $this->config['action_name']);
     }
 
 
@@ -106,29 +95,25 @@ class Dispatcher
      */
     private function getResponseBody()
     {
-        /** @var \stdClass $view_vars  */
+        /** @var \stdClass $view_vars */
         $view_vars = $this->controller->view;
 
         $response_body = $this->controller->getBody();
 
-        if($this->controller->hasViewEnabled())
-        {
-            $view = $this->config['controller'].'/'.$this->config['action'].'.twig';
-            try{
-                $response_body = $this->controller->getTwig()->render($view, (array) $view_vars);
-            } catch (\Exception $e) {
+        if ($this->controller->hasViewEnabled()) {
+            $view = $this->config['controller'] . '/' . $this->config['action'] . '.twig';
+            try {
+                $response_body = $this->controller->getTwig()->render($view, (array)$view_vars);
+            } catch (Exception $e) {
                 throw $e;
             }
         }
 
-        if($this->controller->hasLayoutEnabled())
-        {
-            $response_body = $this->templateCheck($this->controller,$response_body, (array) $view_vars);
+        if ($this->controller->hasLayoutEnabled()) {
+            $response_body = $this->templateCheck($this->controller, $response_body);
         }
         return $response_body;
     }
-
-
 
 
     /**
@@ -136,32 +121,34 @@ class Dispatcher
      */
     public function fireCannons()
     {
-        try
-        {
+        try {
             // Where be the navigator? Be we on course?
             $this->checkNavigator();
 
             // boom! direct hit Cap'n! Be gettin' the booty!
             $this->plunderEnemyShip();
 
-            // report back to th' cap'n
-            $this->response->setHeaders($this->controller->getHeaders());
-
             // show th' cap'n th' booty
             $booty = $this->getResponseBody();
-        }
-        catch(Exception $e)
-        {
-            // Feck! We be sinking Cap'n!
-            $this->response->setHeaders($this->controller->getHeaders());
+        } catch (Exception $e) {
             $booty = $this->sinkingShip($e);
         }
 
-        $this->response->setBody($booty);
-        $this->response->send();
+        $this->response->getBody()->write($booty);
+
+        // report back to th' cap'n
+        $this->setHeaders();
+
+        $emitter = new SapiEmitter();
+        return $emitter->emit($this->response);
     }
 
-
+    private function setHeaders()
+    {
+        foreach ($this->controller->getHeaders() as $key => $value) {
+            $this->response = $this->response->withHeader($key, $value);
+        }
+    }
 
 
     private function plunderEnemyShip()
@@ -174,17 +161,15 @@ class Dispatcher
     }
 
 
-
-
     public function sinkingShip($e)
     {
-        $this->request->setParam('error',$e);
+//        $this->request->setParam('error', $e);
         $this->controller = class_exists('\App\Controller\ErrorController') ? new \App\Controller\ErrorController($this->request) : new Controller($this->request);
 
         $reflection = new ReflectionClass(get_class($this->controller));
         $method = $reflection->getMethod('errorAction');
         $method->setAccessible(true);
-        $method->invokeArgs($this->controller,[]);
+        $method->invokeArgs($this->controller, []);
         $this->controller->error = $e;
         $this->config['controller'] = 'error';
         $this->config['action'] = 'error';
@@ -192,44 +177,27 @@ class Dispatcher
     }
 
 
-
-
-
-
-
-
-
-
-
     /**
-     *  @param Controller $controller
-     *  @param string $content
-     *  @return string
+     * @param Controller $controller
+     * @param string $content
+     * @return string
      */
-    private function templateCheck($controller, $content, array $view_vars = [])
+    private function templateCheck($controller, $content)
     {
         $response_body = '';
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
         $template = ($templates != null) ? $templates[0] : null;
-        if($template)
-        {
-            $view_vars['content'] = $content;
-            $response_body = $controller->getTwig()->render('layouts/'.$template.'.twig',$view_vars);
+        if ($template) {
+            $response_body = $controller->getTwig()->render('layouts/' . $template . '.twig', array('content' => $content));
         }
         return $response_body;
     }
 
 
-
-
-
-
-
-
     /**
      * Sets controller to error and action to not found
-     * @return null
+     * @return void
      */
     private function setNotFound()
     {
@@ -239,7 +207,4 @@ class Dispatcher
         $this->config['action'] = 'not-found';
         $this->controller = new $this->config['controller_name']($this->request);
     }
-
-
-
 }
