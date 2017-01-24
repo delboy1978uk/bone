@@ -76,7 +76,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
         $this->setPrivateProperty($controller,'viewEngine',$plates);
-        $this->assertEquals('layouts/b.twig',$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
+        $this->assertEquals('<h1>Layout Template</h1>',$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
     }
 
 
@@ -133,7 +133,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testGetResponseBody()
     {
-        $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
+        $plates = new PlatesEngine(__DIR__);
         Registry::ahoy()->set('templates','blah');
         $controller = new Controller($this->request);
         $dispatcher = new Dispatcher($this->request,$this->response);
@@ -141,13 +141,13 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->setPrivateProperty($controller,'viewEngine',$plates);
         $body = $this->invokeMethod($dispatcher,'getResponseBody');
         $this->assertTrue(is_string($body));
-        $this->assertEquals('layouts/b.twig',$body);
+        $this->assertEquals('<h1>Layout Template</h1>',$body);
     }
 
 
     public function testFireCannons()
     {
-        $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
+        $plates = new PlatesEngine(__DIR__);
         Registry::ahoy()->set('templates','blah');
 
         Test::double('Bone\Mvc\Dispatcher',['checkNavigator' => null,'sinkingShip' => 'glurg']);
