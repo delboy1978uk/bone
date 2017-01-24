@@ -163,9 +163,8 @@ class Dispatcher
 
     public function sinkingShip($e)
     {
-//        $this->request->setParam('error', $e);
         $this->controller = class_exists('\App\Controller\ErrorController') ? new \App\Controller\ErrorController($this->request) : new Controller($this->request);
-
+        $this->controller->setParam('error', $e);
         $reflection = new ReflectionClass(get_class($this->controller));
         $method = $reflection->getMethod('errorAction');
         $method->setAccessible(true);
