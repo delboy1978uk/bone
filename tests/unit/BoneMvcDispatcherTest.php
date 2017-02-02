@@ -154,14 +154,16 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
+        $controller->setHeader('rubber', 'chicken');
+        $this->assertEquals('chicken', $controller->getHeader('rubber'));
 
         $this->setPrivateProperty($controller,'viewEngine',$plates);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $config = [
             'controller_name' => 'Bone\Mvc\Controller',
-            'action_name' => 'init',
+            'action_name' => 'indexAction',
             'controller' => 'controller',
-            'action' => 'init',
+            'action' => 'index',
         ];
         $this->setPrivateProperty($dispatcher,'config',$config);
         $this->assertNull($dispatcher->fireCannons());

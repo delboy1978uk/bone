@@ -94,6 +94,20 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     }
 
 
+    public function testGetSetHeader()
+    {
+        $this->controller->setHeader('monkey', 'island');
+        $this->assertEquals('island', $this->controller->getHeader('monkey'));
+    }
+
+
+    public function testGetSetRequest()
+    {
+        $this->controller->setRequest(new Request());
+        $this->assertInstanceOf('Psr\Http\Message\ServerRequestInterface', $this->controller->getRequest());
+    }
+
+
     public function testGetParams()
     {
         $this->assertInstanceOf('StdClass',$this->controller->getParams());

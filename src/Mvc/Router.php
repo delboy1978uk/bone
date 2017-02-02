@@ -18,7 +18,7 @@ class Router
 
     /**
      *  We be needin' t' look at th' map
-     *  @param Request $request
+     *  @param RequestInterface $request
      */
     public function __construct(RequestInterface $request)
     {

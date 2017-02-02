@@ -5,11 +5,9 @@ namespace Bone\Mvc;
 use Bone\Filter;
 use Exception;
 use ReflectionClass;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\SapiEmitter;
-use Zend\Diactoros\Stream;
 
 /**
  * Class Dispatcher
@@ -20,7 +18,7 @@ class Dispatcher
     // Garrrr! An arrrray!
     private $config = array();
 
-    /** @var RequestInterface $request */
+    /** @var ServerRequestInterface $request */
     private $request;
 
     /** @var Controller */
@@ -30,7 +28,7 @@ class Dispatcher
     private $response;
 
 
-    public function __construct(RequestInterface $request, ResponseInterface $response)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
         $this->request = $request;
         $this->response = $response;
@@ -156,7 +154,12 @@ class Dispatcher
         // run th' controller action
         $action = $this->config['action_name'];
         $this->controller->init();
-        $this->controller->$action();
+        $vars = $this->controller->$action();
+        if (is_array($vars)) {
+            $viewVars = (array) $this->controller->view;
+            $view = (object) array_merge($vars, $viewVars);
+            $this->controller->view =$view;
+        }
         $this->controller->postDispatch();
     }
 

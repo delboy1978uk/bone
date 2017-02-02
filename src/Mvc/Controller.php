@@ -6,12 +6,12 @@ use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Mvc\View\PlatesEngine;
 use PDO;
-use Psr\Http\Message\RequestInterface;;
+use Psr\Http\Message\ServerRequestInterface;
 use stdClass;
 
 class Controller
 {
-    /** @var RequestInterface */
+    /** @var ServerRequestInterface */
     protected $request;
 
     /** @var ViewEngine $plates */
@@ -35,16 +35,20 @@ class Controller
     /** @var bool */
     private $viewEnabled;
 
+    /** @var array $headers */
+    private $headers;
+
 
 
     /**
-     * @var \Bone\Db\Adapter\MySQL
+     * @var MySQL
      */
     protected $_db;
 
-    public function __construct(RequestInterface $request)
+    public function __construct(ServerRequestInterface $request)
     {
         $this->request = $request;
+        $this->headers = [];
         $this->params = (object) $this->request->getQueryParams();
 
         $this->initViewEngine();
@@ -142,34 +146,52 @@ class Controller
      */
     public function getHeaders()
     {
-        return $this->request->getHeaders();
+        return $this->headers;
     }
 
+    /**
+     * @return bool
+     */
     public function hasLayoutEnabled()
     {
         return ($this->layoutEnabled === true);
     }
 
+    /**
+     * Enables the layout
+     */
     public function enableLayout()
     {
         $this->layoutEnabled = true;
     }
 
+    /**
+     * Disables the layout
+     */
     public function disableLayout()
     {
         $this->layoutEnabled = false;
     }
 
+    /**
+     * @return bool
+     */
     public function hasViewEnabled()
     {
         return ($this->viewEnabled === true);
     }
 
+    /**
+     * Enables the view
+     */
     public function enableView()
     {
         $this->viewEnabled = true;
     }
 
+    /**
+     * Disables the view
+     */
     public function disableView()
     {
         $this->viewEnabled = false;
@@ -193,6 +215,14 @@ class Controller
         $this->body = $body;
     }
 
+    /**
+     * @return array
+     */
+    public function indexAction()
+    {
+        return ['message' => 'Override this method'];
+    }
+
     private function errorAction()
     {
         $this->disableView();
@@ -205,5 +235,53 @@ class Controller
         $this->disableView();
         $this->disableLayout();
         $this->body = '404 Page Not Found.';
+    }
+
+    /**
+     * @return ServerRequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return Controller
+     */
+    public function setRequest(ServerRequestInterface $request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return $this
+     */
+    public function setHeader($key, $value)
+    {
+        $this->headers[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * @param array $headers
+     * @return Controller
+     */
+    public function getHeader($key)
+    {
+        return $this->headers[$key] ? $this->headers[$key] : null;
+    }
+
+    public function sendJsonResponse(array $data)
+    {
+        $this->disableLayout();
+        $this->disableView();
+        $this->setHeader('Cache-Control', 'no-cache, must-revalidate');
+        $this->setHeader('Expires','Mon, 26 Jul 1997 05:00:00 GMT');
+        $this->setHeader('Content-Type','application/json');
+        return json_encode($data);
     }
 }
