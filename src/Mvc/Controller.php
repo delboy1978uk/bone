@@ -282,6 +282,7 @@ class Controller
         $this->setHeader('Cache-Control', 'no-cache, must-revalidate');
         $this->setHeader('Expires','Mon, 26 Jul 1997 05:00:00 GMT');
         $this->setHeader('Content-Type','application/json');
-        return json_encode($data);
+        $json = json_encode($data);
+        $this->setBody($json);
     }
 }
