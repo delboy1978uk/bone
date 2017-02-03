@@ -138,7 +138,11 @@ class Dispatcher
         $this->setHeaders();
 
         $emitter = new SapiEmitter();
-        return $emitter->emit($this->response);
+        ob_start();
+        $emitter->emit($this->response);
+        $content = ob_get_contents();
+        ob_end_clean();
+        return  $content;
     }
 
     private function setHeaders()
