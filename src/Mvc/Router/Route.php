@@ -67,9 +67,9 @@ class Route
     {
         $this->name = $name;
         $this->config = $config;
-        $this->strings = array(
+        $this->strings = [
             0 => '',
-        );
+        ];
 
         $name = $this->removeOptionalFromName($name);
 

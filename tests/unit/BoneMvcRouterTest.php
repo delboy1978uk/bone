@@ -67,28 +67,57 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
     public function testControllerMatch()
     {
         $this->server['REQUEST_URI'] = '/the-lone-pirate';
-        $this->request = new Request();
+        $this->request = new Request(
+            $this->server, [], 'http://bone/the-lone-pirate', 'GET'
+
+        );
         $this->router = new Router($this->request);
         $this->router->parseRoute();
-        $this->assertEquals('error', $this->router->getController());
+        $this->assertEquals('the-lone-pirate', $this->router->getController());
     }
 
     public function testControllerActionMatch()
     {
         $this->server['REQUEST_URI'] = '/treasure/chest';
-        $this->request = new Request( );
+        $this->request = new Request(
+            $this->server, [], 'http://bone/treasure/chest', 'GET'
+
+        );
         $this->router = new Router($this->request);
         $this->router->parseRoute();
-        $this->assertEquals('error', $this->router->getController());
+        $this->assertEquals('treasure', $this->router->getController());
+        $this->assertEquals('chest', $this->router->getAction());
     }
 
     public function testControllerActionParamsMatch()
     {
         $this->server['REQUEST_URI'] = '/treasure/chest/value/100/contents/gold';
-        $this->request = new Request();
+        $this->request = new Request(
+            $this->server, [], 'http://bone/treasure/chest/value/100/contents/gold', 'GET'
+
+        );
         $this->router = new Router($this->request);
         $this->router->parseRoute();
-        $this->assertEquals('error', $this->router->getController());
+        $this->assertEquals('treasure', $this->router->getController());
+        $this->assertEquals('chest', $this->router->getAction());
+        $this->assertEquals('100', $this->router->getParams()['value']);
+        $this->assertEquals('gold', $this->router->getParams()['contents']);
+    }
+
+    public function testCustomRouteMatch()
+    {
+        $this->server['REQUEST_URI'] = '/custom/ship';
+        $this->request = new Request(
+            $this->server, [], 'http://bone/custom/ship', 'GET'
+
+        );
+        $this->router = new Router($this->request);
+        $this->router->parseRoute();
+        $this->assertEquals('index', $this->router->getController());
+        $this->assertEquals('test', $this->router->getAction());
+        $this->assertEquals('ship', $this->router->getParams()['mandatory']);
+        $this->assertEquals('grog', $this->router->getParams()['value']);
+        $this->assertEquals('pirate', $this->router->getParams()['contents']);
     }
 
     public function testHomePageMatch()
