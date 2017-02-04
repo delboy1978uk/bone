@@ -218,8 +218,6 @@ class Router
 
             // Merge th' GET POST and config params
             $this->setParams();
-
-            return;
         }
     }
 

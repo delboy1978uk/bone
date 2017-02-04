@@ -74,7 +74,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
         $this->setPrivateProperty($controller,'viewEngine',$plates);
-        $this->assertEquals('<h1>Layout Template</h1>',$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
+        $this->assertEquals("<h1>Layout Template</h1>\n<p>moreblah</p>",$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
     }
 
 
@@ -106,27 +106,27 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     }
 
 
-    /**
-     *  check it be runnin through setting the destination
-     */
-    public function testCheckNavigator()
-    {
-        $dispatcher = new Dispatcher($this->request,$this->response);
-        $this->setPrivateProperty($dispatcher,'config',[
-            'controller_name' => 'no controller',
-            'action_name' => 'and no action',
-        ]);
-        $this->assertNull($dispatcher->checkNavigator());
-        $this->setPrivateProperty($dispatcher,'config',[
-            'controller_name' => '\Bone\Mvc\Controller',
-            'action_name' => 'and no action',
-        ]);
-        $this->assertNull($dispatcher->checkNavigator());
-        $this->setPrivateProperty($dispatcher,'config',[
-            'controller_name' => '\Bone\Mvc\Controller',
-            'action_name' => 'init',
-        ]);
-    }
+//    /**
+//     *  check it be runnin through setting the destination
+//     */
+//    public function testCheckNavigator()
+//    {
+//        $dispatcher = new Dispatcher($this->request,$this->response);
+//        $this->setPrivateProperty($dispatcher,'config',[
+//            'controller_name' => 'no controller',
+//            'action_name' => 'and no action',
+//        ]);
+//        $this->assertNull($dispatcher->checkNavigator());
+//        $this->setPrivateProperty($dispatcher,'config',[
+//            'controller_name' => '\Bone\Mvc\Controller',
+//            'action_name' => 'and no action',
+//        ]);
+//        $this->assertNull($dispatcher->checkNavigator());
+//        $this->setPrivateProperty($dispatcher,'config',[
+//            'controller_name' => '\Bone\Mvc\Controller',
+//            'action_name' => 'init',
+//        ]);
+//    }
 
 
     public function testGetResponseBody()
@@ -139,7 +139,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->setPrivateProperty($controller,'viewEngine',$plates);
         $body = $this->invokeMethod($dispatcher,'getResponseBody');
         $this->assertTrue(is_string($body));
-        $this->assertEquals('<h1>Layout Template</h1>',$body);
+        $this->assertEquals("<h1>Layout Template</h1>\n<p><h1>404</h1></p>",$body);
     }
 
 
@@ -164,7 +164,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
             'action' => 'index',
         ];
         $this->setPrivateProperty($dispatcher,'config',$config);
-        $this->assertNull($dispatcher->fireCannons());
+        $this->assertEquals("<h1>Layout Template</h1>\n<p>Override this method</p>", $dispatcher->fireCannons());
 
 
         $dispatcher = new Dispatcher($this->request,$this->response);

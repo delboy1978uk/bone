@@ -193,13 +193,26 @@ class Dispatcher
         $response_body = '';
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
-        $template = ($templates != null) ? $templates[0] : null;
+        $template = $this->getTemplateName($templates);
         if ($template) {
             $response_body = $controller->getViewEngine()->render('layouts/' . $template, array('content' => $content));
         }
         return $response_body;
     }
 
+    /**
+     * @param mixed $templates
+     * @return string|null
+     */
+    private function getTemplateName($templates)
+    {
+        if (is_null($templates)) {
+            return null;
+        } elseif (is_array($templates)) {
+            return $templates[0];
+        }
+        return $templates;
+    }
 
     /**
      * Sets controller to error and action to not found
