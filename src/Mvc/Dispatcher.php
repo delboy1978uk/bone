@@ -194,7 +194,7 @@ class Dispatcher
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
         $template = $this->getTemplateName($templates);
-        if ($template) {
+        if ($template !== null) {
             $response_body = $controller->getViewEngine()->render('layouts/' . $template, array('content' => $content));
         }
         return $response_body;
@@ -209,9 +209,9 @@ class Dispatcher
         if (is_null($templates)) {
             return null;
         } elseif (is_array($templates)) {
-            return $templates[0];
+            return (string) $templates[0];
         }
-        return $templates;
+        return (string) $templates;
     }
 
     /**
