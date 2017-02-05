@@ -105,28 +105,54 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->assertEquals('500 Page Error.',$this->invokeMethod($dispatcher,'sinkingShip',['argh']));
     }
 
+    public function testGetTemplateName()
+    {
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $output = $this->invokeMethod($dispatcher, 'getTemplateName', [null]);
+        $this->assertNull($output);
+        $output = $this->invokeMethod($dispatcher, 'getTemplateName', ['pirated-template']);
+        $this->assertEquals('pirated-template', $output);
+        $output = $this->invokeMethod($dispatcher, 'getTemplateName', [['pirated-template']]);
+        $this->assertEquals('pirated-template', $output);
+    }
 
-//    /**
-//     *  check it be runnin through setting the destination
-//     */
-//    public function testCheckNavigator()
+//    public function testHandleException()
 //    {
+//        Registry::ahoy()->set('templates', null);
+//        $fakeController = Test::spec(new Bone\Mvc\Controller($this->request),[
+//            'errorAction' => null,
+//            'notFoundAction' => null,
+//            'viewEnabled' => true,
+//            'getViewEngine' => new Exception('gaaaargh!'),
+//        ]);
 //        $dispatcher = new Dispatcher($this->request,$this->response);
-//        $this->setPrivateProperty($dispatcher,'config',[
-//            'controller_name' => 'no controller',
-//            'action_name' => 'and no action',
-//        ]);
-//        $this->assertNull($dispatcher->checkNavigator());
-//        $this->setPrivateProperty($dispatcher,'config',[
-//            'controller_name' => '\Bone\Mvc\Controller',
-//            'action_name' => 'and no action',
-//        ]);
-//        $this->assertNull($dispatcher->checkNavigator());
-//        $this->setPrivateProperty($dispatcher,'config',[
-//            'controller_name' => '\Bone\Mvc\Controller',
-//            'action_name' => 'init',
-//        ]);
+//        $this->setPrivateProperty($dispatcher, 'controller', $fakeController);
+//        $this->assertEquals('404 Page Not Found.',$dispatcher->fireCannons());
 //    }
+
+
+    /**
+     *  check it be runnin through setting the destination
+     *
+     */
+    public function testCheckNavigator()
+    {
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $this->setPrivateProperty($dispatcher,'config',[
+            'controller_name' => 'no controller',
+            'action_name' => 'and no action',
+        ]);
+        $this->assertNull($dispatcher->checkNavigator());
+        $this->setPrivateProperty($dispatcher,'config',[
+            'controller_name' => '\Bone\Mvc\Controller',
+            'action_name' => 'and no action',
+        ]);
+        $this->assertNull($dispatcher->checkNavigator());
+        $this->setPrivateProperty($dispatcher,'config',[
+            'controller_name' => '\Bone\Mvc\Controller',
+            'action_name' => 'init',
+        ]);
+    }
 
 
     public function testGetResponseBody()

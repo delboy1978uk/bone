@@ -50,6 +50,7 @@ class Dispatcher
 
     /**
      *  Gaaarrr! Check the Navigator be readin' the map!
+     * @return null|void
      */
     public function checkNavigator()
     {
@@ -66,6 +67,7 @@ class Dispatcher
         if (!$this->checkActionExists()) {
             $this->setNotFound();
         }
+        return null;
     }
 
 
@@ -170,7 +172,8 @@ class Dispatcher
 
     public function sinkingShip($e)
     {
-        $this->controller = class_exists('\App\Controller\ErrorController') ? new \App\Controller\ErrorController($this->request) : new Controller($this->request);
+        $controllerName = class_exists('\App\Controller\ErrorController') ? 'App\Controller\ErrorController' : 'Bone\Mvc\Controller';
+        $this->controller = new $controllerName($this->request);
         $this->controller->setParam('error', $e);
         $reflection = new ReflectionClass(get_class($this->controller));
         $method = $reflection->getMethod('errorAction');

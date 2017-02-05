@@ -223,14 +223,14 @@ class Controller
         return ['message' => 'Override this method'];
     }
 
-    private function errorAction()
+    public function errorAction()
     {
         $this->disableView();
         $this->disableLayout();
         $this->body = '500 Page Error.';
     }
 
-    private function notFoundAction()
+    public function notFoundAction()
     {
         $this->disableView();
         $this->disableLayout();
@@ -256,8 +256,8 @@ class Controller
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param string $value
      * @return $this
      */
     public function setHeader($key, $value)
@@ -267,14 +267,17 @@ class Controller
     }
 
     /**
-     * @param array $headers
-     * @return Controller
+     * @param $key
+     * @return string|null
      */
     public function getHeader($key)
     {
         return $this->headers[$key] ? $this->headers[$key] : null;
     }
 
+    /**
+     * @param array $data
+     */
     public function sendJsonResponse(array $data)
     {
         $this->disableLayout();
