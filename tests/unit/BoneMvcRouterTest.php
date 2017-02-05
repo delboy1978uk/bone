@@ -42,7 +42,7 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
                     'speak' => 'pirate',
                 ),
             ),
-            '/custom/:mandatory/[:optional]' => array(
+            '/custom/:mandatory[/:optional]' => array(
                 'controller' => 'index',
                 'action' => 'test',
                 'params' => array(
@@ -52,8 +52,7 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
             ),
         );
 
-        $this->registry = Registry::ahoy();
-        $this->registry->set('routes', $this->routes);
+        Registry::ahoy()->set('routes', $this->routes);
 
         $this->request = new Request();
 
@@ -67,28 +66,62 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
     public function testControllerMatch()
     {
         $this->server['REQUEST_URI'] = '/the-lone-pirate';
-        $this->request = new Request();
+        $this->request = new Request(
+            $this->server, [], 'http://bone/the-lone-pirate', 'GET'
+
+        );
         $this->router = new Router($this->request);
         $this->router->parseRoute();
-        $this->assertEquals('error', $this->router->getController());
+        $this->assertEquals('the-lone-pirate', $this->router->getController());
     }
 
     public function testControllerActionMatch()
     {
         $this->server['REQUEST_URI'] = '/treasure/chest';
-        $this->request = new Request( );
+        $this->request = new Request(
+            $this->server, [], 'http://bone/treasure/chest', 'GET'
+
+        );
         $this->router = new Router($this->request);
         $this->router->parseRoute();
-        $this->assertEquals('error', $this->router->getController());
+        $this->assertEquals('treasure', $this->router->getController());
+        $this->assertEquals('chest', $this->router->getAction());
     }
 
     public function testControllerActionParamsMatch()
     {
         $this->server['REQUEST_URI'] = '/treasure/chest/value/100/contents/gold';
-        $this->request = new Request();
+        $this->request = new Request(
+            $this->server, [], 'http://bone/treasure/chest/value/100/contents/gold', 'GET'
+
+        );
         $this->router = new Router($this->request);
         $this->router->parseRoute();
-        $this->assertEquals('error', $this->router->getController());
+        $this->assertEquals('treasure', $this->router->getController());
+        $this->assertEquals('chest', $this->router->getAction());
+        $this->assertArrayHasKey('value', $this->router->getParams());
+        $this->assertArrayHasKey('contents', $this->router->getParams());
+        $this->assertEquals('100', $this->router->getParams()['value']);
+        $this->assertEquals('gold', $this->router->getParams()['contents']);
+    }
+
+    public function testCustomRouteMatch()
+    {
+        $this->server['REQUEST_URI'] = '/custom/ship';
+        $this->request = new Request(
+            $this->server, [], 'http://bone/custom/ship', 'POST'
+
+        );
+
+        $this->router = new Router($this->request);
+        $this->router->parseRoute();
+        $this->assertEquals('index', $this->router->getController());
+        $this->assertEquals('test', $this->router->getAction());
+        $this->assertEquals('ship', $this->router->getParams()['mandatory']);
+        $this->assertArrayHasKey('drink', $this->router->getParams());
+        $this->assertArrayHasKey('speak', $this->router->getParams());
+        $this->assertEquals('grog', $this->router->getParams()['drink']);
+        $this->assertEquals('pirate', $this->router->getParams()['speak']);
     }
 
     public function testHomePageMatch()

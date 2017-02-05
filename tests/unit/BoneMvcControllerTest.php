@@ -56,9 +56,9 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
 
 
-    public function testGetTwig()
+    public function testGetViewEngine()
     {
-        $this->assertInstanceOf('Twig_Environment',$this->controller->getTwig());
+        $this->assertInstanceOf('Bone\Mvc\View\ViewEngine',$this->controller->getViewEngine());
     }
 
 
@@ -94,6 +94,20 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     }
 
 
+    public function testGetSetHeader()
+    {
+        $this->controller->setHeader('monkey', 'island');
+        $this->assertEquals('island', $this->controller->getHeader('monkey'));
+    }
+
+
+    public function testGetSetRequest()
+    {
+        $this->controller->setRequest(new Request());
+        $this->assertInstanceOf('Psr\Http\Message\ServerRequestInterface', $this->controller->getRequest());
+    }
+
+
     public function testGetParams()
     {
         $this->assertInstanceOf('StdClass',$this->controller->getParams());
@@ -109,6 +123,20 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     public function testNotFoundAction()
     {
         $this->assertNull($this->invokeMethod($this->controller, 'notFoundAction', []));
+    }
+
+
+
+
+    public function testSendJsonResponse()
+    {
+        $data = [
+            'drink' => 'grog',
+            'sail' => 'the 7 seas',
+        ];
+        $this->controller->sendJsonResponse($data);
+        $body = $this->controller->getBody();
+        $this->assertEquals('{"drink":"grog","sail":"the 7 seas"}', $body);
     }
 
 

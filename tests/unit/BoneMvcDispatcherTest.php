@@ -3,10 +3,12 @@
 use Bone\Mvc\Dispatcher;
 use Bone\Mvc\Controller;
 use Bone\Mvc\Registry;
+use Bone\Mvc\View\PlatesEngine;
 use Psr\Http\Message\ServerRequestInterface ;
 use Psr\Http\Message\ResponseInterface;
 use AspectMock\Test;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\ServerRequest;
 
 class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 {
@@ -27,10 +29,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     protected function _before()
     {
         Test::spec('\App\Controller\ErrorController');
-
-
-        $this->request = Test::double('\Zend\Diactoros\ServerRequest')->make();
-//        $this->response = Test::double('\Zend\Diactoros\Response')->make();
+        $this->request = new ServerRequest();
         $this->response = new Response();
     }
 
@@ -70,20 +69,18 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testTemplateCheck()
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
+        $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
         Registry::ahoy()->set('templates','blah');
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
-        $this->setPrivateProperty($controller,'twig',$twig);
-        $this->assertEquals('layouts/b.twig',$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
+        $this->assertEquals("<h1>Layout Template</h1>\n<p>moreblah</p>",$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
     }
 
 
     public function testPlunderEnemyShip()
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
+        $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
         Registry::ahoy()->set('templates','blah');
 
         $dispatcher = new Dispatcher($this->request,$this->response);
@@ -91,7 +88,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
             'action_name' => 'init',
         ]);
         $controller = new Controller($this->request);
-        $this->setPrivateProperty($controller,'twig',$twig);
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $this->assertNull($this->invokeMethod($dispatcher,'plunderEnemyShip'));
     }
@@ -108,9 +105,35 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->assertEquals('500 Page Error.',$this->invokeMethod($dispatcher,'sinkingShip',['argh']));
     }
 
+    public function testGetTemplateName()
+    {
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $output = $this->invokeMethod($dispatcher, 'getTemplateName', [null]);
+        $this->assertNull($output);
+        $output = $this->invokeMethod($dispatcher, 'getTemplateName', ['pirated-template']);
+        $this->assertEquals('pirated-template', $output);
+        $output = $this->invokeMethod($dispatcher, 'getTemplateName', [['pirated-template']]);
+        $this->assertEquals('pirated-template', $output);
+    }
+
+//    public function testHandleException()
+//    {
+//        Registry::ahoy()->set('templates', null);
+//        $fakeController = Test::spec(new Bone\Mvc\Controller($this->request),[
+//            'errorAction' => null,
+//            'notFoundAction' => null,
+//            'viewEnabled' => true,
+//            'getViewEngine' => new Exception('gaaaargh!'),
+//        ]);
+//        $dispatcher = new Dispatcher($this->request,$this->response);
+//        $this->setPrivateProperty($dispatcher, 'controller', $fakeController);
+//        $this->assertEquals('404 Page Not Found.',$dispatcher->fireCannons());
+//    }
+
 
     /**
      *  check it be runnin through setting the destination
+     *
      */
     public function testCheckNavigator()
     {
@@ -134,40 +157,40 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     public function testGetResponseBody()
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
+        $plates = new PlatesEngine(__DIR__);
         Registry::ahoy()->set('templates','blah');
         $controller = new Controller($this->request);
         $dispatcher = new Dispatcher($this->request,$this->response);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
-        $this->setPrivateProperty($controller,'twig',$twig);
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
         $body = $this->invokeMethod($dispatcher,'getResponseBody');
         $this->assertTrue(is_string($body));
-        $this->assertEquals('layouts/b.twig',$body);
+        $this->assertEquals("<h1>Layout Template</h1>\n<p><h1>404</h1></p>",$body);
     }
 
 
     public function testFireCannons()
     {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
+        $plates = new PlatesEngine(__DIR__);
         Registry::ahoy()->set('templates','blah');
 
         Test::double('Bone\Mvc\Dispatcher',['checkNavigator' => null,'sinkingShip' => 'glurg']);
 
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
+        $controller->setHeader('rubber', 'chicken');
+        $this->assertEquals('chicken', $controller->getHeader('rubber'));
 
-        $this->setPrivateProperty($controller,'twig',$twig);
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $config = [
             'controller_name' => 'Bone\Mvc\Controller',
-            'action_name' => 'init',
+            'action_name' => 'indexAction',
             'controller' => 'controller',
-            'action' => 'init',
+            'action' => 'index',
         ];
         $this->setPrivateProperty($dispatcher,'config',$config);
-        $this->assertNull($dispatcher->fireCannons());
+        $this->assertEquals("<h1>Layout Template</h1>\n<p>Override this method</p>", $dispatcher->fireCannons());
 
 
         $dispatcher = new Dispatcher($this->request,$this->response);

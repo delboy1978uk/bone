@@ -3,57 +3,58 @@
 namespace Bone\Mvc;
 
 use Bone\Db\Adapter\MySQL;
+use Bone\Mvc\View\ViewEngine;
+use Bone\Mvc\View\PlatesEngine;
 use PDO;
-use Psr\Http\Message\RequestInterface;;
-use Twig_Loader_Filesystem;
-use Twig_Environment;
-use Twig_Extension_Debug;
+use Psr\Http\Message\ServerRequestInterface;
 use stdClass;
-use Zend\Diactoros\Response;
 
 class Controller
 {
-    /**
-     * @var RequestInterface
-     */
+    /** @var ServerRequestInterface */
     protected $request;
 
-    protected $twig;
+    /** @var ViewEngine $plates */
+    protected $viewEngine;
 
+    /** @var string $controller */
     protected $controller;
 
+    /** @var string $action  */
     protected $action;
 
+    /** @var stdClass $view */
     public $view;
 
+    /** @var string $body */
     private $body;
 
-    /**
-     * @var bool
-     */
-    private $layout_enabled;
+    /** @var bool */
+    private $layoutEnabled;
+
+    /** @var bool */
+    private $viewEnabled;
+
+    /** @var array $headers */
+    private $headers;
+
+
 
     /**
-     * @var bool
-     */
-    private $view_enabled;
-
-
-
-    /**
-     * @var \Bone\Db\Adapter\MySQL
+     * @var MySQL
      */
     protected $_db;
 
-    public function __construct(RequestInterface $request)
+    public function __construct(ServerRequestInterface $request)
     {
         $this->request = $request;
+        $this->headers = [];
         $this->params = (object) $this->request->getQueryParams();
 
-        $this->setTwig();
+        $this->initViewEngine();
         $this->view = new stdClass();
-        $this->layout_enabled = true;
-        $this->view_enabled = true;
+        $this->layoutEnabled = true;
+        $this->viewEnabled = true;
     }
 
     /**
@@ -68,12 +69,11 @@ class Controller
     /**
      * @return void
      */
-    protected function setTwig()
+    protected function initViewEngine()
     {
-        $view_path = file_exists(APPLICATION_PATH.'/src/App/View/') ? APPLICATION_PATH.'/src/App/View/' : '.' ;
-        $loader = new Twig_Loader_Filesystem($view_path);
-        $this->twig = new Twig_Environment($loader,array('debug' => true));
-        $this->twig->addExtension(new Twig_Extension_Debug());
+        $viewPath = file_exists(APPLICATION_PATH.'/src/App/View/') ? APPLICATION_PATH.'/src/App/View/' : '.' ;
+        $engine = new PlatesEngine($viewPath);
+        $this->viewEngine = $engine;
     }
 
     /**
@@ -89,11 +89,11 @@ class Controller
     }
 
     /**
-     * @return Twig_Environment
+     * @return ViewEngine
      */
-    public function getTwig()
+    public function getViewEngine()
     {
-        return $this->twig;
+        return $this->viewEngine;
     }
 
 
@@ -146,37 +146,55 @@ class Controller
      */
     public function getHeaders()
     {
-        return $this->request->getHeaders();
+        return $this->headers;
     }
 
+    /**
+     * @return bool
+     */
     public function hasLayoutEnabled()
     {
-        return ($this->layout_enabled === true);
+        return ($this->layoutEnabled === true);
     }
 
+    /**
+     * Enables the layout
+     */
     public function enableLayout()
     {
-        $this->layout_enabled = true;
+        $this->layoutEnabled = true;
     }
 
+    /**
+     * Disables the layout
+     */
     public function disableLayout()
     {
-        $this->layout_enabled = false;
+        $this->layoutEnabled = false;
     }
 
+    /**
+     * @return bool
+     */
     public function hasViewEnabled()
     {
-        return ($this->view_enabled === true);
+        return ($this->viewEnabled === true);
     }
 
+    /**
+     * Enables the view
+     */
     public function enableView()
     {
-        $this->view_enabled = true;
+        $this->viewEnabled = true;
     }
 
+    /**
+     * Disables the view
+     */
     public function disableView()
     {
-        $this->view_enabled = false;
+        $this->viewEnabled = false;
     }
 
     /**
@@ -197,17 +215,77 @@ class Controller
         $this->body = $body;
     }
 
-    private function errorAction()
+    /**
+     * @return array
+     */
+    public function indexAction()
+    {
+        return ['message' => 'Override this method'];
+    }
+
+    public function errorAction()
     {
         $this->disableView();
         $this->disableLayout();
         $this->body = '500 Page Error.';
     }
 
-    private function notFoundAction()
+    public function notFoundAction()
     {
         $this->disableView();
         $this->disableLayout();
         $this->body = '404 Page Not Found.';
+    }
+
+    /**
+     * @return ServerRequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return Controller
+     */
+    public function setRequest(ServerRequestInterface $request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     * @return $this
+     */
+    public function setHeader($key, $value)
+    {
+        $this->headers[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @return string|null
+     */
+    public function getHeader($key)
+    {
+        return $this->headers[$key] ? $this->headers[$key] : null;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function sendJsonResponse(array $data)
+    {
+        $this->disableLayout();
+        $this->disableView();
+        $this->setHeader('Cache-Control', 'no-cache, must-revalidate');
+        $this->setHeader('Expires','Mon, 26 Jul 1997 05:00:00 GMT');
+        $this->setHeader('Content-Type','application/json');
+        $json = json_encode($data);
+        $this->setBody($json);
     }
 }

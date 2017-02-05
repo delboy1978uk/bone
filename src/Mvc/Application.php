@@ -48,6 +48,6 @@ class Application
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $response = new Response();
         $dispatcher = new Dispatcher($request, $response);
-        $dispatcher->fireCannons();
+        echo $dispatcher->fireCannons();
     }
 }

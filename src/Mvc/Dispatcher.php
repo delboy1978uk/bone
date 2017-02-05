@@ -5,11 +5,9 @@ namespace Bone\Mvc;
 use Bone\Filter;
 use Exception;
 use ReflectionClass;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\SapiEmitter;
-use Zend\Diactoros\Stream;
 
 /**
  * Class Dispatcher
@@ -20,7 +18,7 @@ class Dispatcher
     // Garrrr! An arrrray!
     private $config = array();
 
-    /** @var RequestInterface $request */
+    /** @var ServerRequestInterface $request */
     private $request;
 
     /** @var Controller */
@@ -30,7 +28,7 @@ class Dispatcher
     private $response;
 
 
-    public function __construct(RequestInterface $request, ResponseInterface $response)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
         $this->request = $request;
         $this->response = $response;
@@ -52,6 +50,7 @@ class Dispatcher
 
     /**
      *  Gaaarrr! Check the Navigator be readin' the map!
+     * @return null|void
      */
     public function checkNavigator()
     {
@@ -68,6 +67,7 @@ class Dispatcher
         if (!$this->checkActionExists()) {
             $this->setNotFound();
         }
+        return null;
     }
 
 
@@ -101,9 +101,9 @@ class Dispatcher
         $response_body = $this->controller->getBody();
 
         if ($this->controller->hasViewEnabled()) {
-            $view = $this->config['controller'] . '/' . $this->config['action'] . '.twig';
+            $view = $this->config['controller'] . '/' . $this->config['action'];
             try {
-                $response_body = $this->controller->getTwig()->render($view, (array)$view_vars);
+                $response_body = $this->controller->getViewEngine()->render($view, (array) $view_vars);
             } catch (Exception $e) {
                 throw $e;
             }
@@ -140,7 +140,11 @@ class Dispatcher
         $this->setHeaders();
 
         $emitter = new SapiEmitter();
-        return $emitter->emit($this->response);
+        ob_start();
+        $emitter->emit($this->response);
+        $content = ob_get_contents();
+        ob_end_clean();
+        return  $content;
     }
 
     private function setHeaders()
@@ -156,16 +160,21 @@ class Dispatcher
         // run th' controller action
         $action = $this->config['action_name'];
         $this->controller->init();
-        $this->controller->$action();
+        $vars = $this->controller->$action();
+        if (is_array($vars)) {
+            $viewVars = (array) $this->controller->view;
+            $view = (object) array_merge($vars, $viewVars);
+            $this->controller->view =$view;
+        }
         $this->controller->postDispatch();
     }
 
 
     public function sinkingShip($e)
     {
-//        $this->request->setParam('error', $e);
-        $this->controller = class_exists('\App\Controller\ErrorController') ? new \App\Controller\ErrorController($this->request) : new Controller($this->request);
-
+        $controllerName = class_exists('\App\Controller\ErrorController') ? 'App\Controller\ErrorController' : 'Bone\Mvc\Controller';
+        $this->controller = new $controllerName($this->request);
+        $this->controller->setParam('error', $e);
         $reflection = new ReflectionClass(get_class($this->controller));
         $method = $reflection->getMethod('errorAction');
         $method->setAccessible(true);
@@ -187,13 +196,26 @@ class Dispatcher
         $response_body = '';
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
-        $template = ($templates != null) ? $templates[0] : null;
-        if ($template) {
-            $response_body = $controller->getTwig()->render('layouts/' . $template . '.twig', array('content' => $content));
+        $template = $this->getTemplateName($templates);
+        if ($template !== null) {
+            $response_body = $controller->getViewEngine()->render('layouts/' . $template, array('content' => $content));
         }
         return $response_body;
     }
 
+    /**
+     * @param mixed $templates
+     * @return string|null
+     */
+    private function getTemplateName($templates)
+    {
+        if (is_null($templates)) {
+            return null;
+        } elseif (is_array($templates)) {
+            return (string) $templates[0];
+        }
+        return (string) $templates;
+    }
 
     /**
      * Sets controller to error and action to not found
