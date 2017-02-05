@@ -126,6 +126,20 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     }
 
 
+
+
+    public function testSendJsonResponse()
+    {
+        $data = [
+            'drink' => 'grog',
+            'sail' => 'the 7 seas',
+        ];
+        $this->controller->sendJsonResponse($data);
+        $body = $this->controller->getBody();
+        $this->assertEquals('{"drink":"grog","sail":"the 7 seas"}', $body);
+    }
+
+
     /**
      * This method allows us to test protected and private methods without
      * having to go through everything using public methods
