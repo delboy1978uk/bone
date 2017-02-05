@@ -109,9 +109,10 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
     {
         $this->server['REQUEST_URI'] = '/custom/ship';
         $this->request = new Request(
-            $this->server, [], 'http://bone/custom/ship', 'GET'
+            $this->server, [], 'http://bone/custom/ship', 'POST'
 
         );
+
         $this->router = new Router($this->request);
         $this->router->parseRoute();
         $this->assertEquals('index', $this->router->getController());
