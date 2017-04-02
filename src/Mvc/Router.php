@@ -163,9 +163,15 @@ class Router
         $this->controller = 'error';
         $this->action = 'not-found';
 
-        // Get th' navigator! Do we know where we be sailin'?
-        $knownDestination = $this->matchCustomRoute();
-        if ($knownDestination === false && $matches = $this->matchControllerActionParamsRoute()) {
+        // Get th' navigator! Do we know where we be sailin'? Do we have a plan?
+        if (!$this->matchCustomRoute()) {
+            $this->matchDefaultRoutes();
+        }
+    }
+
+    public function matchDefaultRoutes()
+    {
+        if ( $matches = $this->matchControllerActionParamsRoute()) {
             // we have a controller action var val match Cap'n!
             $this->setController($matches);
             $this->setAction($matches);
@@ -181,6 +187,7 @@ class Router
             $this->action = 'index';
         }
     }
+
 
     /**
      *  Tells the Navigator to go to the / route
