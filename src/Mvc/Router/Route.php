@@ -1,6 +1,7 @@
 <?php
 
 namespace Bone\Mvc\Router;
+
 use Bone\Regex;
 use Bone\Regex\Url;
 
@@ -47,10 +48,11 @@ class Route
      *  th' exploded uri
      * @var array
      */
-    private $matched_uri_parts;
+    private $matchedUriParts;
 
 
-
+    /** @var int $partCount  */
+    private $partCount;
 
 
 
@@ -124,7 +126,7 @@ class Route
             $this->regex->setPattern($expression);
             if($this->regex->getMatches($uri))
             {
-                $this->matched_uri_parts = explode('/',$uri);
+                $this->matchedUriParts = explode('/',$uri);
                 return true;
             }
         }
@@ -220,51 +222,68 @@ class Route
     }
 
 
-
-
-
-
-
-
-
+    /**
+     * @return string
+     */
     public function getControllerName()
     {
         return $this->config['controller'];
     }
 
 
-
-
-
-
-
+    /**
+     * @return string
+     */
     public function getActionName()
     {
         return $this->config['action'];
     }
 
 
-
-
-
-
-
-
+    /**
+     * @return array
+     */
     public function getParams()
     {
-        $x = 0;
+        $this->processMandatoryParams();
+        $this->processOptionalParams();
+        return $this->config['params'];
+    }
+
+    /**
+     * @return void
+     */
+    private function processMandatoryParams()
+    {
+        $this->partCount = 0;
         foreach($this->parts as $part)
         {
-            if(strstr($part,':'))
-            {
-                $this->config['params'][str_replace(':','',$part)] = $this->matched_uri_parts[$x];
-            }
-            $x ++;
+            $this->processConfigParam($part, $this->partCount);
+            $this->partCount ++;
         }
+    }
+
+    /**
+     * @return void
+     */
+    private function processOptionalParams()
+    {
         if($this->optional)
         {
-            $this->config['params'][str_replace(':','',$this->optional)] = isset($this->matched_uri_parts[$x]) ? $this->matched_uri_parts[$x] : null;
+            $this->config['params'][str_replace(':','',$this->optional)] = isset($this->matchedUriParts[$this->partCount]) ? $this->matchedUriParts[$this->partCount] : null;
         }
-        return $this->config['params'];
+    }
+
+    /**
+     * @param $part
+     * @param $index
+     * @return void
+     */
+    private function processConfigParam($part, $index)
+    {
+        if(strstr($part,':'))
+        {
+            $this->config['params'][str_replace(':','',$part)] = $this->matchedUriParts[$index];
+        }
     }
 }

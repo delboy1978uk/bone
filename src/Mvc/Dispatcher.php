@@ -122,23 +122,30 @@ class Dispatcher
     public function fireCannons()
     {
         try {
-            // Where be the navigator? Be we on course?
+            // Garr! Check the route with th' navigator
             $this->checkNavigator();
 
-            // boom! direct hit Cap'n! Be gettin' the booty!
+            // Fire cannons t' th' controller action
             $this->plunderEnemyShip();
 
-            // show th' cap'n th' booty
+            // See what treasure we have plundered
             $booty = $this->getResponseBody();
         } catch (Exception $e) {
             $booty = $this->sinkingShip($e);
         }
 
-        $this->response->getBody()->write($booty);
 
         // report back to th' cap'n
+        $this->response->getBody()->write($booty);
         $this->setHeaders();
+        return $this->sendResponse();
+    }
 
+    /**
+     * @return string
+     */
+    private function sendResponse()
+    {
         $emitter = new SapiEmitter();
         ob_start();
         $emitter->emit($this->response);

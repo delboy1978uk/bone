@@ -163,10 +163,9 @@ class Router
         $this->controller = 'error';
         $this->action = 'not-found';
 
-        // Get th' navigator!
-        if ($this->matchCustomRoute()) {
-            // gaaarrrr, we're set to go!
-        } elseif ($matches = $this->matchControllerActionParamsRoute()) {
+        // Get th' navigator! Do we know where we be sailin'?
+        $knownDestination = $this->matchCustomRoute();
+        if ($knownDestination === false && $matches = $this->matchControllerActionParamsRoute()) {
             // we have a controller action var val match Cap'n!
             $this->setController($matches);
             $this->setAction($matches);
