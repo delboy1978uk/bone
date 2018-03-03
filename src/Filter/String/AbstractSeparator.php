@@ -1,10 +1,14 @@
 <?php
 
-
 namespace Bone\Filter\String;
 
-abstract class AbstractSeparator
+use Bone\Filter\FilterInterface;
+
+abstract class AbstractSeparator implements FilterInterface
 {
+    /**
+     * @var string $separator
+     */
     protected  $separator;
 
     /**
@@ -15,5 +19,9 @@ abstract class AbstractSeparator
         $this->separator = $separator;
     }
 
+    /**
+     * @param string $value
+     * @return string mixed
+     */
     abstract public function filter($value);
 }

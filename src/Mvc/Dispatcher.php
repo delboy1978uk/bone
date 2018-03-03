@@ -27,7 +27,12 @@ class Dispatcher
     /** @var ResponseInterface $response */
     private $response;
 
-
+    /**
+     * Dispatcher constructor.
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @throws Filter\Exception
+     */
     public function __construct(ServerRequestInterface $request, ResponseInterface $response)
     {
         $this->request = $request;
@@ -138,20 +143,13 @@ class Dispatcher
         // report back to th' cap'n
         $this->response->getBody()->write($booty);
         $this->setHeaders();
-        return $this->sendResponse();
+        $this->sendResponse();
     }
 
-    /**
-     * @return string
-     */
     private function sendResponse()
     {
         $emitter = new SapiEmitter();
-        ob_start();
         $emitter->emit($this->response);
-        $content = ob_get_contents();
-        ob_end_clean();
-        return  $content;
     }
 
     private function setHeaders()
@@ -176,8 +174,12 @@ class Dispatcher
         $this->controller->postDispatch();
     }
 
-
-    public function sinkingShip($e)
+    /**
+     * @param Exception $e
+     * @return string
+     * @throws Exception
+     */
+    public function sinkingShip(Exception $e)
     {
         $controllerName = class_exists('\App\Controller\ErrorController') ? 'App\Controller\ErrorController' : 'Bone\Mvc\Controller';
         $this->controller = new $controllerName($this->request);
@@ -189,6 +191,7 @@ class Dispatcher
         $this->controller->error = $e;
         $this->config['controller'] = 'error';
         $this->config['action'] = 'error';
+        $this->response = $this->response->withStatus(500);
         return $this->getResponseBody();
     }
 
@@ -235,5 +238,6 @@ class Dispatcher
         $this->config['controller'] = 'error';
         $this->config['action'] = 'not-found';
         $this->controller = new $this->config['controller_name']($this->request);
+        $this->response = $this->response->withStatus(404);
     }
 }

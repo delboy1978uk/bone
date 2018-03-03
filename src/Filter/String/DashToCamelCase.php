@@ -6,7 +6,6 @@ class DashToCamelCase extends SeparatorToCamelCase
 {
     /**
      * Constructor
-     *
      */
     public function __construct()
     {

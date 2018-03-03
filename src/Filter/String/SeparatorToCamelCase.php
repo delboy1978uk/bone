@@ -11,7 +11,6 @@ class SeparatorToCamelCase extends AbstractSeparator
     /** @var array */
     private $patterns;
 
-
     /**
      * settin' the regex gubbins, Cap'n!
      */
@@ -23,45 +22,42 @@ class SeparatorToCamelCase extends AbstractSeparator
         $quote = preg_quote($this->separator, '#');
 
         // create some feckin' voodoo black magic regex
-        $this->patterns = array(
+        $this->patterns = [
             '#(' . $quote.')([A-Za-z]{1})#',
             '#(^[A-Za-z]{1})#',
-        );
+        ];
     }
 
     /**
      * @param string $value
+     *
      * @return string
      */
     public function filter($value)
     {
         $replace = $this->getReplaceCallback();
-
         $filtered = $value;
+
         foreach ($this->patterns as $index => $pattern)
         {
             $filtered = preg_replace_callback($pattern, $replace[$index], $filtered);
         }
+
         return $filtered;
     }
-
-
-
 
     /**
      * @return array
      */
     private function getReplaceCallback()
     {
-        return array(
-            function ($matches)
-            {
+        return [
+            function ($matches) {
                 return ucwords($matches[2]);
             },
-            function ($matches)
-            {
+            function ($matches) {
                 return $matches[1];
             },
-        );
+        ];
     }
 }
