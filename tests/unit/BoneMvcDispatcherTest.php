@@ -190,9 +190,14 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
             'action' => 'index',
         ];
         $this->setPrivateProperty($dispatcher,'config',$config);
-        $this->assertEquals("<h1>Layout Template</h1>\n<p>Override this method</p>", $dispatcher->fireCannons());
 
+        ob_start();
+        $dispatcher->fireCannons();
+        $content = ob_get_contents();
+        ob_end_clean();
 
+        $this->assertEquals("<h1>Layout Template</h1>\n<p>Override this method</p>", $content);
+        
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
