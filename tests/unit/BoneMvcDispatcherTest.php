@@ -102,7 +102,8 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         Registry::ahoy()->set('templates', null);
         Test::double(new Bone\Mvc\Controller($this->request),[ 'errorAction' => null, 'notFoundAction' => null]);
         $dispatcher = new Dispatcher($this->request,$this->response);
-        $this->assertEquals('500 Page Error.',$this->invokeMethod($dispatcher,'sinkingShip',['argh']));
+        $result = $this->invokeMethod($dispatcher,'sinkingShip',[new Bone\Exception('argh')]);
+        $this->assertEquals('500 Page Error.', $result);
     }
 
     public function testGetTemplateName()
@@ -197,7 +198,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         ob_end_clean();
 
         $this->assertEquals("<h1>Layout Template</h1>\n<p>Override this method</p>", $content);
-        
+
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
         $this->setPrivateProperty($dispatcher,'controller',$controller);

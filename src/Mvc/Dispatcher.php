@@ -122,7 +122,7 @@ class Dispatcher
 
 
     /**
-     *
+     * @throws Exception
      */
     public function fireCannons()
     {
@@ -138,8 +138,7 @@ class Dispatcher
         } catch (Exception $e) {
             $booty = $this->sinkingShip($e);
         }
-
-
+        
         // report back to th' cap'n
         $this->response->getBody()->write($booty);
         $this->setHeaders();
