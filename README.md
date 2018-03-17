@@ -4,6 +4,7 @@
 
 Bone MVC Framework library files.<br />
 Bone Skeleton App at https://github.com/delboy1978uk/bonemvc<br />
-Install using Composer!<br />
+Install using Composer:
+`composer create-project delboy1978uk/bonemvc your/path/here ^2.0.5`
 Start here: http://bonemvc.delboysplace.co.uk
 
