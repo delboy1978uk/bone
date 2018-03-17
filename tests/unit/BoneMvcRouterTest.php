@@ -42,6 +42,11 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
                     'speak' => 'pirate',
                 ),
             ),
+            '/user/activate/:email/:token' => [
+                'controller' => 'index',
+                'action' => 'activate',
+                'params' => [],
+            ],
             '/custom/:mandatory[/:optional]' => array(
                 'controller' => 'index',
                 'action' => 'test',
@@ -122,6 +127,16 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
         $this->assertArrayHasKey('speak', $this->router->getParams());
         $this->assertEquals('grog', $this->router->getParams()['drink']);
         $this->assertEquals('pirate', $this->router->getParams()['speak']);
+
+        $this->server['REQUEST_URI'] = '/user/activate/jhgiyfgiy@email.com/c39e46af9cc84290a0724bcb03229ccb';
+        $this->request = new Request(
+            $this->server, [], 'http://bone/user/activate/jhgiyfgiy@email.com/c39e46af9cc84290a0724bcb03229ccb', 'GET'
+
+        );
+        $this->router = new Router($this->request);
+        $this->router->parseRoute();
+        $this->assertEquals('index', $this->router->getController());
+        $this->assertEquals('activate', $this->router->getAction());
     }
 
     public function testHomePageMatch()

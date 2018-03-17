@@ -14,8 +14,8 @@
     "league/plates": "*"
   },
   "require-dev": {
-    "codeception/codeception": "*",
-    "codeception/aspect-mock": "^1.0"
+    "codeception/codeception": "^2.2.8",
+    "codeception/aspect-mock": "2.0.0"
   },
   "autoload": {
     "psr-4": {
