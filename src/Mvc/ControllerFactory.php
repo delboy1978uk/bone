@@ -1,9 +1,4 @@
 <?php
-/**
- * User: delboy1978uk
- * Date: 09/12/2014
- * Time: 02:59
- */
 
 namespace Bone\Mvc;
 

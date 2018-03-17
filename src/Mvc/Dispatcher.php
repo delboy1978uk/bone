@@ -50,6 +50,7 @@ class Dispatcher
         $this->config['action_name'] = $filtered . 'Action';
         $this->config['controller'] = $router->getController();
         $this->config['action'] = $router->getAction();
+        $this->config['params'] = $router->getParams();
     }
 
 
@@ -67,6 +68,7 @@ class Dispatcher
 
         // gaaarr! there be the controller!
         $this->controller = new $this->config['controller_name']($this->request);
+        $this->controller->params = $this->config['params'];
 
         // where's the bloody action?
         if (!$this->checkActionExists()) {

@@ -137,6 +137,10 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
         $this->router->parseRoute();
         $this->assertEquals('index', $this->router->getController());
         $this->assertEquals('activate', $this->router->getAction());
+        $this->assertArrayHasKey('email', $this->router->getParams());
+        $this->assertArrayHasKey('token', $this->router->getParams());
+        $this->assertEquals('jhgiyfgiy@email.com', $this->router->getParams()['email']);
+        $this->assertEquals('c39e46af9cc84290a0724bcb03229ccb', $this->router->getParams()['token']);
     }
 
     public function testHomePageMatch()

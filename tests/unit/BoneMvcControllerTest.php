@@ -157,6 +157,4 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         $method->setAccessible(true);
         return $method->invokeArgs($object, $parameters);
     }
-
-
 }

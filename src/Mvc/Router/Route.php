@@ -54,11 +54,6 @@ class Route
     /** @var int $partCount  */
     private $partCount;
 
-
-
-
-
-
     /**
      * The key an' value from th' configgerashun
      *
@@ -72,16 +67,11 @@ class Route
         $this->strings = [
             0 => '',
         ];
-
         $name = $this->removeOptionalFromName($name);
 
         $this->setParts($name);
-
         $this->setStrings();
-
         $this->setOptionalStrings();
-
-
     }
 
 
@@ -105,13 +95,6 @@ class Route
         return $name;
     }
 
-
-
-
-
-
-
-
     /**
      * checks t' see if th' uri matches the regex routes
      *
@@ -133,7 +116,6 @@ class Route
         return false;
     }
 
-
     /**
      * @param $name
      */
@@ -144,7 +126,6 @@ class Route
          */
         $this->parts = explode('/',$name);
     }
-
 
     /**
      *  break the url t' smithereens! garrr!
@@ -164,7 +145,6 @@ class Route
          */
         $this->strings[0] = ($this->strings[0] == '') ? '\/' : $this->strings[0];
     }
-
 
     /**
      * @param string $part
@@ -190,8 +170,6 @@ class Route
         }
     }
 
-
-
     /**
      *  checks fer the optional stuff
      */
@@ -208,9 +186,6 @@ class Route
         }
     }
 
-
-
-
     /**
      * th' patterns the route wants t' match
      *
@@ -221,7 +196,6 @@ class Route
         return $this->strings;
     }
 
-
     /**
      * @return string
      */
@@ -230,7 +204,6 @@ class Route
         return $this->config['controller'];
     }
 
-
     /**
      * @return string
      */
@@ -238,7 +211,6 @@ class Route
     {
         return $this->config['action'];
     }
-
 
     /**
      * @return array

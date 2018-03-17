@@ -207,7 +207,6 @@ class Router
      */
     public function parseRoute()
     {
-
         // start at the home page
         $this->sailHome();
 
