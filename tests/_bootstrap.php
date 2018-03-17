@@ -8,6 +8,6 @@ define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
     'debug' => true,
-    'includePaths' => [__DIR__.'/../src']
+    'includePaths' => [__DIR__.'/../src'],
+    'cacheDir'  => '/tmp',
 ]);
-
