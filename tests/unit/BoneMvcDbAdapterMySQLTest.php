@@ -19,7 +19,7 @@ class BoneMvcDbAdapterMySQLTest extends \Codeception\TestCase\Test
     protected function _before()
     {
         $credentials = array(
-            'host' => 'mariadb',
+            'host' => 'localhost',
             'user' => 'travis',
             'pass' => 'drinkgrog',
             'database' => 'bone_db',
