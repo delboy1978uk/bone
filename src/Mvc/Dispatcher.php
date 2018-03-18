@@ -100,26 +100,32 @@ class Dispatcher
      * @return string
      * @throws \Exception
      */
-    private function getResponseBody()
+    private function distributeBooty()
     {
-        /** @var \stdClass $view_vars */
-        $view_vars = $this->controller->view;
+        /** @var \stdClass $viewVars */
+        $viewVars = $this->controller->view;
 
-        $response_body = $this->controller->getBody();
+        if ($viewVars instanceof ResponseInterface) {
+            $this->response = $viewVars;
+            return $this->sendResponse();
+        }
+
+        $responseBody = $this->controller->getBody();
 
         if ($this->controller->hasViewEnabled()) {
             $view = $this->config['controller'] . '/' . $this->config['action'];
             try {
-                $response_body = $this->controller->getViewEngine()->render($view, (array) $view_vars);
+                $responseBody = $this->controller->getViewEngine()->render($view, (array) $viewVars);
             } catch (Exception $e) {
                 throw $e;
             }
         }
 
         if ($this->controller->hasLayoutEnabled()) {
-            $response_body = $this->templateCheck($this->controller, $response_body);
+            $responseBody = $this->templateCheck($this->controller, $responseBody);
         }
-        return $response_body;
+        $this->prepareResponse($responseBody);
+        $this->sendResponse();
     }
 
 
@@ -135,17 +141,23 @@ class Dispatcher
             // Fire cannons t' th' controller action
             $this->plunderEnemyShip();
 
-            // See what treasure we have plundered
-            $booty = $this->getResponseBody();
+            // Share the loot! send out th' response
+            $this->distributeBooty();
         } catch (Exception $e) {
-            $booty = $this->sinkingShip($e);
+            $this->sinkingShip($e);
         }
-        
-        // report back to th' cap'n
+    }
+
+    /**
+     * @param $booty
+     */
+    private function prepareResponse($booty)
+    {
         $this->response->getBody()->write($booty);
         $this->setHeaders();
-        $this->sendResponse();
+        $this->setStatusCode();
     }
+
 
     private function sendResponse()
     {
@@ -160,6 +172,19 @@ class Dispatcher
         }
     }
 
+    private function setStatusCode()
+    {
+        $status = $this->controller->getStatusCode();
+        if ($status != 200) {
+            try {
+                $this->response = $this->response->withStatus($status);
+            } catch (Exception $e) {
+                $this->response = $this->response->withStatus(500);
+            }
+
+        }
+    }
+
 
     private function plunderEnemyShip()
     {
@@ -170,7 +195,9 @@ class Dispatcher
         if (is_array($vars)) {
             $viewVars = (array) $this->controller->view;
             $view = (object) array_merge($vars, $viewVars);
-            $this->controller->view =$view;
+            $this->controller->view = $view;
+        } elseif ($vars instanceof ResponseInterface) {
+            $this->controller->view = $vars;
         }
         $this->controller->postDispatch();
     }
@@ -193,7 +220,7 @@ class Dispatcher
         $this->config['controller'] = 'error';
         $this->config['action'] = 'error';
         $this->response = $this->response->withStatus(500);
-        return $this->getResponseBody();
+        $this->distributeBooty();
     }
 
 
@@ -204,14 +231,14 @@ class Dispatcher
      */
     private function templateCheck($controller, $content)
     {
-        $response_body = '';
+        $responseBody = '';
         //check we be usin' th' templates in th' config
         $templates = Registry::ahoy()->get('templates');
         $template = $this->getTemplateName($templates);
         if ($template !== null) {
-            $response_body = $controller->getViewEngine()->render('layouts/' . $template, array('content' => $content));
+            $responseBody = $controller->getViewEngine()->render('layouts/' . $template, array('content' => $content));
         }
-        return $response_body;
+        return $responseBody;
     }
 
     /**

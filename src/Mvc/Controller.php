@@ -38,6 +38,9 @@ class Controller
     /** @var array $headers */
     private $headers;
 
+    /** @var int $statusCode */
+    private $statusCode = 200;
+
 
 
     /**
@@ -267,6 +270,24 @@ class Controller
     }
 
     /**
+     * @param int $statusCode
+     */
+    public function setStatusCode($statusCode)
+    {
+        $this->statusCode = $statusCode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+
+
+    /**
      * @param $key
      * @return string|null
      */
@@ -277,8 +298,9 @@ class Controller
 
     /**
      * @param array $data
+     * @param int $statusCode
      */
-    public function sendJsonResponse(array $data)
+    public function sendJsonResponse(array $data, $statusCode = 200)
     {
         $this->disableLayout();
         $this->disableView();
@@ -287,5 +309,6 @@ class Controller
         $this->setHeader('Content-Type','application/json');
         $json = json_encode($data);
         $this->setBody($json);
+        $this->setStatusCode($statusCode);
     }
 }
