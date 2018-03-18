@@ -242,7 +242,10 @@ class Route
     {
         if($this->optional)
         {
-            $this->config['params'][str_replace(':','',$this->optional)] = isset($this->matchedUriParts[$this->partCount]) ? $this->matchedUriParts[$this->partCount] : null;
+            $optional = str_replace(':', '', $this->optional);
+            $this->config['params'][$optional] = isset($this->matchedUriParts[$this->partCount])
+                ? $this->matchedUriParts[$this->partCount]
+                : null;
         }
     }
 

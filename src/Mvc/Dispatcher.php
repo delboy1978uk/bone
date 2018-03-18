@@ -68,7 +68,7 @@ class Dispatcher
 
         // gaaarr! there be the controller!
         $this->controller = new $this->config['controller_name']($this->request);
-        $this->controller->params = $this->config['params'];
+        $this->controller->params = isset($this->config['params']) ? $this->config['params'] : null;
 
         // where's the bloody action?
         if (!$this->checkActionExists()) {

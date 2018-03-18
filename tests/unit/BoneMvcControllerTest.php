@@ -44,7 +44,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     public function testGetDbAdapter()
     {
         Test::double('Bone\Db\Adapter\MySQL',[
-            'getHost' => '127.0.0.1',
+            'getHost' => 'mariadb',
             'getDatabase' => 'bone_db',
             'getUser'     => 'travis',
             'getPass'     => 'drinkgrog',
