@@ -117,7 +117,7 @@ class Controller
     public function getParam($param)
     {
         $params = $this->getParams();
-        return isset($params->$param) ? $params->$param : null;
+        return isset($params->$param) ? urldecode($params->$param) : null;
     }
 
     /**
