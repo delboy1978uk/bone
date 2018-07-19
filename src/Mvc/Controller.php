@@ -129,8 +129,7 @@ class Controller
      */
     public function getParam($param, $default = null)
     {
-        $params = $this->getParams();
-        return isset($params->$param) ? urldecode($params->$param) : $default;
+        return isset($this->params->$param) ? urldecode($this->params->$param) : $default;
     }
 
     /**
