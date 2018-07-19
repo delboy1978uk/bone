@@ -41,18 +41,28 @@ class Controller
     /** @var int $statusCode */
     private $statusCode = 200;
 
+    /** @var object $params */
+    public $params;
 
+    /** @var array $post */
+    protected $post = [];
 
-    /**
-     * @var MySQL
-     */
+    /** @var MySQL */
     protected $_db;
 
+    /**
+     * Controller constructor.
+     * @param ServerRequestInterface $request
+     */
     public function __construct(ServerRequestInterface $request)
     {
         $this->request = $request;
         $this->headers = [];
         $this->params = (object) $this->request->getQueryParams();
+
+        if ($this->request->getMethod() == 'POST') {
+            $this->post = $this->request->getParsedBody();
+        }
 
         $this->initViewEngine();
         $this->view = new stdClass();
@@ -110,17 +120,17 @@ class Controller
 
     public function getParams()
     {
-        return (object) $this->params;
+        return array_merge((array) $this->params, $this->post);
     }
 
     /**
      * @param $param
      * @return mixed
      */
-    public function getParam($param)
+    public function getParam($param, $default = null)
     {
         $params = $this->getParams();
-        return isset($params->$param) ? $params->$param : null;
+        return isset($params->$param) ? urldecode($params->$param) : $default;
     }
 
     /**
@@ -310,5 +320,19 @@ class Controller
         $json = json_encode($data);
         $this->setBody($json);
         $this->setStatusCode($statusCode);
+    }
+
+    /**
+     * @param null $key
+     * @param string $default
+     * @return array|string|null
+     */
+    public function getPost($key = null, $default = null)
+    {
+        if ($key) {
+            return array_key_exists($key, $this->post) ? $this->post[$key] : $default;
+        }
+
+        return $this->post;
     }
 }
