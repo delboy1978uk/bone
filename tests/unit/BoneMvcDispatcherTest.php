@@ -103,7 +103,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         Test::double(new Bone\Mvc\Controller($this->request),[ 'errorAction' => null, 'notFoundAction' => null]);
         $dispatcher = new Dispatcher($this->request,$this->response);
         $result = $this->invokeMethod($dispatcher,'sinkingShip',[new Bone\Exception('argh')]);
-        $reflection = new ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass(get_class($dispatcher));
         $prop = $reflection->getProperty('controller');
         $prop->setAccessible(true);
         $body = $prop->getValue($dispatcher);
