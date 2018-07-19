@@ -106,7 +106,8 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $reflection = new ReflectionClass(get_class($dispatcher));
         $prop = $reflection->getProperty('controller');
         $prop->setAccessible(true);
-        $body = $prop->getValue($dispatcher);
+        $controller = $prop->getValue($dispatcher);
+        $body = $controller->getBody();
         $this->assertEquals('500 Page Error.', $body);
     }
 
