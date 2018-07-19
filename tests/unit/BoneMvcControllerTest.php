@@ -1,7 +1,10 @@
 <?php
 
 use AspectMock\Test;
+use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\Controller;
+use Bone\Mvc\View\ViewEngine;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequest as Request;
 
 class BoneMvcControllerTest extends \Codeception\TestCase\Test
@@ -20,6 +23,8 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     {
         $request = new Request();
         $this->controller = new Controller($request) ;
+        $this->controller->init();
+        $this->controller->postDispatch();
         $this->controller->setParam('drink','rum');
     }
 
@@ -28,29 +33,19 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         Test::clean();
     }
 
-
-    public function testInit()
-    {
-        $this->assertNull($this->controller->init());
-    }
-
-
-    public function testPostDispatch()
-    {
-        $this->assertNull($this->controller->postDispatch());
-    }
-
-
+    /**
+     * @throws Exception
+     */
     public function testGetDbAdapter()
     {
-        Test::double('Bone\Db\Adapter\MySQL',[
+        Test::double(MySQL::class,[
             'getHost' => '127.0.0.1',
             'getDatabase' => 'bone_db',
             'getUser'     => 'travis',
             'getPass'     => 'drinkgrog',
         ]);
         $db = $this->controller->getDbAdapter();
-        $this->assertInstanceOf('PDO',$db);
+        $this->assertInstanceOf(PDO::class, $db);
 
     }
 
@@ -58,7 +53,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetViewEngine()
     {
-        $this->assertInstanceOf('Bone\Mvc\View\ViewEngine',$this->controller->getViewEngine());
+        $this->assertInstanceOf(ViewEngine::class, $this->controller->getViewEngine());
     }
 
 
@@ -104,13 +99,19 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     public function testGetSetRequest()
     {
         $this->controller->setRequest(new Request());
-        $this->assertInstanceOf('Psr\Http\Message\ServerRequestInterface', $this->controller->getRequest());
+        $this->assertInstanceOf(ServerRequestInterface::class, $this->controller->getRequest());
     }
 
 
     public function testGetParams()
     {
-        $this->assertInstanceOf('StdClass',$this->controller->getParams());
+        $this->assertTrue(is_array($this->controller->getParams()));
+    }
+
+
+    public function testGetPost()
+    {
+        $this->assertTrue(is_array($this->controller->getPost()));
     }
 
 
@@ -119,14 +120,13 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         $this->assertEquals('rum',$this->controller->getParam('drink'));
     }
 
-
+    /**
+     * @throws ReflectionException
+     */
     public function testNotFoundAction()
     {
         $this->assertNull($this->invokeMethod($this->controller, 'notFoundAction', []));
     }
-
-
-
 
     public function testSendJsonResponse()
     {
@@ -147,6 +147,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
      * @param object &$object
      * @param string $methodName
      * @param array  $parameters
+     * @throws ReflectionException
      *
      * @return mixed could return anything!.
      */
