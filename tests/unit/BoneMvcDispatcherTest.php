@@ -164,7 +164,11 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $dispatcher = new Dispatcher($this->request,$this->response);
         $this->setPrivateProperty($dispatcher,'controller',$controller);
         $this->setPrivateProperty($controller,'viewEngine',$plates);
-        $body = $this->invokeMethod($dispatcher,'distributeBooty');
+
+        ob_start();
+        $this->invokeMethod($dispatcher,'distributeBooty');
+        $body = ob_end_clean();
+        
         $this->assertTrue(is_string($body));
         $this->assertEquals("<h1>Layout Template</h1>\n<p><h1>404</h1></p>",$body);
     }
