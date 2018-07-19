@@ -155,7 +155,9 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         ]);
     }
 
-
+    /**
+     * @throws \Bone\Filter\Exception
+     */
     public function testGetResponseBody()
     {
         $plates = new PlatesEngine(__DIR__);
@@ -168,12 +170,14 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         ob_start();
         $this->invokeMethod($dispatcher,'distributeBooty');
         $body = ob_end_clean();
-        
+
         $this->assertTrue(is_string($body));
         $this->assertEquals("<h1>Layout Template</h1>\n<p><h1>404</h1></p>",$body);
     }
 
-
+    /**
+     * @throws \Bone\Filter\Exception
+     */
     public function testFireCannons()
     {
         $plates = new PlatesEngine(__DIR__);
