@@ -169,12 +169,13 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         Registry::ahoy()->set('templates','blah');
         $controller = new Controller($this->request);
         $dispatcher = new Dispatcher($this->request,$this->response);
-        $this->setPrivateProperty($dispatcher,'controller',$controller);
-        $this->setPrivateProperty($controller,'viewEngine',$plates);
+        $this->setPrivateProperty($dispatcher,'controller', $controller);
+        $this->setPrivateProperty($controller,'viewEngine', $plates);
 
         ob_start();
         $this->invokeMethod($dispatcher,'distributeBooty');
-        $body = ob_end_flush();
+        $body = ob_get_contents();
+        ob_end_clean();
 
         $this->assertTrue(is_string($body));
         $this->assertEquals("<h1>Layout Template</h1>\n<p><h1>404</h1></p>",$body);
@@ -211,13 +212,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         ob_end_clean();
 
         $this->assertEquals("<h1>Layout Template</h1>\n<p>Override this method</p>", $content);
-
-        $dispatcher = new Dispatcher($this->request,$this->response);
-        $controller = new Controller($this->request);
-        $this->setPrivateProperty($dispatcher,'controller',$controller);
-        $this->setPrivateProperty($dispatcher,'config',$config);
-
-        $dispatcher->fireCannons();
+        
     }
 
 
