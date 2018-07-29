@@ -8,6 +8,7 @@ use Bone\Mvc\View\PlatesEngine;
 use PDO;
 use Psr\Http\Message\ServerRequestInterface;
 use stdClass;
+use Zend\Diactoros\Response\TextResponse;
 
 class Controller
 {
@@ -86,6 +87,11 @@ class Controller
     {
         $viewPath = file_exists(APPLICATION_PATH.'/src/App/View/') ? APPLICATION_PATH.'/src/App/View/' : '.' ;
         $engine = new PlatesEngine($viewPath);
+        $this->viewEngine = $engine;
+    }
+
+    public function setViewEngine(ViewEngine $engine)
+    {
         $this->viewEngine = $engine;
     }
 
@@ -240,6 +246,7 @@ class Controller
         $this->disableView();
         $this->disableLayout();
         $this->body = '500 Page Error.';
+        return new TextResponse($this->body, 500);
     }
 
     public function notFoundAction()
@@ -276,6 +283,14 @@ class Controller
     {
         $this->headers[$key] = $value;
         return $this;
+    }
+
+    /**
+     * @param array $headers
+     */
+    public function setHeaders(array $headers)
+    {
+        $this->headers = $headers;
     }
 
     /**

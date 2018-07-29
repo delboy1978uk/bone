@@ -2,7 +2,7 @@
 
 namespace Bone;
 
-use Bone\Filter\Exception as FilterException;
+use Bone\Filter\FilterException;
 use Bone\Filter\FilterInterface;
 
 abstract class Filter
@@ -11,10 +11,11 @@ abstract class Filter
      * @param string $string
      * @param string $filter_type
      * @return string
-     * @throws Filter\Exception
+     * @throws FilterException
      */
     public static function filterString($string, $filterType)
     {
+        $filter = null;
         $boneFilter = 'Bone\Filter\String\\'.$filterType;
 
         if (class_exists($filterType)) {

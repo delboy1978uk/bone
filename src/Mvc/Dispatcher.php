@@ -190,15 +190,22 @@ class Dispatcher
     {
         // run th' controller action
         $action = $this->config['action_name'];
+
         $this->controller->init();
         $vars = $this->controller->$action();
+
         if (is_array($vars)) {
+
             $viewVars = (array) $this->controller->view;
             $view = (object) array_merge($vars, $viewVars);
             $this->controller->view = $view;
+
         } elseif ($vars instanceof ResponseInterface) {
+
             $this->controller->view = $vars;
+
         }
+
         $this->controller->postDispatch();
     }
 

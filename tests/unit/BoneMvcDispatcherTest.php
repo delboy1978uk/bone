@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface ;
 use Psr\Http\Message\ResponseInterface;
 use AspectMock\Test;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\TextResponse;
 use Zend\Diactoros\ServerRequest;
 
 class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
@@ -36,6 +37,8 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     protected function _after()
     {
         Test::clean();
+        unset($this->request);
+        unset($this->response);
     }
 
     public function testCheckControllerExists()
@@ -187,9 +190,9 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     public function testFireCannons()
     {
         $plates = new PlatesEngine(__DIR__);
-        Registry::ahoy()->set('templates','blah');
+        Registry::ahoy()->set('templates', 'blah');
 
-        Test::double('Bone\Mvc\Dispatcher',['checkNavigator' => null,'sinkingShip' => 'glurg']);
+        Test::double(Dispatcher::class, ['checkNavigator' => null, 'sinkingShip' => 'glurg']);
 
         $dispatcher = new Dispatcher($this->request,$this->response);
         $controller = new Controller($this->request);
@@ -212,11 +215,87 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         ob_end_clean();
 
         $this->assertEquals("<h1>Layout Template</h1>\n<p>Override this method</p>", $content);
-        
+
+    }
+
+    public function testDistributeBootySendsResponse()
+    {
+        $controller = new Controller($this->request);
+        $controller->view = new TextResponse('Message in a bottle!');
+        $dispatcher = new Dispatcher($this->request, $this->response);
+        $this->setPrivateProperty($dispatcher,'controller', $controller);
+
+        $plates = new PlatesEngine(__DIR__);
+        Registry::ahoy()->set('templates','blah');
+
+        $this->setPrivateProperty($controller,'viewEngine',$plates);
+        $this->setPrivateProperty($dispatcher,'controller',$controller);
+        $config = [
+            'action_name' => 'errorAction',
+        ];
+        $this->setPrivateProperty($dispatcher,'config',$config);
+
+        ob_start();
+        $this->invokeMethod($dispatcher, 'distributeBooty');
+        $body = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertTrue(is_string($body));
+        $this->assertEquals('Message in a bottle!', $body);
+    }
+
+    public function testSetStatusCode()
+    {
+        $controller = new Controller($this->request);
+        $controller->setStatusCode(700);
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $this->setPrivateProperty($dispatcher,'controller', $controller);
+        $this->invokeMethod($dispatcher, 'setStatusCode');
+        $reflection = new ReflectionClass(Dispatcher::class);
+        $prop = $reflection->getProperty('response');
+        $prop->setAccessible(true);
+        $response = $prop->getValue($dispatcher);
+        $this->assertInstanceOf(Response::class, $response);
+    }
+
+    public function testSetHeaders()
+    {
+        $controller = new Controller($this->request);
+        $controller->setHeaders(['Content-Type' => 'application/json']);
+        $dispatcher = new Dispatcher($this->request,$this->response);
+        $this->setPrivateProperty($dispatcher,'controller', $controller);
+        $this->invokeMethod($dispatcher, 'setHeaders');
+        $reflection = new ReflectionClass(Dispatcher::class);
+        $prop = $reflection->getProperty('response');
+        $prop->setAccessible(true);
+        $response = $prop->getValue($dispatcher);
+        /** @var Response $response */
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertArrayHasKey('Content-Type', $response->getHeaders());
+    }
+
+    public function testPlunderEnemyShipSetsReturnedResponse()
+    {
+        $controller = new Controller($this->request);
+        $dispatcher = new Dispatcher($this->request, new Response());
+
+        $config = [
+            'action_name' => 'errorAction',
+        ];
+        $this->setPrivateProperty($dispatcher,'config', $config);
+        $this->setPrivateProperty($dispatcher,'controller', $controller);
+        $this->invokeMethod($dispatcher, 'plunderEnemyShip');
+
+        $reflection = new ReflectionClass(Dispatcher::class);
+        $prop = $reflection->getProperty('controller');
+        $prop->setAccessible(true);
+
+        $controller = $prop->getValue($dispatcher);
+        $this->assertInstanceOf(TextResponse::class, $controller->view);
     }
 
 
-    /**
+        /**
      * @param $object
      * @param $property
      * @param $value
