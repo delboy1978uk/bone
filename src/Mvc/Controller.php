@@ -135,7 +135,13 @@ class Controller
      */
     public function getParam($param, $default = null)
     {
-        return isset($this->params->$param) ? urldecode($this->params->$param) : $default;
+        $set = isset($this->params->$param);
+        if ($set && is_string($this->params->$param)) {
+            return urldecode($this->params->$param);
+        } elseif ($set) {
+            return $this->params->$param;
+        }
+        return $default;
     }
 
     /**
