@@ -42,7 +42,7 @@ class Controller
     /** @var int $statusCode */
     private $statusCode = 200;
 
-    /** @var object $params */
+    /** @var array $params */
     public $params;
 
     /** @var array $post */
@@ -59,7 +59,7 @@ class Controller
     {
         $this->request = $request;
         $this->headers = [];
-        $this->params = (object) $this->request->getQueryParams();
+        $this->params = $this->request->getQueryParams();
 
         if ($this->request->getMethod() == 'POST') {
             $this->post = $this->request->getParsedBody();
@@ -126,7 +126,7 @@ class Controller
 
     public function getParams()
     {
-        return array_merge((array) $this->params, $this->post);
+        return array_merge($this->params, $this->post);
     }
 
     /**
@@ -135,11 +135,11 @@ class Controller
      */
     public function getParam($param, $default = null)
     {
-        $set = isset($this->params->$param);
-        if ($set && is_string($this->params->$param)) {
-            return urldecode($this->params->$param);
+        $set = isset($this->params[$param]);
+        if ($set && is_string($this->params[$param])) {
+            return urldecode($this->params[$param]);
         } elseif ($set) {
-            return $this->params->$param;
+            return $this->params[$param];
         }
         return $default;
     }
@@ -151,7 +151,7 @@ class Controller
      */
     public function setParam($key, $val)
     {
-        $this->params->$key = $val;
+        $this->params[$key] = $val;
         return $this;
     }
 
