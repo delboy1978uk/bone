@@ -8,7 +8,7 @@
     }
   ],
   "require": {
-    "php": ">5.4",
+    "php": ">7.0",
     "delboy1978uk/barnacle": "*",
     "zendframework/zend-diactoros": "1.*",
     "league/plates": "*"

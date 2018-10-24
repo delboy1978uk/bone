@@ -27,13 +27,12 @@ class EnvironmentTest extends Test
     {
         $server = new Environment([]);
         $config = $server->fetchConfig(self::CONFIG_FOLDER, 'development');
-        die(var_dump($config));
         $this->assertCount(3, $config);
         $this->assertArrayHasKey('legacy config', $config);
         $this->assertArrayHasKey('development config', $config);
         $this->assertArrayHasKey('db', $config);
         $this->assertEquals('hello', $config['legacy config']);
-        $this->assertEquals('db', $config['dev value']);
+        $this->assertEquals('dev value', $config['db']);
     }
 
     public function testCanGetProdConfig()
@@ -45,6 +44,6 @@ class EnvironmentTest extends Test
         $this->assertArrayHasKey('production config', $config);
         $this->assertArrayHasKey('db', $config);
         $this->assertEquals('hello', $config['legacy config']);
-        $this->assertEquals('db', $config['production value']);
+        $this->assertEquals('production value', $config['db']);
     }
 }
