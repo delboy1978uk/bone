@@ -5,7 +5,13 @@ use Codeception\TestCase\Test;
 
 class EnvironmentTest extends Test
 {
-    const CONFIG_FOLDER = 'tests/_data/config';
+    const CONFIG_FOLDER = '/tests/_data/config';
+
+    public function __construct(string $name = null, array $data = [], string $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+    }
 
     /**
      * @var \UnitTester
@@ -15,7 +21,7 @@ class EnvironmentTest extends Test
     public function testCanGetLegacyConfig()
     {
         $server = new Environment([]);
-        $config = $server->fetchConfig(self::CONFIG_FOLDER, '');
+        $config = $server->fetchConfig(getcwd() . self::CONFIG_FOLDER, '');
         $this->assertCount(2, $config);
         $this->assertArrayHasKey('legacy config', $config);
         $this->assertArrayHasKey('db', $config);
@@ -26,7 +32,7 @@ class EnvironmentTest extends Test
     public function testCanGetDevConfig()
     {
         $server = new Environment([]);
-        $config = $server->fetchConfig(self::CONFIG_FOLDER, 'development');
+        $config = $server->fetchConfig(getcwd() . self::CONFIG_FOLDER, 'development');
         $this->assertCount(3, $config);
         $this->assertArrayHasKey('legacy config', $config);
         $this->assertArrayHasKey('development config', $config);
@@ -38,7 +44,7 @@ class EnvironmentTest extends Test
     public function testCanGetProdConfig()
     {
         $server = new Environment([]);
-        $config = $server->fetchConfig(self::CONFIG_FOLDER, 'production');
+        $config = $server->fetchConfig(getcwd() . self::CONFIG_FOLDER, 'production');
         $this->assertCount(3, $config);
         $this->assertArrayHasKey('legacy config', $config);
         $this->assertArrayHasKey('production config', $config);

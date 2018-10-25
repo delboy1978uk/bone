@@ -27,7 +27,6 @@ class Environment
         $config = $this->loadLegacyConfig($configFolder);
 
         if (!empty($applicationEnvironment)) {
-//            die(var_dump($config, $configFolder, $applicationEnvironment));
             $config = $this->loadEnvironmentConfig($configFolder, $applicationEnvironment, $config);
         }
 
@@ -78,7 +77,7 @@ class Environment
      */
     private function loadInConfig(array $config, string $file) : array
     {
-        $moreConfig = require_once $file;
+        $moreConfig = include $file;
         if (is_array($moreConfig)) {
             $config = array_merge($config, $moreConfig);
         }
