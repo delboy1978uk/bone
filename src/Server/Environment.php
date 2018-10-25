@@ -37,11 +37,10 @@ class Environment
      * @param string $configFolder
      * @return array
      */
-    private function loadLegacyConfig(string $configFolder) : array
+    private function loadLegacyConfig(string $configFolder): array
     {
         $config = [];
 
-        // load the config.php if it exists
         $path = $configFolder . '/config.php';
         if (file_exists($path)) {
             $config = $this->loadInConfig($config, $path);
@@ -56,9 +55,8 @@ class Environment
      * @param array $config
      * @return array
      */
-    private function loadEnvironmentConfig(string $configFolder, string $applicationEnvironment, array $config) : array
+    private function loadEnvironmentConfig(string $configFolder, string $applicationEnvironment, array $config): array
     {
-        // check environment config folder exists
         $path = $configFolder . '/' . $applicationEnvironment;
         if (file_exists($path)) {
             $files = glob($path . '/*.php');
@@ -75,7 +73,7 @@ class Environment
      * @param string $file
      * @return array
      */
-    private function loadInConfig(array $config, string $file) : array
+    private function loadInConfig(array $config, string $file): array
     {
         $moreConfig = include $file;
         if (is_array($moreConfig)) {
