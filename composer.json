@@ -9,9 +9,9 @@
   ],
   "require": {
     "php": ">7.0",
-    "delboy1978uk/barnacle": "*",
+    "delboy1978uk/barnacle": "^2.1",
     "zendframework/zend-diactoros": "1.*",
-    "league/plates": "*"
+    "league/plates": "^3.3"
   },
   "require-dev": {
     "codeception/codeception": "^2.2.8",
