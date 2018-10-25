@@ -5,8 +5,6 @@ use Codeception\TestCase\Test;
 
 class HasAttributesTraitTest extends Test
 {
-    const CONFIG_FOLDER = 'tests/_data/config';
-
     /**
      * @var \UnitTester
      */
