@@ -11,7 +11,8 @@
     "php": ">7.0",
     "delboy1978uk/barnacle": "^2.1",
     "zendframework/zend-diactoros": "1.*",
-    "league/plates": "^3.3"
+    "league/plates": "^3.3",
+    "zendframework/zend-mail": "^2.10"
   },
   "require-dev": {
     "codeception/codeception": "^2.2.8",
@@ -23,4 +24,3 @@
     }
   }
 }
-
