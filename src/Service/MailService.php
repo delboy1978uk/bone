@@ -46,7 +46,7 @@ class MailService
     }
 
     /**
-     *
+     * @return bool
      */
     public function send()
     {
@@ -60,6 +60,7 @@ class MailService
             ->setSubject($this->subject);
 
         $this->transport->send($this->mail);
+        return true;
     }
 
     /**
