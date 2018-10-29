@@ -3,12 +3,17 @@
 
 namespace Bone\Mvc;
 
+use Pimple\Container;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response;
 
 class Application
 {
+    /** @var Registry $registry */
     private $registry;
+
+    /** @var Registry $registry */
+    private $treasureChest;
 
     /**
      *  There be nay feckin wi' constructors on board this ship
@@ -32,9 +37,11 @@ class Application
         {
             $inst = new Application();
             $inst->registry = Registry::ahoy();
+            $inst->treasureChest = new Container();
             foreach($config as $key => $value)
             {
                 $inst->registry->set($key,$value);
+                $inst->treasureChest[$key] = $value;
             }
         }
         return $inst;
