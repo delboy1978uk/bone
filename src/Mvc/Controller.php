@@ -68,7 +68,8 @@ class Controller
         $this->params = $this->request->getQueryParams();
 
         if ($this->request->getMethod() == 'POST') {
-            $this->post = (array) $this->request->getParsedBody() ?: [];
+            $body = $this->request->getParsedBody();
+            $this->post = $body ?: [];
         }
 
         $this->initViewEngine();

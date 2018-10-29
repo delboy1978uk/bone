@@ -24,7 +24,11 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        $request = new Request(['hello' => 'world'], [], '/', 'POST');
+        $request = new Request([], [], '/', 'POST', 'hello=world',
+            ['Content-Type' => 'application/x-www-form-urlencoded'],
+            [], [],
+            ['hello' => 'world']
+        );
         $this->controller = new Controller($request) ;
         $this->controller->init();
         $this->controller->postDispatch();
@@ -154,6 +158,8 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     public function testGetParam()
     {
         $this->assertEquals('rum',$this->controller->getParam('drink'));
+        $this->controller->setParam('date', new DateTime());
+        $this->assertInstanceOf(DateTime::class, $this->controller->getParam('date'));
     }
 
     /**
