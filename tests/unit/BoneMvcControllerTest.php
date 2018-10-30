@@ -160,6 +160,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         $this->assertEquals('rum',$this->controller->getParam('drink'));
         $this->controller->setParam('date', new DateTime());
         $this->assertInstanceOf(DateTime::class, $this->controller->getParam('date'));
+        $this->assertEquals('fail', $this->controller->getParam('doesnteExist', 'fail'));
     }
 
     /**
