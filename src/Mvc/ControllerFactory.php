@@ -21,6 +21,7 @@ class ControllerFactory
         }
         /** @var Controller $controller */
         $controller = new $controller_name($request);
+
         return $controller;
     }
 }

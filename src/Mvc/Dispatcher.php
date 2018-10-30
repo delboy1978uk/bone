@@ -3,6 +3,7 @@
 namespace Bone\Mvc;
 
 use Bone\Filter;
+use Bone\Server\Environment;
 use Exception;
 use ReflectionClass;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,16 +28,20 @@ class Dispatcher
     /** @var ResponseInterface $response */
     private $response;
 
+    /** @var Environment $env */
+    private $env;
+
     /**
      * Dispatcher constructor.
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
-     * @throws Filter\Exception
+     * @throws \Exception
      */
-    public function __construct(ServerRequestInterface $request, ResponseInterface $response)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response, Environment $env)
     {
         $this->request = $request;
         $this->response = $response;
+        $this->env = $env;
 
         $router = new Router($request);
         $router->parseRoute();
@@ -69,6 +74,7 @@ class Dispatcher
         // gaaarr! there be the controller!
         $this->controller = new $this->config['controller_name']($this->request);
         $this->controller->params = isset($this->config['params']) ? $this->config['params'] : null;
+        $this->controller->setServerEnvironment($this->getEnv());
 
         // where's the bloody action?
         if (!$this->checkActionExists()) {
@@ -107,7 +113,8 @@ class Dispatcher
 
         if ($viewVars instanceof ResponseInterface) {
             $this->response = $viewVars;
-            return $this->sendResponse();
+            $this->sendResponse();
+            return;
         }
 
         $responseBody = $this->controller->getBody();
@@ -219,6 +226,7 @@ class Dispatcher
         $controllerName = class_exists('\App\Controller\ErrorController') ? 'App\Controller\ErrorController' : 'Bone\Mvc\Controller';
         $this->controller = new $controllerName($this->request);
         $this->controller->setParam('error', $e);
+        $this->controller->setServerEnvironment($this->getEnv());
         $reflection = new ReflectionClass(get_class($this->controller));
         $method = $reflection->getMethod('errorAction');
         $method->setAccessible(true);
@@ -273,6 +281,15 @@ class Dispatcher
         $this->config['controller'] = 'error';
         $this->config['action'] = 'not-found';
         $this->controller = new $this->config['controller_name']($this->request);
+        $this->controller->setServerEnvironment($this->getEnv());
         $this->response = $this->response->withStatus(404);
+    }
+
+    /**
+     * @return Environment
+     */
+    private function getEnv(): Environment
+    {
+        return $this->env;
     }
 }

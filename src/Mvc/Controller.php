@@ -5,6 +5,7 @@ namespace Bone\Mvc;
 use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Mvc\View\PlatesEngine;
+use Bone\Server\Environment;
 use Bone\Service\MailService;
 use PDO;
 use Psr\Http\Message\ServerRequestInterface;
@@ -56,6 +57,9 @@ class Controller
 
     /** @var MySQL */
     protected $_db;
+
+    /** @var Environment $serverEnvironment */
+    protected $serverEnvironment;
 
     /**
      * Controller constructor.
@@ -385,5 +389,21 @@ class Controller
         }
 
         return $this->post;
+    }
+
+    /**
+     * @return Environment
+     */
+    public function getServerEnvironment(): Environment
+    {
+        return $this->serverEnvironment;
+    }
+
+    /**
+     * @param Environment $serverEnvironment
+     */
+    public function setServerEnvironment(Environment $serverEnvironment)
+    {
+        $this->serverEnvironment = $serverEnvironment;
     }
 }
