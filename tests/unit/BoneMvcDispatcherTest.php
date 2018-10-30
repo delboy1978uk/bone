@@ -4,6 +4,7 @@ use Bone\Mvc\Dispatcher;
 use Bone\Mvc\Controller;
 use Bone\Mvc\Registry;
 use Bone\Mvc\View\PlatesEngine;
+use Bone\Server\Environment;
 use Psr\Http\Message\ServerRequestInterface ;
 use Psr\Http\Message\ResponseInterface;
 use AspectMock\Test;
@@ -41,20 +42,26 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         unset($this->response);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testCheckControllerExists()
     {
         // check for an obviouslly existant class
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->setPrivateProperty($dispatcher,'config',[
             'controller_name' => 'DateTime'
         ]);
         $this->assertTrue($this->invokeMethod($dispatcher,'checkControllerExists'));
     }
 
+    /**
+     * @throws Exception
+     */
     public function testCheckActionExists()
     {
         // check for an obviously existent class
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->setPrivateProperty($dispatcher,'controller',new DateTime());
         $this->setPrivateProperty($dispatcher,'config',[
             'action_name' => 'modify',
@@ -62,31 +69,37 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->assertTrue($this->invokeMethod($dispatcher,'checkActionExists'));
     }
 
-
+    /**
+     * @throws Exception
+     */
     public function testSetNotFound()
     {
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->assertNull($this->invokeMethod($dispatcher,'setNotFound'));
     }
 
-
+    /**
+     * @throws Exception
+     */
     public function testTemplateCheck()
     {
         $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
         Registry::ahoy()->set('templates','blah');
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $controller = new Controller($this->request);
         $this->setPrivateProperty($controller,'viewEngine',$plates);
         $this->assertEquals("<h1>Layout Template</h1>\n<p>moreblah</p>",$this->invokeMethod($dispatcher,'templateCheck',[$controller,'moreblah']));
     }
 
-
+    /**
+     * @throws Exception
+     */
     public function testPlunderEnemyShip()
     {
         $plates = new PlatesEngine(__DIR__.DIRECTORY_SEPARATOR);
         Registry::ahoy()->set('templates','blah');
 
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->setPrivateProperty($dispatcher,'config',[
             'action_name' => 'init',
         ]);
@@ -99,13 +112,15 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     /**
      *  check it be runnin through setting the destination
+     *
+     * @throws Exception
      */
     public function testSinkingShip()
     {
         Registry::ahoy()->set('templates', null);
         Test::double(new Bone\Mvc\Controller($this->request),[ 'errorAction' => null, 'notFoundAction' => null]);
-        $dispatcher = new Dispatcher($this->request,$this->response);
-        $result = $this->invokeMethod($dispatcher,'sinkingShip',[new Bone\Exception('argh')]);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
+        $this->invokeMethod($dispatcher,'sinkingShip',[new Bone\Exception('argh')]);
         $reflection = new ReflectionClass(get_class($dispatcher));
         $prop = $reflection->getProperty('controller');
         $prop->setAccessible(true);
@@ -114,9 +129,12 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->assertEquals('500 Page Error.', $body);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testGetTemplateName()
     {
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $output = $this->invokeMethod($dispatcher, 'getTemplateName', [null]);
         $this->assertNull($output);
         $output = $this->invokeMethod($dispatcher, 'getTemplateName', ['pirated-template']);
@@ -125,28 +143,15 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->assertEquals('pirated-template', $output);
     }
 
-//    public function testHandleException()
-//    {
-//        Registry::ahoy()->set('templates', null);
-//        $fakeController = Test::spec(new Bone\Mvc\Controller($this->request),[
-//            'errorAction' => null,
-//            'notFoundAction' => null,
-//            'viewEnabled' => true,
-//            'getViewEngine' => new Exception('gaaaargh!'),
-//        ]);
-//        $dispatcher = new Dispatcher($this->request,$this->response);
-//        $this->setPrivateProperty($dispatcher, 'controller', $fakeController);
-//        $this->assertEquals('404 Page Not Found.',$dispatcher->fireCannons());
-//    }
-
 
     /**
      *  check it be runnin through setting the destination
      *
+     * @throws Exception
      */
     public function testCheckNavigator()
     {
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->setPrivateProperty($dispatcher,'config',[
             'controller_name' => 'no controller',
             'action_name' => 'and no action',
@@ -164,14 +169,14 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     }
 
     /**
-     * @throws \Bone\Filter\Exception
+     * @throws Exception
      */
     public function testGetResponseBody()
     {
         $plates = new PlatesEngine(__DIR__);
         Registry::ahoy()->set('templates','blah');
         $controller = new Controller($this->request);
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->setPrivateProperty($dispatcher,'controller', $controller);
         $this->setPrivateProperty($controller,'viewEngine', $plates);
 
@@ -185,7 +190,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     }
 
     /**
-     * @throws \Bone\Filter\Exception
+     * @throws Exception
      */
     public function testFireCannons()
     {
@@ -194,7 +199,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
         Test::double(Dispatcher::class, ['checkNavigator' => null, 'sinkingShip' => 'glurg']);
 
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $controller = new Controller($this->request);
         $controller->setHeader('rubber', 'chicken');
         $this->assertEquals('chicken', $controller->getHeader('rubber'));
@@ -218,11 +223,14 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     }
 
+    /**
+     * @throws Exception
+     */
     public function testDistributeBootySendsResponse()
     {
         $controller = new Controller($this->request);
         $controller->view = new TextResponse('Message in a bottle!');
-        $dispatcher = new Dispatcher($this->request, $this->response);
+        $dispatcher = new Dispatcher($this->request, $this->response, new Environment([]));
         $this->setPrivateProperty($dispatcher,'controller', $controller);
 
         $plates = new PlatesEngine(__DIR__);
@@ -244,11 +252,14 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->assertEquals('Message in a bottle!', $body);
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function testSetStatusCode()
     {
         $controller = new Controller($this->request);
         $controller->setStatusCode(700);
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->setPrivateProperty($dispatcher,'controller', $controller);
         $this->invokeMethod($dispatcher, 'setStatusCode');
         $reflection = new ReflectionClass(Dispatcher::class);
@@ -258,11 +269,14 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->assertInstanceOf(Response::class, $response);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testSetHeaders()
     {
         $controller = new Controller($this->request);
         $controller->setHeaders(['Content-Type' => 'application/json']);
-        $dispatcher = new Dispatcher($this->request,$this->response);
+        $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->setPrivateProperty($dispatcher,'controller', $controller);
         $this->invokeMethod($dispatcher, 'setHeaders');
         $reflection = new ReflectionClass(Dispatcher::class);
@@ -274,10 +288,13 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $this->assertArrayHasKey('Content-Type', $response->getHeaders());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testPlunderEnemyShipSetsReturnedResponse()
     {
         $controller = new Controller($this->request);
-        $dispatcher = new Dispatcher($this->request, new Response());
+        $dispatcher = new Dispatcher($this->request, new Response(), new Environment([]));
 
         $config = [
             'action_name' => 'errorAction',
@@ -295,11 +312,12 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     }
 
 
-        /**
+    /**
      * @param $object
      * @param $property
      * @param $value
      * @return mixed
+     * @throws ReflectionException
      */
     public function setPrivateProperty(&$object, $property, $value)
     {
@@ -320,6 +338,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
      * @param array  $parameters
      *
      * @return mixed could return anything!.
+     * @throws ReflectionException
      */
     public function invokeMethod(&$object, $methodName, array $parameters = array())
     {
