@@ -5,10 +5,13 @@ namespace Bone\Mvc;
 use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Mvc\View\PlatesEngine;
+use Bone\Service\MailService;
 use PDO;
 use Psr\Http\Message\ServerRequestInterface;
 use stdClass;
 use Zend\Diactoros\Response\TextResponse;
+use Zend\Mail\Transport\Smtp;
+use Zend\Mail\Transport\SmtpOptions;
 
 class Controller
 {
@@ -42,6 +45,9 @@ class Controller
     /** @var int $statusCode */
     private $statusCode = 200;
 
+    /** @var MailService $mailService */
+    private $mailService;
+
     /** @var array $params */
     public $params;
 
@@ -62,7 +68,8 @@ class Controller
         $this->params = $this->request->getQueryParams();
 
         if ($this->request->getMethod() == 'POST') {
-            $this->post = $this->request->getParsedBody();
+            $body = $this->request->getParsedBody();
+            $this->post = $body ?: [];
         }
 
         $this->initViewEngine();
@@ -105,6 +112,30 @@ class Controller
             $this->setDB();
         }
         return $this->_db->getConnection();
+    }
+
+    /**
+     * @return MailService
+     */
+    public function getMailService()
+    {
+        if (!$this->mailService instanceof MailService) {
+            $this->initMailService();
+        }
+
+        return $this->mailService;
+    }
+
+    private function initMailService()
+    {
+        $this->mailService = new MailService();
+        $options = Registry::ahoy()->get('mail');
+        if (isset($options['name']) && isset($options['host']) && isset($options['port']) ) {
+            $transport = new Smtp();
+            $options   = new SmtpOptions($options);
+            $transport->setOptions($options);
+            $this->mailService->setTransport($transport);
+        }
     }
 
     /**

@@ -19,6 +19,7 @@ class ControllerFactory
         {
             throw new Insult('Controller not found');
         }
+        /** @var Controller $controller */
         $controller = new $controller_name($request);
         return $controller;
     }

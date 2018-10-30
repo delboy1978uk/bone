@@ -1,11 +1,14 @@
 <?php
 
 use AspectMock\Test;
-use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\Controller;
+use Bone\Mvc\Registry;
+use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
+use Bone\Service\MailService;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequest as Request;
+use Zend\Mail\Transport\Smtp;
 
 class BoneMvcControllerTest extends \Codeception\TestCase\Test
 {
@@ -21,7 +24,11 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        $request = new Request();
+        $request = new Request([], [], '/', 'POST', 'hello=world',
+            ['Content-Type' => 'application/x-www-form-urlencoded'],
+            [], [],
+            ['hello' => 'world']
+        );
         $this->controller = new Controller($request) ;
         $this->controller->init();
         $this->controller->postDispatch();
@@ -38,22 +45,39 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
      */
     public function testGetDbAdapter()
     {
-        Test::double(MySQL::class,[
-            'getHost' => '127.0.0.1',
-            'getDatabase' => 'bone_db',
-            'getUser'     => 'travis',
-            'getPass'     => 'drinkgrog',
+        Test::double(PDO::class);
+        Registry::ahoy()->set('db',[
+            'host' => '127.0.0.1',
+            'database' => 'bone_db',
+            'user'     => 'travis',
+            'pass'     => 'drinkgrog',
         ]);
         $db = $this->controller->getDbAdapter();
         $this->assertInstanceOf(PDO::class, $db);
 
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testMailService()
+    {
+        Test::double(Smtp::class);
+        Registry::ahoy()->set('mail', [
+            'name' => 'test',
+            'host' => 'test',
+            'port' => 25,
+        ]);
+        $mail = $this->controller->getMailService();
+        $this->assertInstanceOf(MailService::class, $mail);
 
+    }
 
     public function testGetViewEngine()
     {
         $this->assertInstanceOf(ViewEngine::class, $this->controller->getViewEngine());
+        $this->controller->setViewEngine(new PlatesEngine('.'));
+        $this->assertInstanceOf(PlatesEngine::class, $this->controller->getViewEngine());
     }
 
 
@@ -122,13 +146,20 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     public function testGetPost()
     {
+        $post = $this->controller->getPost();
         $this->assertTrue(is_array($this->controller->getPost()));
+        $this->assertCount(1, $post);
+        $this->assertArrayHasKey('hello', $post);
+        $this->assertEquals('world', $post['hello']);
+        $this->assertEquals('world', $this->controller->getPost('hello'));
     }
 
 
     public function testGetParam()
     {
         $this->assertEquals('rum',$this->controller->getParam('drink'));
+        $this->controller->setParam('date', new DateTime());
+        $this->assertInstanceOf(DateTime::class, $this->controller->getParam('date'));
     }
 
     /**
