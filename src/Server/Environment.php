@@ -202,4 +202,12 @@ class Environment
     {
         return $this->getAttribute('HTTP_HOST');
     }
+
+    /**
+     * @return string
+     */
+    public function getSiteURL() : string
+    {
+        return $this->getRequestScheme() . '://' . $this->getHttpHost();
+    }
 }

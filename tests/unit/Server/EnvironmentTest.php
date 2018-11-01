@@ -46,4 +46,13 @@ class EnvironmentTest extends Test
         $this->assertEquals('hello', $config['legacy config']);
         $this->assertEquals('production value', $config['db']);
     }
+
+    public function testGetters()
+    {
+        $json = file_get_contents('tests/_data/server.json');
+        $server = json_decode($json, true);
+        $env = new Environment($server);
+        $this->assertEquals('https://awesome.scot', $env->getSiteURL());
+    }
+
 }
