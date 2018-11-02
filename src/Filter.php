@@ -9,14 +9,14 @@ abstract class Filter
 {
     /**
      * @param string $string
-     * @param string $filter_type
+     * @param string $filterType
      * @return string
      * @throws FilterException
      */
     public static function filterString($string, $filterType)
     {
         $filter = null;
-        $boneFilter = 'Bone\Filter\String\\'.$filterType;
+        $boneFilter = 'Bone\Filter\String\\' . $filterType;
 
         if (class_exists($filterType)) {
             $filter = new $filterType();
