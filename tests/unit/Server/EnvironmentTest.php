@@ -53,6 +53,19 @@ class EnvironmentTest extends Test
         $server = json_decode($json, true);
         $env = new Environment($server);
         $this->assertEquals('https://awesome.scot', $env->getSiteURL());
+        $this->assertEquals('development', $env->getApplicationEnv());
+        $this->assertEquals('/usr/local/etc/php', $env->getPhpIniDir());
+        $this->assertEquals('/var/www/html', $env->getPwd());
+        $this->assertEquals('www-data', $env->getUser());
+        $this->assertEquals('/', $env->getRequestUri());
+        $this->assertEquals('', $env->getQueryString());
+        $this->assertEquals('GET', $env->getRequestMethod());
+        $this->assertEquals('/var/www/html/public/index.php', $env->getScriptFilename());
+        $this->assertEquals('delboy1978uk@gmail.com', $env->getServerAdmin());
+        $this->assertEquals('/var/www/html/public', $env->getDocumentRoot());
+        $this->assertEquals('192.168.99.1', $env->getRemoteAddress());
+        $this->assertEquals(443, $env->getServerPort());
+        $this->assertEquals('awesome.scot', $env->getServerName());
     }
 
 }
