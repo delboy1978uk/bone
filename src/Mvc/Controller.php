@@ -473,11 +473,15 @@ class Controller
         if (!is_array($config)) {
             throw new LogicException('No i18n config found');
         }
+
         $factory = new TranslatorFactory();
         $translator = $factory->createTranslator($config);
-        /** @var Engine $engine */
+
         $engine = $this->getViewEngine();
-        $engine->loadExtension(new Translate($translator));
+        if ($engine instanceof Engine) {
+            $engine->loadExtension(new Translate($translator));
+        }
+
         return $translator;
     }
 }
