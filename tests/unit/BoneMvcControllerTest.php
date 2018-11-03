@@ -196,7 +196,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
                 'default' => 'tests/_data/log/default_log',
             ],
         ]);
-
+        $this->invokeMethod($this->controller, 'initLogs');
         $log = $this->controller->getLog();
         $this->assertInstanceOf(Logger::class, $log);
     }
@@ -217,7 +217,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     {
         Registry::ahoy()->set('log', []);
         $this->expectException(InvalidArgumentException::class);
-        $this->controller->getLog();
+        $this->invokeMethod($this->controller, 'initLogs');
     }
 
     /**
@@ -251,6 +251,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     /**
      * @return Translator
+     * @throws ReflectionException
      */
     private function getTranslatorObject()
     {
@@ -261,6 +262,7 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
             'supported_locales' => ['en_GB', 'nl_BE', 'fr_BE'],
         ]);
 
+        $this->invokeMethod($this->controller, 'initTranslator');
         $translator = $this->controller->getTranslator();
 
         return $translator;

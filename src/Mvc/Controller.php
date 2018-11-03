@@ -76,6 +76,7 @@ class Controller
     /**
      * Controller constructor.
      * @param ServerRequestInterface $request
+     * @throws \Exception
      */
     public function __construct(ServerRequestInterface $request)
     {
@@ -89,6 +90,8 @@ class Controller
         }
 
         $this->initViewEngine();
+        $this->initTranslator();
+        $this->initLogs();
         $this->view = new stdClass();
         $this->layoutEnabled = true;
         $this->viewEnabled = true;
@@ -178,7 +181,8 @@ class Controller
 
     /**
      * @param $param
-     * @return mixed
+     * @param null $default
+     * @return mixed|null|string
      */
     public function getParam($param, $default = null)
     {
@@ -420,13 +424,13 @@ class Controller
     }
 
     /**
-     * @return array|\Monolog\Logger[]
-     * @throws \Exception
+     * @param string $channel
+     * @return Logger
      */
-    public function getLog($channel = 'default')
+    public function getLog($channel = 'default'): Logger
     {
         if (!$this->log) {
-            $this->log = $this->initLogs();
+            throw new LogicException('No log config found');
         }
 
         if (!isset($this->log[$channel])) {
@@ -437,19 +441,16 @@ class Controller
     }
 
     /**
-     * @return array|\Monolog\Logger[]
      * @throws \Exception
      */
     private function initLogs()
     {
         $config = Registry::ahoy()->get('log');
-        if (!is_array($config)) {
-            throw new LogicException('No log config found');
+        if (is_array($config)) {
+            $factory = new LoggerFactory();
+            $logs = $factory->createLoggers($config);
+            $this->log = $logs;
         }
-        $factory = new LoggerFactory();
-        $logs = $factory->createLoggers($config);
-        return $logs;
-
     }
 
     /**
@@ -458,30 +459,26 @@ class Controller
     public function getTranslator()
     {
         if (!$this->translator) {
-            $this->translator = $this->initTranslator();
+            throw new LogicException('No i18n config found');
         }
 
         return $this->translator;
     }
 
-    /**
-     * @return \Zend\I18n\Translator\Translator
-     */
     private function initTranslator()
     {
         $config = Registry::ahoy()->get('i18n');
-        if (!is_array($config)) {
-            throw new LogicException('No i18n config found');
+        if (is_array($config) && !$this->translator) {
+
+            $factory = new TranslatorFactory();
+            $translator = $factory->createTranslator($config);
+
+            $engine = $this->getViewEngine();
+            if ($engine instanceof Engine) {
+                $engine->loadExtension(new Translate($translator));
+            }
+
+            $this->translator = $translator;
         }
-
-        $factory = new TranslatorFactory();
-        $translator = $factory->createTranslator($config);
-
-        $engine = $this->getViewEngine();
-        if ($engine instanceof Engine) {
-            $engine->loadExtension(new Translate($translator));
-        }
-
-        return $translator;
     }
 }
