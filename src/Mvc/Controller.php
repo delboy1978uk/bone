@@ -8,8 +8,10 @@ use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\Service\LoggerFactory;
 use Bone\Service\MailService;
+use Bone\Service\TranslatorFactory;
 use InvalidArgumentException;
 use LogicException;
+use Monolog\Logger;
 use PDO;
 use Psr\Http\Message\ServerRequestInterface;
 use stdClass;
@@ -64,7 +66,10 @@ class Controller
     /** @var Environment $serverEnvironment */
     protected $serverEnvironment;
 
+    /** @var Logger[] $log */
     protected $log;
+
+    protected $translator;
 
     /**
      * Controller constructor.
@@ -437,11 +442,37 @@ class Controller
     {
         $config = Registry::ahoy()->get('log');
         if (!is_array($config)) {
-            throw new LogicException('No config found');
+            throw new LogicException('No log config found');
         }
         $factory = new LoggerFactory();
         $logs = $factory->createLoggers($config);
         return $logs;
 
+    }
+
+    /**
+     * @return \Zend\I18n\Translator\Translator
+     */
+    public function getTranslator()
+    {
+        if (!$this->translator) {
+            $this->translator = $this->initTranslator();
+        }
+
+        return $this->translator;
+    }
+
+    /**
+     * @return \Zend\I18n\Translator\Translator
+     */
+    private function initTranslator()
+    {
+        $config = Registry::ahoy()->get('i18n');
+        if (!is_array($config)) {
+            throw new LogicException('No i18n config found');
+        }
+        $factory = new TranslatorFactory();
+        $translator = $factory->createTranslator($config);
+        return $translator;
     }
 }

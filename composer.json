@@ -14,7 +14,8 @@
     "league/plates": "^3.3",
     "zendframework/zend-mail": "^2.10",
     "zendframework/zend-servicemanager": "^3.3",
-    "monolog/monolog": "^1.23"
+    "monolog/monolog": "^1.23",
+    "zendframework/zend-i18n": "^2.9"
   },
   "require-dev": {
     "codeception/codeception": "^2.2.8",

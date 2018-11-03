@@ -9,6 +9,7 @@ use Bone\Service\MailService;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequest as Request;
+use Zend\I18n\Translator\Translator;
 use Zend\Mail\Transport\Smtp;
 
 class BoneMvcControllerTest extends \Codeception\TestCase\Test
@@ -217,6 +218,52 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         Registry::ahoy()->set('log', []);
         $this->expectException(InvalidArgumentException::class);
         $this->controller->getLog();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetTranslator()
+    {
+        $translator = $this->getTranslatorObject();
+        $this->assertInstanceOf(Translator::class, $translator);
+    }
+
+    /**
+     * @return Translator
+     */
+    private function getTranslatorObject()
+    {
+        Registry::ahoy()->set('i18n', [
+            'translations_dir' => 'tests/_data/translations',
+            'type' => \Zend\I18n\Translator\Loader\Gettext::class,
+            'default_locale' => 'en_GB',
+            'supported_locales' => ['en_GB', 'nl_BE', 'fr_BE'],
+        ]);
+
+        $translator = $this->controller->getTranslator();
+
+        return $translator;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testTranslateEnglish()
+    {
+        $translator = $this->getTranslatorObject();
+        $translator->setLocale('en_GB');
+        $this->assertEquals('Hello', $translator->translate('greeting'));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testTranslateDutch()
+    {
+        $translator = $this->getTranslatorObject();
+        $translator->setLocale('nl_BE');
+        $this->assertEquals('Hoi', $translator->translate('greeting'));
     }
 
 
