@@ -3,6 +3,7 @@
 namespace Bone\Mvc;
 
 use Bone\Db\Adapter\MySQL;
+use Bone\Mvc\View\Extension\Plates\Translate;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
@@ -10,6 +11,7 @@ use Bone\Service\LoggerFactory;
 use Bone\Service\MailService;
 use Bone\Service\TranslatorFactory;
 use InvalidArgumentException;
+use League\Plates\Engine;
 use LogicException;
 use Monolog\Logger;
 use PDO;
@@ -473,6 +475,9 @@ class Controller
         }
         $factory = new TranslatorFactory();
         $translator = $factory->createTranslator($config);
+        /** @var Engine $engine */
+        $engine = $this->getViewEngine();
+        $engine->loadExtension(new Translate($translator));
         return $translator;
     }
 }

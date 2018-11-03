@@ -230,23 +230,6 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     }
 
     /**
-     * @return Translator
-     */
-    private function getTranslatorObject()
-    {
-        Registry::ahoy()->set('i18n', [
-            'translations_dir' => 'tests/_data/translations',
-            'type' => \Zend\I18n\Translator\Loader\Gettext::class,
-            'default_locale' => 'en_GB',
-            'supported_locales' => ['en_GB', 'nl_BE', 'fr_BE'],
-        ]);
-
-        $translator = $this->controller->getTranslator();
-
-        return $translator;
-    }
-
-    /**
      * @throws Exception
      */
     public function testTranslateEnglish()
@@ -264,6 +247,23 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         $translator = $this->getTranslatorObject();
         $translator->setLocale('nl_BE');
         $this->assertEquals('Hoi', $translator->translate('greeting'));
+    }
+
+    /**
+     * @return Translator
+     */
+    private function getTranslatorObject()
+    {
+        Registry::ahoy()->set('i18n', [
+            'translations_dir' => 'tests/_data/translations',
+            'type' => \Zend\I18n\Translator\Loader\Gettext::class,
+            'default_locale' => 'en_GB',
+            'supported_locales' => ['en_GB', 'nl_BE', 'fr_BE'],
+        ]);
+
+        $translator = $this->controller->getTranslator();
+
+        return $translator;
     }
 
 
