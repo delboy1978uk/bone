@@ -6,7 +6,10 @@ use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
+use Bone\Service\LoggerFactory;
 use Bone\Service\MailService;
+use InvalidArgumentException;
+use LogicException;
 use PDO;
 use Psr\Http\Message\ServerRequestInterface;
 use stdClass;
@@ -60,6 +63,8 @@ class Controller
 
     /** @var Environment $serverEnvironment */
     protected $serverEnvironment;
+
+    protected $log;
 
     /**
      * Controller constructor.
@@ -405,5 +410,38 @@ class Controller
     public function setServerEnvironment(Environment $serverEnvironment)
     {
         $this->serverEnvironment = $serverEnvironment;
+    }
+
+    /**
+     * @return array|\Monolog\Logger[]
+     * @throws \Exception
+     */
+    public function getLog($channel = 'default')
+    {
+        if (!$this->log) {
+            $this->log = $this->initLogs();
+        }
+
+        if (!isset($this->log[$channel])) {
+            throw new InvalidArgumentException('No log channel with that name found');
+        }
+
+        return $this->log[$channel];
+    }
+
+    /**
+     * @return array|\Monolog\Logger[]
+     * @throws \Exception
+     */
+    private function initLogs()
+    {
+        $config = Registry::ahoy()->get('log');
+        if (!is_array($config)) {
+            throw new LogicException('No config found');
+        }
+        $factory = new LoggerFactory();
+        $logs = $factory->createLoggers($config);
+        return $logs;
+
     }
 }

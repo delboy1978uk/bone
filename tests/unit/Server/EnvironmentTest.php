@@ -16,7 +16,7 @@ class EnvironmentTest extends Test
     {
         $server = new Environment([]);
         $config = $server->fetchConfig(self::CONFIG_FOLDER, '');
-        $this->assertCount(2, $config);
+        $this->assertCount(3, $config);
         $this->assertArrayHasKey('legacy config', $config);
         $this->assertArrayHasKey('db', $config);
         $this->assertEquals('hello', $config['legacy config']);
@@ -27,7 +27,7 @@ class EnvironmentTest extends Test
     {
         $server = new Environment([]);
         $config = $server->fetchConfig(self::CONFIG_FOLDER, 'development');
-        $this->assertCount(3, $config);
+        $this->assertCount(4, $config);
         $this->assertArrayHasKey('legacy config', $config);
         $this->assertArrayHasKey('development config', $config);
         $this->assertArrayHasKey('db', $config);
@@ -39,7 +39,7 @@ class EnvironmentTest extends Test
     {
         $server = new Environment([]);
         $config = $server->fetchConfig( self::CONFIG_FOLDER, 'production');
-        $this->assertCount(3, $config);
+        $this->assertCount(4, $config);
         $this->assertArrayHasKey('legacy config', $config);
         $this->assertArrayHasKey('production config', $config);
         $this->assertArrayHasKey('db', $config);

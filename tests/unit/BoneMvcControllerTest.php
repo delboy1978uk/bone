@@ -6,6 +6,7 @@ use Bone\Mvc\Registry;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Service\MailService;
+use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequest as Request;
 use Zend\Mail\Transport\Smtp;
@@ -38,6 +39,8 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
     protected function _after()
     {
         Test::clean();
+        unset($this->controller);
+        Registry::ahoy()->set('log', null);
     }
 
     /**
@@ -180,6 +183,40 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         $this->controller->sendJsonResponse($data);
         $body = $this->controller->getBody();
         $this->assertEquals('{"drink":"grog","sail":"the 7 seas"}', $body);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetLogger()
+    {
+        Registry::ahoy()->set('log', [
+            'channels' => [
+                'default' => 'tests/_data/log/default_log',
+            ],
+        ]);
+
+        $log = $this->controller->getLog();
+        $this->assertInstanceOf(Logger::class, $log);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetLoggerThrowsLogicExceptionWhenNoConfig()
+    {
+        $this->expectException(LogicException::class);
+        $this->controller->getLog();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetLoggerThrowsInvalidArgumentException()
+    {
+        Registry::ahoy()->set('log', []);
+        $this->expectException(InvalidArgumentException::class);
+        $this->controller->getLog();
     }
 
 
