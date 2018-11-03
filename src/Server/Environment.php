@@ -41,9 +41,11 @@ class Environment
     {
         $config = [];
 
-        $path = $configFolder . '/config.php';
-        if (file_exists($path)) {
-            $config = $this->loadInConfig($config, $path);
+        if (file_exists($configFolder)) {
+            $files = glob($configFolder . '/*.php');
+            foreach ($files as $file) {
+                $config = $this->loadInConfig($config, $file);
+            }
         }
 
         return $config;
