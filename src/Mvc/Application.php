@@ -44,13 +44,29 @@ class Application
             $inst = new Application();
             $inst->registry = Registry::ahoy();
             $inst->treasureChest = new Container();
-            foreach($config as $key => $value)
-            {
-                $inst->registry->set($key,$value);
-                $inst->treasureChest[$key] = $value;
-            }
+            $inst->setConfig($config);
         }
         return $inst;
+    }
+
+    /**
+     * @param string $environment
+     */
+    public function setApplicationEnv(string $environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * @param array $config
+     */
+    private function setConfig(array $config)
+    {
+        foreach($config as $key => $value)
+        {
+            $this->registry->set($key,$value);
+            $this->treasureChest[$key] = $value;
+        }
     }
 
     /**
@@ -63,7 +79,7 @@ class Application
         $env = new Environment($_SERVER);
         if (!count($this->registry->getAll())) {
             $config = $env->fetchConfig($this->configFolder, $this->environment);
-            $this->se
+            $this->setConfig($config);
         }
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $response = new Response();
