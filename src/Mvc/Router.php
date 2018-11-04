@@ -220,10 +220,10 @@ class Router
 
             // Match the feckin' route ya blubberin' seadog!
             $this->matchRoute();
-
-            // Merge th' GET POST and config params
-            $this->setParams();
         }
+
+        // Merge th' GET POST and config params
+        $this->setParams();
     }
 
     public function getController()
