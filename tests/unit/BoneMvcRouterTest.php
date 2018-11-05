@@ -203,7 +203,9 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
         $this->router->parseRoute();
         $this->assertEquals('index', $this->router->getController());
         $this->assertEquals('learn', $this->router->getAction());
-        $this->assertCount(0, $this->router->getParams());
+        $params = $this->router->getParams();
+        var_dump($params); exit();
+        $this->assertCount(0, $params);
         $this->server['REQUEST_URI'] = '/en_GB/learn';
         $this->request = new Request(
             $this->server, [], 'http://bone/en_GB/learn', 'POST'
