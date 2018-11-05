@@ -15,7 +15,7 @@ class Registry
      * @var array
      * @access private
      */
-    private $vars = array();
+    private $vars = [];
 
 
     /**
@@ -32,7 +32,7 @@ class Registry
 
      * @return Registry
      */
-    public static function ahoy()
+    public static function ahoy(): Registry
     {
         static $inst = null;
         if($inst === null)
@@ -47,7 +47,7 @@ class Registry
      * @param $index
      * @param $value
      */
-    public function set($index, $value)
+    public function set(string $index, $value)
     {
         $this->vars[$index] = $value;
     }
@@ -60,5 +60,13 @@ class Registry
     public function get($index)
     {
         return isset($this->vars[$index]) ? $this->vars[$index] : null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAll(): array
+    {
+        return $this->vars;
     }
 }
