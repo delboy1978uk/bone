@@ -11,5 +11,5 @@ class Url
     const URL_MANDATORY_PARAM = '(\/:\w+)';
     const URL_OPTIONAL_PARAM = '(\[\/:\w+\])';
     const SQUARE_BRACKETS = '\[(\X+)\]';
-    const SLASH_WORD = '(\/.+)';
+    const SLASH_WORD = '\/([^\/?]+)';
 }
