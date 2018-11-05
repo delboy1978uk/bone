@@ -26,8 +26,8 @@ class Router
         $this->uri = $request->getURI();
         $this->controller = 'index';
         $this->action = 'index';
-        $this->params = array();
-        $this->routes = array();
+        $this->params = [];
+        $this->routes = [];
 
         // get th' path 'n' query string from url
         $parse = parse_url($this->uri);
@@ -145,12 +145,12 @@ class Router
     {
         // be addin' the $_GET an' $_POST t' th' params!
         $method = $this->request->getMethod();
-        $serverParams = $this->request->getServerParams();
-        $queryParams = $this->request->getQueryParams();
-        if ($method == "POST") {
-            $this->params = array_merge($this->params, $serverParams);
+        $getParams = $this->request->getServerParams();
+        $postParams = $this->request->getParsedBody();
+        if ($method == "POST" && is_array($postParams)) {
+            $this->params = array_merge($this->params, $postParams);
         }
-        $this->params = array_merge($this->params, $queryParams);
+        $this->params = array_merge($this->params, $getParams);
     }
 
 
