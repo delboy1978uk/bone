@@ -196,14 +196,18 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
         ];
         Registry::ahoy()->set('routes', $this->routes);
         $this->server['REQUEST_URI'] = '/learn';
-        $this->request = new Request();
+        $this->request = new Request(
+            $this->server, [], 'http://bone/learn', 'POST'
+        );
         $this->router = new Router($this->request);
         $this->router->parseRoute();
         $this->assertEquals('index', $this->router->getController());
         $this->assertEquals('learn', $this->router->getAction());
         $this->assertCount(0, $this->router->getParams());
         $this->server['REQUEST_URI'] = '/en_GB/learn';
-        $this->request = new Request();
+        $this->request = new Request(
+            $this->server, [], 'http://bone/en_GB/learn', 'POST'
+        );
         $this->router = new Router($this->request);
         $this->router->parseRoute();
         $this->assertEquals('index', $this->router->getController());
