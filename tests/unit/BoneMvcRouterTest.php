@@ -173,27 +173,25 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
     public function testRouteMatches()
     {
         $this->routes = [
-            'routes' => [
-                '/' => [
-                    'controller' => 'index',
-                    'action' => 'index',
-                    'params' => [],
-                ],
-                '/learn' => [
-                    'controller' => 'index',
-                    'action' => 'learn',
-                    'params' => [],
-                ],
-                '/:locale' => [
-                    'controller' => 'index',
-                    'action' => 'index',
-                    'params' => [],
-                ],
-                '/:locale/learn' => [
-                    'controller' => 'index',
-                    'action' => 'learn',
-                    'params' => [],
-                ],
+            '/' => [
+                'controller' => 'index',
+                'action' => 'index',
+                'params' => [],
+            ],
+            '/learn' => [
+                'controller' => 'index',
+                'action' => 'learn',
+                'params' => [],
+            ],
+            '/:locale' => [
+                'controller' => 'index',
+                'action' => 'index',
+                'params' => [],
+            ],
+            '/:locale/learn' => [
+                'controller' => 'index',
+                'action' => 'learn',
+                'params' => [],
             ],
         ];
         Registry::ahoy()->set('routes', $this->routes);
