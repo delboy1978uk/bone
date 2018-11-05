@@ -144,6 +144,7 @@ class Route
          *  if there's still nuthin', we must be on the feckin' home page
          */
         $this->strings[0] = ($this->strings[0] == '') ? '\/' : $this->strings[0];
+        $this->strings[0] = '^' . $this->strings[0] . '$';
     }
 
     /**

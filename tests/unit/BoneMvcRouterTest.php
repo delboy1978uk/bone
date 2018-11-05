@@ -170,4 +170,48 @@ class BoneMvcRouterTest extends \Codeception\TestCase\Test
         $this->assertEquals('error', $this->router->getController());
     }
 
+    public function testRouteMatches()
+    {
+        $this->routes = [
+            'routes' => [
+                '/' => [
+                    'controller' => 'index',
+                    'action' => 'index',
+                    'params' => [],
+                ],
+                '/learn' => [
+                    'controller' => 'index',
+                    'action' => 'learn',
+                    'params' => [],
+                ],
+                '/:locale' => [
+                    'controller' => 'index',
+                    'action' => 'index',
+                    'params' => [],
+                ],
+                '/:locale/learn' => [
+                    'controller' => 'index',
+                    'action' => 'learn',
+                    'params' => [],
+                ],
+            ],
+        ];
+        Registry::ahoy()->set('routes', $this->routes);
+        $this->server['REQUEST_URI'] = '/learn';
+        $this->request = new Request();
+        $this->router = new Router($this->request);
+        $this->router->parseRoute();
+        $this->assertEquals('index', $this->router->getController());
+        $this->assertEquals('learn', $this->router->getAction());
+        $this->assertCount(0, $this->router->getParams());
+        $this->server['REQUEST_URI'] = '/en_GB/learn';
+        $this->request = new Request();
+        $this->router = new Router($this->request);
+        $this->router->parseRoute();
+        $this->assertEquals('index', $this->router->getController());
+        $this->assertEquals('learn', $this->router->getAction());
+        $this->assertCount(1, $this->router->getParams());
+        $this->assertArrayHasKey('locale', $this->router->getParams());
+    }
+
 }

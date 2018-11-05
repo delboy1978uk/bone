@@ -44,6 +44,6 @@ class Regex
     public function getMatches($subject)
     {
         preg_match('/'.$this->pattern.'/',$subject,$matches);
-        return ($this->pattern) ? $matches : false;
+        return count($matches) ? $matches : false;
     }
 }
