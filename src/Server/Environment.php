@@ -59,6 +59,11 @@ class Environment
         return $config;
     }
 
+    /**
+     * @param $path
+     * @param array $config
+     * @return array
+     */
     private function globLoadConfig($path, array $config)
     {
         if (file_exists($path)) {
