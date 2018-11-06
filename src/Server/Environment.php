@@ -22,7 +22,7 @@ class Environment
      * @param string $applicationEnvironment
      * @return array
      */
-    public function fetchConfig(string $configFolder, string $applicationEnvironment) : array
+    public function fetchConfig(string $configFolder, string $applicationEnvironment): array
     {
         $config = $this->loadLegacyConfig($configFolder);
 
