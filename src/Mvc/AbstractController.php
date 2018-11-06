@@ -2,6 +2,12 @@
 
 namespace Bone\Mvc;
 
+use Bone\Db\Adapter\MySQL;
+use Bone\Mvc\View\PlatesEngine;
+use Bone\Mvc\View\ViewEngine;
+use Bone\Server\Environment;
+use Psr\Http\Message\ServerRequestInterface;
+
 abstract class AbstractController
 {
     /** @var ServerRequestInterface */
