@@ -45,16 +45,12 @@ class Application
             $inst->registry = Registry::ahoy();
             $inst->treasureChest = new Container();
             $inst->setConfig($config);
+            $env = getenv('APPLICATION_ENV');
+            if ($env) {
+                $inst->setEnvironment($env);
+            }
         }
         return $inst;
-    }
-
-    /**
-     * @param string $environment
-     */
-    public function setApplicationEnv(string $environment)
-    {
-        $this->environment = $environment;
     }
 
     /**
