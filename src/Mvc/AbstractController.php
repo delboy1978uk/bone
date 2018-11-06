@@ -11,11 +11,17 @@ use stdClass;
 
 abstract class AbstractController
 {
+    /** @var Environment $serverEnvironment */
+    protected $serverEnvironment;
+
     /** @var ServerRequestInterface */
     protected $request;
 
     /** @var ViewEngine $plates */
     protected $viewEngine;
+
+    /** @var MySQL */
+    protected $db;
 
     /** @var string $controller */
     protected $controller;
@@ -107,7 +113,7 @@ abstract class AbstractController
     protected function setDB()
     {
         $config = Registry::ahoy()->get('db');
-        $this->_db = new MySQL($config);
+        $this->db = new MySQL($config);
     }
 
     /**
@@ -130,11 +136,11 @@ abstract class AbstractController
      */
     public function getDbAdapter()
     {
-        if(!$this->_db)
+        if(!$this->db)
         {
             $this->setDB();
         }
-        return $this->_db->getConnection();
+        return $this->db->getConnection();
     }
 
     /**

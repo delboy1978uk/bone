@@ -4,8 +4,6 @@ namespace Bone\Mvc;
 
 use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\View\Extension\Plates\Translate;
-use Bone\Mvc\View\ViewEngine;
-use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\Service\LoggerFactory;
 use Bone\Service\MailService;
@@ -14,9 +12,7 @@ use InvalidArgumentException;
 use League\Plates\Engine;
 use LogicException;
 use Monolog\Logger;
-use PDO;
 use Psr\Http\Message\ServerRequestInterface;
-use stdClass;
 use Zend\Diactoros\Response\TextResponse;
 use Zend\Mail\Transport\Smtp;
 use Zend\Mail\Transport\SmtpOptions;
@@ -25,12 +21,6 @@ class Controller extends AbstractController
 {
     /** @var MailService $mailService */
     private $mailService;
-
-    /** @var MySQL */
-    protected $_db;
-
-    /** @var Environment $serverEnvironment */
-    protected $serverEnvironment;
 
     /** @var Logger[] $log */
     protected $log;

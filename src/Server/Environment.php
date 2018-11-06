@@ -40,13 +40,7 @@ class Environment
     private function loadLegacyConfig(string $configFolder): array
     {
         $config = [];
-
-        if (file_exists($configFolder)) {
-            $files = glob($configFolder . '/*.php');
-            foreach ($files as $file) {
-                $config = $this->loadInConfig($config, $file);
-            }
-        }
+        $config = $this->globLoadConfig($configFolder);
 
         return $config;
     }
@@ -60,14 +54,19 @@ class Environment
     private function loadEnvironmentConfig(string $configFolder, string $applicationEnvironment, array $config): array
     {
         $path = $configFolder . '/' . $applicationEnvironment;
+        $config = $this->globLoadConfig($path);
+
+        return $config;
+    }
+
+    private function globLoadConfig($path)
+    {
         if (file_exists($path)) {
             $files = glob($path . '/*.php');
             foreach ($files as $file) {
                 $config = $this->loadInConfig($config, $file);
             }
         }
-
-        return $config;
     }
 
     /**
