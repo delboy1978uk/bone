@@ -7,6 +7,7 @@ use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Server\Environment;
 use Psr\Http\Message\ServerRequestInterface;
+use stdClass;
 
 abstract class AbstractController
 {
