@@ -168,7 +168,7 @@ class Environment
      */
     public function getRequestScheme(): string
     {
-        return $this->getAttribute('REQUEST_SCHEME');
+        return $this->getAttribute('REQUEST_SCHEME', 'http');
     }
 
     /**
