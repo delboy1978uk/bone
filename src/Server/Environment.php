@@ -136,7 +136,7 @@ class Environment
      */
     public function getQueryString(): string
     {
-        return $this->getAttribute('QUERY_STRING');
+        return $this->getAttribute('QUERY_STRING') ?: '';
     }
 
     /**
