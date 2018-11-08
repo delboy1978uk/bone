@@ -33,7 +33,7 @@ class Controller extends AbstractController
     public function __construct(ServerRequestInterface $request)
     {
         parent::__construct($request);
-        $this->initTranslator($request);
+        $this->initTranslator();
         $this->initLogs();
     }
 
@@ -142,7 +142,7 @@ class Controller extends AbstractController
         return $this->translator;
     }
 
-    private function initTranslator(ServerRequestInterface $request)
+    private function initTranslator()
     {
         $config = Registry::ahoy()->get('i18n');
         if (is_array($config) && !$this->translator) {
@@ -155,8 +155,11 @@ class Controller extends AbstractController
                 $engine->loadExtension(new Translate($translator));
             }
 
-            $defaultLocale = Registry::ahoy()->get('i18n')['default_locale'] ?: 'en_GB';
-            $locale = $request->getQueryParams()['locale'] ?: $defaultLocale;
+            $defaultLocale = $config['default_locale'] ?: 'en_GB';
+            $locale = $this->getParam('locale', $defaultLocale);
+            if (!in_array($locale, $config['supported_locales'])) {
+                $locale = $defaultLocale;
+            }
             $translator->setLocale($locale);
 
             $this->translator = $translator;
