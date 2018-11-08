@@ -2,9 +2,7 @@
 
 namespace Bone\Mvc;
 
-use Bone\Db\Adapter\MySQL;
 use Bone\Mvc\View\Extension\Plates\Translate;
-use Bone\Server\Environment;
 use Bone\Service\LoggerFactory;
 use Bone\Service\MailService;
 use Bone\Service\TranslatorFactory;
@@ -35,7 +33,7 @@ class Controller extends AbstractController
     public function __construct(ServerRequestInterface $request)
     {
         parent::__construct($request);
-        $this->initTranslator();
+        $this->initTranslator($request);
         $this->initLogs();
     }
 
@@ -144,7 +142,7 @@ class Controller extends AbstractController
         return $this->translator;
     }
 
-    private function initTranslator()
+    private function initTranslator(ServerRequestInterface $request)
     {
         $config = Registry::ahoy()->get('i18n');
         if (is_array($config) && !$this->translator) {
@@ -156,6 +154,10 @@ class Controller extends AbstractController
             if ($engine instanceof Engine) {
                 $engine->loadExtension(new Translate($translator));
             }
+
+            $defaultLocale = Registry::ahoy()->get('i18n')['default_locale'] ?: 'en_GB';
+            $locale = $request->getQueryParams()['locale'] ?: $defaultLocale;
+            $translator->setLocale($locale);
 
             $this->translator = $translator;
         }
