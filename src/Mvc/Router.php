@@ -145,7 +145,7 @@ class Router
     {
         // be addin' the $_GET an' $_POST t' th' params!
         $method = $this->request->getMethod();
-        $getParams = $this->request->getServerParams();
+        $getParams = $this->request->getQueryParams();
         $postParams = $this->request->getParsedBody();
         if ($method == "POST" && is_array($postParams)) {
             $this->params = array_merge($this->params, $postParams);

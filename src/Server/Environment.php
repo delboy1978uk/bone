@@ -216,6 +216,6 @@ class Environment
      */
     public function getSiteURL() : string
     {
-        return $this->getRequestScheme() . '://' . $this->getServerName();
+        return $this->getRequestScheme() . '://' . $this->getHttpHost();
     }
 }
