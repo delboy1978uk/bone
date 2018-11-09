@@ -16,8 +16,8 @@ use Zend\Diactoros\Response\SapiEmitter;
  */
 class Dispatcher
 {
-    // Garrrr! An arrrray!
-    private $config = array();
+    /** @var array $config */
+    private $config = [];
 
     /** @var ServerRequestInterface $request */
     private $request;
@@ -72,7 +72,7 @@ class Dispatcher
         }
 
         // merge the feckin params
-        if (is_array($this->config) && is_array($this->config['params'])) {
+        if (is_array($this->config['params']) && array_key_exists('params')) {
             $merged = array_merge($this->config['params'], $this->request->getQueryParams());
             $this->request = $this->request->withQueryParams($merged);
         }
