@@ -71,11 +71,14 @@ class Dispatcher
             return;
         }
 
-        // gaaarr! there be the controller!
+        // merge the feckin params
+        if (is_array($this->config['params'])) {
+            $merged = array_merge($this->config['params'], $this->request->getQueryParams());
+            $this->request = $this->request->withQueryParams($merged);
+        }
+
+        // create the controller
         $this->controller = new $this->config['controller_name']($this->request);
-        $this->controller->params = isset($this->config['params'])
-            ? array_merge($this->controller->params, $this->config['params'])
-            : $this->controller->params;
         $this->controller->setServerEnvironment($this->getEnv());
 
         // where's the bloody action?
