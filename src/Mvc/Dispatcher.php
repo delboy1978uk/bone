@@ -72,7 +72,7 @@ class Dispatcher
         }
 
         // merge the feckin params
-        if (isset($this->config['params']) && is_array($this->config['params'])) {
+        if (is_array($this->config) && is_array($this->config['params'])) {
             $merged = array_merge($this->config['params'], $this->request->getQueryParams());
             $this->request = $this->request->withQueryParams($merged);
         }
