@@ -1,11 +1,11 @@
 <?php
 
 use Bone\Mvc\ControllerFactory;
+use Codeception\TestCase\Test;
 use Codeception\Util\Stub;
-use AspectMock\Test;
 
 
-class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
+class BoneMvcControllerFactoryTest extends Test
 {
     /**
      * @var \UnitTester
@@ -21,20 +21,26 @@ class BoneMvcControllerFactoryTest extends \Codeception\TestCase\Test
 
     protected function _after()
     {
-        Test::clean();
+
     }
 
-    // test object can be created 
+    /**
+     * test the feckin' object can be created
+     *
+     * @throws \Bone\Exception
+     */
     public function testCreateController()
     {
-        Test::double('\Bone\Mvc\Controller',array('setTwig' => null));
-
         $factory = new ControllerFactory();
         $controller = $factory->create('\Bone\Mvc\Controller',$this->request);
         $this->assertInstanceOf('\Bone\Mvc\Controller',$controller);
     }
 
-    // test throws a feckin' wobbly
+    /**
+     * test throws a feckin' wobbly
+     *
+     * @throws \Bone\Exception
+     */
     public function testThrowsException()
     {
 

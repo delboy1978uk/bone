@@ -1,18 +1,18 @@
 <?php
 
-use AspectMock\Test;
 use Bone\Mvc\Controller;
 use Bone\Mvc\Registry;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Service\MailService;
+use Codeception\TestCase\Test;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequest as Request;
 use Zend\I18n\Translator\Translator;
 use Zend\Mail\Transport\Smtp;
 
-class BoneMvcControllerTest extends \Codeception\TestCase\Test
+class BoneMvcControllerTest extends Test
 {
     /**
      * @var \UnitTester
@@ -24,6 +24,9 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
      */
     protected $controller;
 
+    /**
+     * @throws Exception
+     */
     protected function _before()
     {
         $request = new Request([], [], '/', 'POST', 'hello=world',
@@ -39,7 +42,6 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
 
     protected function _after()
     {
-        Test::clean();
         unset($this->controller);
         Registry::ahoy()->set('log', null);
     }
@@ -49,7 +51,6 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
      */
     public function testGetDbAdapter()
     {
-        Test::double(PDO::class);
         Registry::ahoy()->set('db',[
             'host' => '127.0.0.1',
             'database' => 'bone_db',
@@ -66,7 +67,6 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
      */
     public function testMailService()
     {
-        Test::double(Smtp::class);
         Registry::ahoy()->set('mail', [
             'name' => 'test',
             'host' => 'test',
@@ -74,7 +74,6 @@ class BoneMvcControllerTest extends \Codeception\TestCase\Test
         ]);
         $mail = $this->controller->getMailService();
         $this->assertInstanceOf(MailService::class, $mail);
-
     }
 
     public function testGetViewEngine()

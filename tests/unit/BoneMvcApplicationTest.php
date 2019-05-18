@@ -2,10 +2,10 @@
 
 
 use Bone\Mvc\Application;
+use Codeception\TestCase\Test;
 use Zend\Diactoros\Response;
-use AspectMock\Test;
 
-class BoneMvcApplicationTest extends \Codeception\TestCase\Test
+class BoneMvcApplicationTest extends Test
 {
    /**
     * @var \UnitTester
@@ -23,10 +23,12 @@ class BoneMvcApplicationTest extends \Codeception\TestCase\Test
 
     protected function _after()
     {
-        Test::clean();
+
     }
 
-    // make sure the feckin' headers are at hand
+    /**
+     *
+     */
     public function testCanGetInstance()
     {
         $config = array(
@@ -38,10 +40,12 @@ class BoneMvcApplicationTest extends \Codeception\TestCase\Test
                 ),
             )
         );
-        $this->assertInstanceOf('\Bone\Mvc\Application',Application::ahoy($config));
+        $this->assertInstanceOf(Application::class, Application::ahoy($config));
     }
 
-    // make sure the feckin' ship sails
+    /**
+     * @throws Exception
+     */
     public function testCanSetSail()
     {
         $config = array(
@@ -53,12 +57,9 @@ class BoneMvcApplicationTest extends \Codeception\TestCase\Test
                 ),
             )
         );
-        Test::double('\Zend\Diactoros\ServerRequest',['getURI' => '/']);
-        Test::double('\Bone\Mvc\Dispatcher',['fireCannons' => null]);
-        $this->assertNull(Application::ahoy($config)->setSail());
+        $application = Application::ahoy($config);
+        $this->assertTrue($application->setSail());
     }
-
-
 
 }
 

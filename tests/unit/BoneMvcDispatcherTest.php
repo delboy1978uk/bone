@@ -5,14 +5,14 @@ use Bone\Mvc\Controller;
 use Bone\Mvc\Registry;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
+use Codeception\TestCase\Test;
 use Psr\Http\Message\ServerRequestInterface ;
 use Psr\Http\Message\ResponseInterface;
-use AspectMock\Test;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\TextResponse;
 use Zend\Diactoros\ServerRequest;
 
-class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
+class BoneMvcDispatcherTest extends Test
 {
    /**
     * @var \UnitTester
@@ -30,14 +30,12 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
 
     protected function _before()
     {
-        Test::spec('\App\Controller\ErrorController');
         $this->request = new ServerRequest();
         $this->response = new Response();
     }
 
     protected function _after()
     {
-        Test::clean();
         unset($this->request);
         unset($this->response);
     }
@@ -118,7 +116,6 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     public function testSinkingShip()
     {
         Registry::ahoy()->set('templates', null);
-        Test::double(new Bone\Mvc\Controller($this->request),[ 'errorAction' => null, 'notFoundAction' => null]);
         $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $this->invokeMethod($dispatcher,'sinkingShip',[new Bone\Exception('argh')]);
         $reflection = new ReflectionClass(get_class($dispatcher));
@@ -197,8 +194,6 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
         $plates = new PlatesEngine(__DIR__);
         Registry::ahoy()->set('templates', 'blah');
 
-        Test::double(Dispatcher::class, ['checkNavigator' => null, 'sinkingShip' => 'glurg']);
-
         $dispatcher = new Dispatcher($this->request,$this->response, new Environment([]));
         $controller = new Controller($this->request);
         $controller->setHeader('rubber', 'chicken');
@@ -253,7 +248,7 @@ class BoneMvcDispatcherTest extends \Codeception\TestCase\Test
     }
 
     /**
-     * @throws ReflectionException
+     * @throws Exception
      */
     public function testSetStatusCode()
     {

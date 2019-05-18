@@ -66,8 +66,10 @@ class Application
     }
 
     /**
-     *  T' the high seas! Garrr!
      *
+     * T' the high seas! Garrr!
+     *
+     * @return bool
      * @throws \Exception
      */
     public function setSail()
@@ -81,6 +83,8 @@ class Application
         $response = new Response();
         $dispatcher = new Dispatcher($request, $response, $env);
         $dispatcher->fireCannons();
+
+        return true;
     }
 
     /**

@@ -8,7 +8,7 @@ use Exception;
 use ReflectionClass;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response\SapiEmitter;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 /**
  * Class Dispatcher
