@@ -16,8 +16,8 @@ use Zend\Diactoros\Response\SapiEmitter;
  */
 class Dispatcher
 {
-    // Garrrr! An arrrray!
-    private $config = array();
+    /** @var array $config */
+    private $config = [];
 
     /** @var ServerRequestInterface $request */
     private $request;
@@ -71,11 +71,14 @@ class Dispatcher
             return;
         }
 
-        // gaaarr! there be the controller!
+        // merge the feckin params
+        if (array_key_exists('params', $this->config) && is_array($this->config['params']) ) {
+            $merged = array_merge($this->config['params'], $this->request->getQueryParams());
+            $this->request = $this->request->withQueryParams($merged);
+        }
+
+        // create the controller
         $this->controller = new $this->config['controller_name']($this->request);
-        $this->controller->params = isset($this->config['params'])
-            ? array_merge($this->controller->params, $this->config['params'])
-            : $this->controller->params;
         $this->controller->setServerEnvironment($this->getEnv());
 
         // where's the bloody action?
