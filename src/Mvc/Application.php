@@ -3,9 +3,13 @@
 namespace Bone\Mvc;
 
 use Bone\Server\Environment;
+use League\Route\Router;
 use Pimple\Container;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 class Application
 {
@@ -81,8 +85,22 @@ class Application
         }
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $response = new Response();
-        $dispatcher = new Dispatcher($request, $response, $env);
-        $dispatcher->fireCannons();
+
+        $router = new Router();
+
+        $router->map('GET', '/', function (ServerRequestInterface $request) : ResponseInterface {
+            $response = new \Zend\Diactoros\Response;
+            $response->getBody()->write('<h1>Hello, World!</h1>');
+            return $response;
+        });
+
+        $response = $router->dispatch($request);
+
+        // send the response to the browser
+        (new SapiEmitter)->emit($response);
+
+//        $dispatcher = new Dispatcher($request, $response, $env);
+//        $dispatcher->fireCannons();
 
         return true;
     }

@@ -16,7 +16,8 @@
     "zendframework/zend-servicemanager": "^3.3",
     "monolog/monolog": "^1.23",
     "zendframework/zend-i18n": "^2.9",
-    "zendframework/zend-httphandlerrunner": "^1.1"
+    "zendframework/zend-httphandlerrunner": "^1.1",
+    "league/route": "^4.2"
   },
   "require-dev": {
     "codeception/codeception": "^2.2"
