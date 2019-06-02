@@ -4,13 +4,17 @@ namespace Bone\Mvc;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Server\Environment;
 use BoneMvc\Module\Dragon\Controller\DragonController;
 use League\Route\Router;
+use League\Route\RouteGroup;
 use League\Route\Strategy\ApplicationStrategy;
+use League\Route\Strategy\JsonStrategy;
 use PDO;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\ResponseFactory;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -59,7 +63,7 @@ class Application
     /**
      * @param array $config
      */
-    private function configureContainer(array $config)
+    private function configureContainer(array $config, $router)
     {
         $c = $this->treasureChest;
 
@@ -93,10 +97,16 @@ class Application
             if (class_exists($packageName)) {
                 /** @var RegistrationInterface $package */
                 $package = new $packageName();
+
                 if ($package->hasEntityPath()) {
                     $c['entity_paths'][] = $package->getEntityPath();
                 }
+
                 $package->addToContainer($c);
+
+                if ($package instanceof RouterConfigInterface) {
+                    $package->addRoutes($c, $router);
+                }
             }
         }
 
@@ -109,6 +119,10 @@ class Application
                     $c['entity_paths'][] = $package->getEntityPath();
                 }
                 $package->addToContainer($c);
+
+                if ($package instanceof RouterConfigInterface) {
+                    $package->addRoutes($c, $router);
+                }
             }
         }
 
@@ -125,15 +139,14 @@ class Application
     {
         // load in the config and set up the dependency injection container
         $env = new Environment($_SERVER);
-        $config = $env->fetchConfig($this->configFolder, $this->environment);
-        $this->configureContainer($config);
-
+        $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $router = new Router();
         $strategy = (new ApplicationStrategy())->setContainer($this->treasureChest);
-        $router->setStrategy($strategy);
-        $this->setRoutes($router, $config['routes']);
 
-        $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
+        $router->setStrategy($strategy);
+        $config = $env->fetchConfig($this->configFolder, $this->environment);
+        $this->configureContainer($config, $router);
+
         $response = $router->dispatch($request);
 
         // send the response
@@ -143,25 +156,6 @@ class Application
 //        $dispatcher->fireCannons();
 
         return true;
-    }
-
-    /**
-     * @param Router $router
-     * @param array $config
-     * @return Router
-     */
-    private function setRoutes(Router $router, array $config): Router
-    {
-        /** @todo add the real routs */
-        $router->map('GET', '/', function (ServerRequestInterface $request) : ResponseInterface {
-            $response = new Response;
-            $response->getBody()->write('<h1>Hello, World!</h1>');
-            return $response;
-        });
-
-        $router->map('GET', '/dragon', [DragonController::class, 'indexAction']);
-
-        return $router;
     }
 
     /**
