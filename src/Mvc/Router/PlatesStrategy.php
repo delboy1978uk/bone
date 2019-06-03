@@ -13,6 +13,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Stream;
 
 class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
 {
@@ -44,7 +46,12 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
             $body = $this->viewEngine->render('layouts/layout', [
                 'content' => $body,
             ]);
-            die($body);
+
+            $stream = new Stream('php://memory', 'r+');
+            $stream->write($body);
+            $response = (new Response())->withStatus(500)->withBody($stream);
+
+            return $response;
         }
 
     }
@@ -58,37 +65,42 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
      */
     public function getNotFoundDecorator(NotFoundException $e): MiddlewareInterface
     {
-        $body = $this->viewEngine->render('error/not-found', [
-            'message' => $e->getMessage(),
-            'code' => $e->getCode(),
-            'trace' => $e->getTrace(),
-        ]);
+        $body = $this->viewEngine->render('error/not-found');
         $body = $this->viewEngine->render('layouts/layout', [
             'content' => $body,
         ]);
-        die($body);
-        return parent::getNotFoundDecorator($e);
+
+        return $this->getErrorResponse($body, 404);
+    }
+
+    private function getErrorResponse(string $body, int $code = 500)
+    {
+        $body = $this->viewEngine->render('layouts/layout', [
+            'content' => $body,
+        ]);
+        $stream = new Stream('php://memory', 'r+');
+        $stream->write($body);
+        $response = (new Response())->withStatus($code)->withBody($stream);
+
+        return $response;
     }
 
     /**
      * Get a middleware that will decorate a NotAllowedException
      *
-     * @param \League\Route\Http\Exception\NotFoundException $exception
+     * @param \League\Route\Http\Exception\NotFoundException $e
      *
      * @return \Psr\Http\Server\MiddlewareInterface
      */
-    public function getMethodNotAllowedDecorator(MethodNotAllowedException $exception): MiddlewareInterface
+    public function getMethodNotAllowedDecorator(MethodNotAllowedException $e): MiddlewareInterface
     {
         $body = $this->viewEngine->render('error/error', [
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'trace' => $e->getTrace(),
         ]);
-        $body = $this->viewEngine->render('layouts/layout', [
-            'content' => $body,
-        ]);
-        die($body);
-        return parent::getNotFoundDecorator($e);
+
+        return $this->getErrorResponse($body, $e->getCode());
     }
 
     /**
@@ -133,11 +145,6 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
                 }
             }
         };
-    }
-
-    public function embedContentInLayout(string $content)
-    {
-        return '';
     }
 
 }
