@@ -4,6 +4,7 @@ namespace Bone\Mvc;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Server\Environment;
 use BoneMvc\Module\Dragon\Controller\DragonController;
@@ -141,7 +142,7 @@ class Application
         $env = new Environment($_SERVER);
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $router = new Router();
-        $strategy = (new ApplicationStrategy())->setContainer($this->treasureChest);
+        $strategy = (new PlatesStrategy())->setContainer($this->treasureChest);
 
         $router->setStrategy($strategy);
         $config = $env->fetchConfig($this->configFolder, $this->environment);
