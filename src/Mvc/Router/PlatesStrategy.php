@@ -2,6 +2,7 @@
 
 namespace Bone\Mvc\Router;
 
+use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
 use Exception;
@@ -18,11 +19,16 @@ use Zend\Diactoros\Stream;
 
 class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
 {
+    /** @var PlatesEngine $viewEngine */
     private $viewEngine;
 
-    public function __construct()
+    /** @var NotFoundDecorator $notFoundDecorator */
+    private $notFoundDecorator;
+
+    public function __construct(PlatesEngine $viewEngine, NotFoundDecorator $notFound)
     {
-        $this->viewEngine = new PlatesEngine('src/App/View');
+        $this->viewEngine = $viewEngine;
+        $this->notFoundDecorator = $notFound;
     }
 
     /**
@@ -65,12 +71,7 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
      */
     public function getNotFoundDecorator(NotFoundException $e): MiddlewareInterface
     {
-        $body = $this->viewEngine->render('error/not-found');
-        $body = $this->viewEngine->render('layouts/layout', [
-            'content' => $body,
-        ]);
-
-        return $this->getErrorResponse($body, 404);
+        return $this->notFoundDecorator;
     }
 
     private function getErrorResponse(string $body, int $code = 500)

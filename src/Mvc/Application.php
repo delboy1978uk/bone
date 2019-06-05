@@ -4,8 +4,10 @@ namespace Bone\Mvc;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
+use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
 use BoneMvc\Module\Dragon\Controller\DragonController;
 use League\Route\Router;
@@ -90,6 +92,7 @@ class Application
             return $dbConnection;
         });
 
+        // set up the modules and vendor package modules
         $modules = $c->get('modules');
         $packages = $c->get('packages');
 
@@ -127,6 +130,30 @@ class Application
             }
         }
 
+        // set up the view engine dependencies
+
+        $c[PlatesEngine::class] = $c->factory(function () {
+            return new PlatesEngine('src/App/View');
+        });
+
+        $c[NotFoundDecorator::class] = $c->factory(function (Container $c) {
+            $viewEngine = $c->get(PlatesEngine::class);
+            $notFoundDecorator = new NotFoundDecorator($viewEngine);
+
+            return $notFoundDecorator;
+        });
+
+        $c[PlatesStrategy::class] = $c->factory(function (Container $c) {
+            $viewEngine = $c->get(PlatesEngine::class);
+            $notFoundDecorator = $c->get(NotFoundDecorator::class);
+            $strategy = new PlatesStrategy($viewEngine, $notFoundDecorator);
+
+            return $strategy;
+        });
+
+        $strategy = $this->treasureChest->get(PlatesStrategy::class)->setContainer($this->treasureChest);
+        $router->setStrategy($strategy);
+
     }
 
     /**
@@ -142,9 +169,6 @@ class Application
         $env = new Environment($_SERVER);
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $router = new Router();
-        $strategy = (new PlatesStrategy())->setContainer($this->treasureChest);
-
-        $router->setStrategy($strategy);
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $this->configureContainer($config, $router);
 
