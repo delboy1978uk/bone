@@ -2,6 +2,7 @@
 
 namespace Bone\Mvc\Router;
 
+use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
@@ -25,9 +26,13 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     /** @var NotFoundDecorator $notFoundDecorator */
     private $notFoundDecorator;
 
-    public function __construct(PlatesEngine $viewEngine, NotFoundDecorator $notFound)
+    /** @var ExceptionDecorator $exceptionDecorator\ */
+    private $exceptionDecorator;
+
+    public function __construct(PlatesEngine $viewEngine, ExceptionDecorator $exception, NotFoundDecorator $notFound)
     {
         $this->viewEngine = $viewEngine;
+        $this->exceptionDecorator = $exception;
         $this->notFoundDecorator = $notFound;
     }
 
@@ -112,40 +117,7 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
      */
     public function getExceptionHandler(): MiddlewareInterface
     {
-        $view = $this->viewEngine;
-        return new class ($view) implements MiddlewareInterface
-        {
-            /**
-             * @var ViewEngine
-             */
-            private $viewEngine;
-
-            public function __construct(ViewEngine $view)
-            {
-                $this->viewEngine = $view;
-            }
-
-            /**
-             * {@inheritdoc}
-             */
-            public function process(
-                ServerRequestInterface $request,
-                RequestHandlerInterface $requestHandler
-            ) : ResponseInterface {
-                try {
-                    return $requestHandler->handle($request);
-                } catch (Throwable $e) {
-                    $body = $this->viewEngine->render('error/error', [
-                        'message' => $e->getMessage(),
-                        'code' => $e->getCode(),
-                        'trace' => $e->getTrace(),
-                    ]);
-                    $body = $this->viewEngine->render('layouts/layout', [
-                        'content' => $body,
-                    ]);
-                }
-            }
-        };
+        return $this->exceptionDecorator;
     }
 
 }

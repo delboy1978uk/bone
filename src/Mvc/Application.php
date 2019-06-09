@@ -4,6 +4,7 @@ namespace Bone\Mvc;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
@@ -63,98 +64,6 @@ class Application
         return $inst;
     }
 
-    /**
-     * @param array $config
-     */
-    private function configureContainer(array $config, $router)
-    {
-        $c = $this->treasureChest;
-
-        // add the config array
-        foreach($config as $key => $value)
-        {
-            $c[$key] = $value;
-        }
-
-        // set up a db connection
-        $c[PDO::class] = $c->factory(function(Container $c): PDO {
-            $credentials = $c->get('db');
-            $host =$credentials['host'];
-            $db = $credentials['database'];
-            $user = $credentials['user'];
-            $pass = $credentials['pass'];
-
-            $dbConnection = new PDO('mysql:host='.$host.';dbname='.$db, $user, $pass, [
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ]);
-
-            return $dbConnection;
-        });
-
-        // set up the modules and vendor package modules
-        $modules = $c->get('modules');
-        $packages = $c->get('packages');
-
-        foreach ($modules as $module) {
-            $packageName  = '\BoneMvc\Module\\'.$module.'\\'.$module . 'Package';
-            if (class_exists($packageName)) {
-                /** @var RegistrationInterface $package */
-                $package = new $packageName();
-
-                if ($package->hasEntityPath()) {
-                    $c['entity_paths'][] = $package->getEntityPath();
-                }
-
-                $package->addToContainer($c);
-
-                if ($package instanceof RouterConfigInterface) {
-                    $package->addRoutes($c, $router);
-                }
-            }
-        }
-
-        foreach ($packages as $module) {
-            $packageName  = '\BoneMvc\Module\\'.$module.'\\'.$module . 'Package';
-            if (class_exists($packageName)) {
-                /** @var RegistrationInterface $package */
-                $package = new PackageName();
-                if ($package->hasEntityPath()) {
-                    $c['entity_paths'][] = $package->getEntityPath();
-                }
-                $package->addToContainer($c);
-
-                if ($package instanceof RouterConfigInterface) {
-                    $package->addRoutes($c, $router);
-                }
-            }
-        }
-
-        // set up the view engine dependencies
-
-        $c[PlatesEngine::class] = $c->factory(function () {
-            return new PlatesEngine('src/App/View');
-        });
-
-        $c[NotFoundDecorator::class] = $c->factory(function (Container $c) {
-            $viewEngine = $c->get(PlatesEngine::class);
-            $notFoundDecorator = new NotFoundDecorator($viewEngine);
-
-            return $notFoundDecorator;
-        });
-
-        $c[PlatesStrategy::class] = $c->factory(function (Container $c) {
-            $viewEngine = $c->get(PlatesEngine::class);
-            $notFoundDecorator = $c->get(NotFoundDecorator::class);
-            $strategy = new PlatesStrategy($viewEngine, $notFoundDecorator);
-
-            return $strategy;
-        });
-
-        $strategy = $this->treasureChest->get(PlatesStrategy::class)->setContainer($this->treasureChest);
-        $router->setStrategy($strategy);
-
-    }
 
     /**
      *
@@ -170,15 +79,13 @@ class Application
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $router = new Router();
         $config = $env->fetchConfig($this->configFolder, $this->environment);
-        $this->configureContainer($config, $router);
+        $package = new ApplicationPackage($config, $router);
+        $package->addToContainer($this->treasureChest);
 
         $response = $router->dispatch($request);
 
         // send the response
         (new SapiEmitter)->emit($response);
-
-//        $dispatcher = new Dispatcher($request, $response, $env);
-//        $dispatcher->fireCannons();
 
         return true;
     }
