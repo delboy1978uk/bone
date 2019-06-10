@@ -16,9 +16,18 @@ class ViewRenderer implements MiddlewareInterface
      */
     private $viewEngine;
 
-    public function __construct(ViewEngine $viewEngine)
+    /** @var string $layout */
+    private $layout;
+
+    /**
+     * ViewRenderer constructor.
+     * @param ViewEngine $viewEngine
+     * @param string $layout
+     */
+    public function __construct(ViewEngine $viewEngine, string $layout)
     {
         $this->viewEngine = $viewEngine;
+        $this->layout = $layout;
     }
 
     /**
@@ -30,6 +39,7 @@ class ViewRenderer implements MiddlewareInterface
         $data = json_decode($response->getBody(), true);
 
         $body = $this->viewEngine->render($data['controller'] . '/' . $data['action'], $data['body']);
+        $body = $this->viewEngine->render($this->layout, ['content' => $body]);
 
         $response = new Response();
         $stream = new Stream('php://memory', 'r+');

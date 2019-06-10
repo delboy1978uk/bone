@@ -83,7 +83,8 @@ class ApplicationPackage implements RegistrationInterface
 
         $c[ViewRenderer::class] = $c->factory(function (Container $c) {
             $viewEngine = $c->get(PlatesEngine::class);
-            $viewRenderer = new ViewRenderer($viewEngine);
+            $layouts = $c->get('layouts');
+            $viewRenderer = new ViewRenderer($viewEngine, $layouts[0]);
 
             return $viewRenderer;
         });
