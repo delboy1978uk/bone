@@ -8,8 +8,11 @@ use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
+use Bone\Mvc\View\Extension\Plates\Translate;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewRenderer;
+use Bone\Service\TranslatorFactory;
+use Zend\I18n\Translator\Translator;
 
 class ApplicationPackage implements RegistrationInterface
 {
@@ -44,6 +47,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupPdoConnection($c);
         $this->setupModules($c);
         $this->setupViewEngine($c);
+        $this->setupTranslator($c);
     }
 
     /**
@@ -52,9 +56,7 @@ class ApplicationPackage implements RegistrationInterface
     private function setupViewEngine(Container $c)
     {
         // set up the view engine dependencies
-        $c[PlatesEngine::class] = $c->factory(function (Container $c) {
-            return new PlatesEngine($c->get('viewFolder'));
-        });
+        $c[PlatesEngine::class] = new PlatesEngine($c->get('viewFolder'));
 
         $c[NotFoundDecorator::class] = $c->factory(function (Container $c) {
             $viewEngine = $c->get(PlatesEngine::class);
@@ -134,6 +136,26 @@ class ApplicationPackage implements RegistrationInterface
                     $package->addRoutes($c, $this->router);
                 }
             }
+        }
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setupTranslator(Container $c)
+    {
+        $config = $c->get('i18n');
+        $engine = $c->get(PlatesEngine::class);
+        if (is_array($config)) {
+            $factory = new TranslatorFactory();
+            $translator = $factory->createTranslator($config);
+            $engine->loadExtension(new Translate($translator));
+            $defaultLocale = $config['default_locale'] ?: 'en_GB';
+//            if (!in_array($locale, $config['supported_locales'])) {
+//                $locale = $defaultLocale;
+//            }
+//            $translator->setLocale($locale);
+            $c[Translator::class] = $translator;
         }
     }
 

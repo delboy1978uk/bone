@@ -2,10 +2,12 @@
 
 namespace Bone\Mvc\View;
 
+use Bone\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Diactoros\Stream;
 
 class ViewRenderer implements MiddlewareInterface
 {
