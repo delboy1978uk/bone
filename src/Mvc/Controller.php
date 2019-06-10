@@ -77,13 +77,6 @@ class Controller extends AbstractController
         // extend this t' run code after yer controller is finished
     }
 
-    /**
-     * @return array
-     */
-    public function indexAction()
-    {
-        return ['message' => 'Override this method'];
-    }
 
     public function errorAction()
     {

@@ -2,10 +2,12 @@
 
 namespace Bone\Mvc\Router;
 
+use Bone\Http\Response as BoneResponse;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
+use Bone\Mvc\View\ViewRenderer;
 use Exception;
 use League\Route\Http\Exception\{MethodNotAllowedException, NotFoundException};
 use League\Route\Route;
@@ -47,7 +49,30 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     public function invokeRouteCallable(Route $route, ServerRequestInterface $request): ResponseInterface
     {
         try {
-            return parent::invokeRouteCallable($route, $request);
+            $controller = $route->getCallable();
+            $controllerClass = get_class($controller[0]);
+            $actionMethod = $controller[1];
+            if (preg_match('#(?<module>\w+)\\\Controller\\\(?<controller>\w+)Controller$#', $controllerClass, $matches)) {
+                $module = $matches['module'];
+                $controller = $matches['controller'];
+            }
+
+            if (preg_match('#(?<action>\w+)Action#', $actionMethod, $action)) {
+                $action = $action['action'];
+            }
+            $response = parent::invokeRouteCallable($route, $request);
+
+            $body = json_decode($response->getBody(), true);
+            $body = json_encode([
+                'body' => $body,
+                'module' => $module,
+                'controller' => $controller,
+                'action' => $action,
+            ]);
+            $stream = new Stream('php://memory', 'r+');
+            $stream->write($body);
+            return $response->withBody($stream);
+
         } catch (Exception $e) {
             $body = $this->viewEngine->render('error/error', [
                 'message' => $e->getMessage(),

@@ -9,6 +9,7 @@ use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\PlatesEngine;
+use Bone\Mvc\View\ViewRenderer;
 
 class ApplicationPackage implements RegistrationInterface
 {
@@ -51,8 +52,8 @@ class ApplicationPackage implements RegistrationInterface
     private function setupViewEngine(Container $c)
     {
         // set up the view engine dependencies
-        $c[PlatesEngine::class] = $c->factory(function () {
-            return new PlatesEngine('src/App/View');
+        $c[PlatesEngine::class] = $c->factory(function (Container $c) {
+            return new PlatesEngine($c->get('viewFolder'));
         });
 
         $c[NotFoundDecorator::class] = $c->factory(function (Container $c) {
@@ -78,8 +79,18 @@ class ApplicationPackage implements RegistrationInterface
             return $strategy;
         });
 
+        $c[ViewRenderer::class] = $c->factory(function (Container $c) {
+            $viewEngine = $c->get(PlatesEngine::class);
+            $viewRenderer = new ViewRenderer($viewEngine);
+
+            return $viewRenderer;
+        });
+
         $strategy = $c->get(PlatesStrategy::class)->setContainer($c);
         $this->router->setStrategy($strategy);
+
+        $viewRenderer = $c->get(ViewRenderer::class);
+        $this->router->middleware($viewRenderer);
     }
 
     /**
