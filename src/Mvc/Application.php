@@ -10,7 +10,6 @@ use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
-use BoneMvc\Module\Dragon\Controller\DragonController;
 use League\Route\Router;
 use League\Route\RouteGroup;
 use League\Route\Strategy\ApplicationStrategy;
@@ -77,7 +76,7 @@ class Application
         // load in the config and set up the dependency injection container
         $env = new Environment($_SERVER);
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-        $router = new Router();
+        $router = $this->treasureChest[Router::class] = new Router();
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $package = new ApplicationPackage($config, $router);
         $package->addToContainer($this->treasureChest);

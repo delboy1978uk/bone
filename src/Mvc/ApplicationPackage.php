@@ -12,6 +12,8 @@ use Bone\Mvc\View\Extension\Plates\Translate;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewRenderer;
 use Bone\Service\TranslatorFactory;
+use League\Route\Router;
+use Psr\Http\Server\MiddlewareInterface;
 use Zend\I18n\Translator\Translator;
 
 class ApplicationPackage implements RegistrationInterface
@@ -159,6 +161,7 @@ class ApplicationPackage implements RegistrationInterface
             $c[Translator::class] = $translator;
         }
     }
+
 
     /**
      * @param Container $c
