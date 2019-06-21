@@ -23,4 +23,13 @@ interface ViewEngine
      * @return mixed
      */
     public function render($view, array $vars = []);
+
+    /**
+     * Add a new template folder for grouping templates under different namespaces.
+     * @param  string  $name
+     * @param  string  $directory
+     * @param  boolean $fallback
+     * @return self
+     */
+    public function addFolder($name, $directory, $fallback = false);
 }

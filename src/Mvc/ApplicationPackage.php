@@ -5,6 +5,7 @@ namespace Bone\Mvc;
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
+use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
@@ -67,6 +68,13 @@ class ApplicationPackage implements RegistrationInterface
             return $notFoundDecorator;
         });
 
+        $c[NotAllowedDecorator::class] = $c->factory(function (Container $c) {
+            $viewEngine = $c->get(PlatesEngine::class);
+            $notAllowedDecorator = new NotAllowedDecorator($viewEngine);
+
+            return $notAllowedDecorator;
+        });
+
         $c[ExceptionDecorator::class] = $c->factory(function (Container $c) {
             $viewEngine = $c->get(PlatesEngine::class);
             $notFoundDecorator = new ExceptionDecorator($viewEngine);
@@ -77,8 +85,9 @@ class ApplicationPackage implements RegistrationInterface
         $c[PlatesStrategy::class] = $c->factory(function (Container $c) {
             $viewEngine = $c->get(PlatesEngine::class);
             $notFoundDecorator = $c->get(NotFoundDecorator::class);
+            $notAllowedDecorator = $c->get(NotAllowedDecorator::class);
             $exceptionDecorator = $c->get(ExceptionDecorator::class);
-            $strategy = new PlatesStrategy($viewEngine, $exceptionDecorator, $notFoundDecorator);
+            $strategy = new PlatesStrategy($viewEngine, $exceptionDecorator, $notFoundDecorator, $notAllowedDecorator);
 
             return $strategy;
         });
@@ -91,11 +100,12 @@ class ApplicationPackage implements RegistrationInterface
             return $viewRenderer;
         });
 
-        $strategy = $c->get(PlatesStrategy::class)->setContainer($c);
+        $strategy = $c->get(PlatesStrategy::class);
+        $strategy->setContainer($c);
         $this->router->setStrategy($strategy);
 
         $viewRenderer = $c->get(ViewRenderer::class);
-        $this->router->middleware($viewRenderer);
+        $this->router->prependMiddleware($viewRenderer);
     }
 
     /**

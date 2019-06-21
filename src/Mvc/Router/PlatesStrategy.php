@@ -4,6 +4,7 @@ namespace Bone\Mvc\Router;
 
 use Bone\Http\Response as BoneResponse;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
+use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
@@ -28,14 +29,18 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     /** @var NotFoundDecorator $notFoundDecorator */
     private $notFoundDecorator;
 
+    /** @var NotAllowedDecorator $notAllowedDecorator */
+    private $notAllowedDecorator;
+
     /** @var ExceptionDecorator $exceptionDecorator\ */
     private $exceptionDecorator;
 
-    public function __construct(PlatesEngine $viewEngine, ExceptionDecorator $exception, NotFoundDecorator $notFound)
+    public function __construct(PlatesEngine $viewEngine, ExceptionDecorator $exception, NotFoundDecorator $notFound, NotAllowedDecorator $notAllowed)
     {
         $this->viewEngine = $viewEngine;
         $this->exceptionDecorator = $exception;
         $this->notFoundDecorator = $notFound;
+        $this->notAllowedDecorator = $notAllowed;
     }
 
     /**
@@ -48,8 +53,8 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
      */
     public function invokeRouteCallable(Route $route, ServerRequestInterface $request): ResponseInterface
     {
-        try {
-            $controller = $route->getCallable();
+//        try {
+            $controller = $route->getCallable($this->container);
             $controllerClass = get_class($controller[0]);
             $actionMethod = $controller[1];
             if (preg_match('#(?<module>\w+)\\\Controller\\\(?<controller>\w+)Controller$#', $controllerClass, $matches)) {
@@ -73,22 +78,22 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
             $stream->write($body);
             return $response->withBody($stream);
 
-        } catch (Exception $e) {
-            $body = $this->viewEngine->render('error/error', [
-                'message' => $e->getMessage(),
-                'code' => $e->getCode(),
-                'trace' => $e->getTrace(),
-            ]);
-            $body = $this->viewEngine->render('layouts/layout', [
-                'content' => $body,
-            ]);
-
-            $stream = new Stream('php://memory', 'r+');
-            $stream->write($body);
-            $response = (new Response())->withStatus(500)->withBody($stream);
-
-            return $response;
-        }
+//        } catch (Exception $e) {
+//            $body = $this->viewEngine->render('error/error', [
+//                'message' => $e->getMessage(),
+//                'code' => $e->getCode(),
+//                'trace' => $e->getTrace(),
+//            ]);
+//            $body = $this->viewEngine->render('layouts/layout', [
+//                'content' => $body,
+//            ]);
+//
+//            $stream = new Stream('php://memory', 'r+');
+//            $stream->write($body);
+//            $response = (new Response())->withStatus(500)->withBody($stream);
+//
+//            return $response;
+//        }
 
     }
 
@@ -125,13 +130,7 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
      */
     public function getMethodNotAllowedDecorator(MethodNotAllowedException $e): MiddlewareInterface
     {
-        $body = $this->viewEngine->render('error/error', [
-            'message' => $e->getMessage(),
-            'code' => $e->getCode(),
-            'trace' => $e->getTrace(),
-        ]);
-
-        return $this->getErrorResponse($body, $e->getCode());
+        return $this->notAllowedDecorator;
     }
 
     /**

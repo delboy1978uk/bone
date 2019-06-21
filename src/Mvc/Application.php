@@ -80,7 +80,6 @@ class Application
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $package = new ApplicationPackage($config, $router);
         $package->addToContainer($this->treasureChest);
-
         $response = $router->dispatch($request);
 
         // send the response

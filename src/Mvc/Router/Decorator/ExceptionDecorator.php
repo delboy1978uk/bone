@@ -40,7 +40,7 @@ class ExceptionDecorator implements MiddlewareInterface
 
             $stream = new Stream('php://memory', 'r+');
             $stream->write($body);
-            $response = (new Response())->withStatus(404)->withBody($stream);
+            $response = (new Response())->withStatus($e->getCode())->withBody($stream);
 
             return $response;
         }
