@@ -9,6 +9,7 @@ use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Mvc\View\ViewRenderer;
+use Bone\Server\I18nHandler;
 use Bone\Traits\LayoutAwareTrait;
 use Exception;
 use League\Route\Http\Exception\{MethodNotAllowedException, NotFoundException};
@@ -35,6 +36,12 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     /** @var NotAllowedDecorator $notAllowedDecorator */
     private $notAllowedDecorator;
 
+    /** @var bool  */
+    private $i18nEnabled = false;
+
+    /** @var array  */
+    private $supportedLocales = [];
+
     /**
      * PlatesStrategy constructor.
      * @param PlatesEngine $viewEngine
@@ -51,6 +58,23 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     }
 
     /**
+     * @param bool $i18nEnabled
+     */
+    public function setI18nEnabled(bool $i18nEnabled): void
+    {
+        $this->i18nEnabled = $i18nEnabled;
+    }
+
+    /**
+     * @param array $locales
+     */
+    public function setSupportedLocales(array $locales): void
+    {
+        $this->supportedLocales = $locales;
+    }
+
+
+    /**
      * Invoke the route callable based on the strategy.
      *
      * @param \League\Route\Route $route
@@ -61,6 +85,7 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     public function invokeRouteCallable(Route $route, ServerRequestInterface $request): ResponseInterface
     {
         try {
+
             $controller = $route->getCallable($this->container);
             $controllerClass = get_class($controller[0]);
             $actionMethod = $controller[1];

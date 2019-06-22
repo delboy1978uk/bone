@@ -10,6 +10,8 @@ use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
+use Bone\Server\I18nHandler;
+use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
 use League\Route\RouteGroup;
 use League\Route\Strategy\ApplicationStrategy;
@@ -20,6 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ResponseFactory;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 class Application
@@ -80,12 +83,44 @@ class Application
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $package = new ApplicationPackage($config, $router);
         $package->addToContainer($this->treasureChest);
-        $response = $router->dispatch($request);
+        if ($this->isMultilingual()) {
+            try {
+                $request = $this->i18nRequestCheck($request);
+                $response = $router->dispatch($request);
+            } catch (NotFoundException $e) {
+                $response = new RedirectResponse($e->getMessage());
+            }
+        } else {
+            $response = $router->dispatch($request);
+        }
 
-        // send the response
         (new SapiEmitter)->emit($response);
 
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultilingual(): bool
+    {
+        $i18n = $this->treasureChest->get('i18n');
+        return $i18n['enabled'];
+    }
+
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
+     * @throws NotFoundException
+     */
+    private function i18nRequestCheck(ServerRequestInterface $request): ServerRequestInterface
+    {
+        $i18n = $this->treasureChest->get('i18n');
+        $i18nHandler = new I18nHandler($i18n['supported_locales']);
+        $request = $i18nHandler->handleI18n($request);
+
+        return $request;
     }
 
     /**

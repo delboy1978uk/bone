@@ -14,6 +14,7 @@ use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewRenderer;
 use Bone\Service\TranslatorFactory;
 use League\Route\Router;
+use Locale;
 use Psr\Http\Server\MiddlewareInterface;
 use Zend\I18n\Translator\Translator;
 
@@ -24,6 +25,12 @@ class ApplicationPackage implements RegistrationInterface
 
     /** @var Router $router */
     private $router;
+
+   /** @var bool $i18nEnabledSite */
+    private $i18nEnabledSite = false;
+
+    /** @var array $supportedLocales */
+    private $supportedLocales = [];
 
     /**
      * ApplicationPackage constructor.
@@ -41,16 +48,35 @@ class ApplicationPackage implements RegistrationInterface
      */
     public function addToContainer(Container $c)
     {
-        // add the config array
-        foreach($this->config as $key => $value)
-        {
-            $c[$key] = $value;
-        }
-
+        $this->setConfigArray($c);
+        $this->setLocale($c);
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
         $this->setupTranslator($c);
         $this->setupModules($c);
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setConfigArray(Container $c)
+    {
+        foreach($this->config as $key => $value)
+        {
+            $c[$key] = $value;
+        }
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setLocale(Container $c)
+    {
+        $i18n = $c->get('i18n');
+        $this->i18nEnabledSite = $i18n['enabled'];
+        $this->supportedLocales = $i18n['supported_locales'];
+        $defaultLocale = $i18n['default_locale'];
+        Locale::setDefault($defaultLocale);
     }
 
     /**
@@ -96,8 +122,15 @@ class ApplicationPackage implements RegistrationInterface
             return $strategy;
         });
 
+        /** @var PlatesStrategy $strategy */
         $strategy = $c->get(PlatesStrategy::class);
         $strategy->setContainer($c);
+
+        if ($this->i18nEnabledSite === true) {
+            $strategy->setI18nEnabled(true);
+            $strategy->setSupportedLocales($this->supportedLocales);
+        }
+
         $this->router->setStrategy($strategy);
     }
 
@@ -157,10 +190,10 @@ class ApplicationPackage implements RegistrationInterface
             $translator = $factory->createTranslator($config);
             $engine->loadExtension(new Translate($translator));
             $defaultLocale = $config['default_locale'] ?: 'en_GB';
-//            if (!in_array($locale, $config['supported_locales'])) {
-//                $locale = $defaultLocale;
-//            }
-//            $translator->setLocale($locale);
+            if (!in_array($locale, $config['supported_locales'])) {
+                $locale = $defaultLocale;
+            }
+            $translator->setLocale($locale);
             $c[Translator::class] = $translator;
         }
     }
