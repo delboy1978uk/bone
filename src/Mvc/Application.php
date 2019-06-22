@@ -117,7 +117,8 @@ class Application
     private function i18nRequestCheck(ServerRequestInterface $request): ServerRequestInterface
     {
         $i18n = $this->treasureChest->get('i18n');
-        $i18nHandler = new I18nHandler($i18n['supported_locales']);
+        $translator = $this->treasureChest->get('translator');
+        $i18nHandler = new I18nHandler($translator, $i18n['supported_locales']);
         $request = $i18nHandler->handleI18n($request);
 
         return $request;

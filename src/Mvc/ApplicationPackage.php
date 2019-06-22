@@ -85,7 +85,11 @@ class ApplicationPackage implements RegistrationInterface
     private function setupViewEngine(Container $c)
     {
         // set up the view engine dependencies
-        $c[PlatesEngine::class] = new PlatesEngine($c->get('viewFolder'));
+        $viewEngine = new PlatesEngine($c->get('viewFolder'));
+//        $i18nExtension = new Translate();
+//        $viewEngine->loadExtension();
+
+        $c[PlatesEngine::class] = $viewEngine;
 
         $c[NotFoundDecorator::class] = $c->factory(function (Container $c) {
             $layout = $c->get('default_layout');
@@ -188,6 +192,7 @@ class ApplicationPackage implements RegistrationInterface
         if (is_array($config)) {
             $factory = new TranslatorFactory();
             $translator = $factory->createTranslator($config);
+            $c['translator'] = $translator;
             $engine->loadExtension(new Translate($translator));
             $defaultLocale = $config['default_locale'] ?: 'en_GB';
             if (!in_array($locale, $config['supported_locales'])) {

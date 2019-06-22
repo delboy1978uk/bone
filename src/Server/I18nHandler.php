@@ -8,23 +8,26 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\I18n\Translator\Translator;
 
 class I18nHandler
 {
     const REGEX_LOCALE = '#^/(?P<locale>[a-z]{2}[-_][a-zA-Z]{2})(?:/|$)#';
 
-    /** @var array */
+    /** @var Translator$translator */
+    private $translator;
+
+    /** @var array $supportedLocales */
     private $supportedLocales;
-
-
 
     /**
      * InternationalisationMiddleware constructor.
      * @param  $helper
      * @param string|null $defaultLocale
      */
-    public function __construct(array $supportedLocales)
+    public function __construct(Translator $translator, array $supportedLocales)
     {
+        $this->translator = $translator;
         $this->supportedLocales = $supportedLocales;
     }
 
@@ -45,6 +48,7 @@ class I18nHandler
         $locale = $matches['locale'];
         $locale = Locale::canonicalize($locale);
         Locale::setDefault($locale);
+        $this->translator->setLocale($locale);
         $path = substr($path, strlen($locale) + 1);
         $uri = $uri->withPath($path);
         $request = $request->withUri($uri);
