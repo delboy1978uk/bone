@@ -9,6 +9,7 @@ use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewEngine;
 use Bone\Mvc\View\ViewRenderer;
+use Bone\Traits\LayoutAwareTrait;
 use Exception;
 use League\Route\Http\Exception\{MethodNotAllowedException, NotFoundException};
 use League\Route\Route;
@@ -23,6 +24,8 @@ use Zend\Diactoros\Stream;
 
 class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
 {
+    use LayoutAwareTrait;
+
     /** @var PlatesEngine $viewEngine */
     private $viewEngine;
 
@@ -32,15 +35,19 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     /** @var NotAllowedDecorator $notAllowedDecorator */
     private $notAllowedDecorator;
 
-    /** @var ExceptionDecorator $exceptionDecorator\ */
-    private $exceptionDecorator;
-
-    public function __construct(PlatesEngine $viewEngine, ExceptionDecorator $exception, NotFoundDecorator $notFound, NotAllowedDecorator $notAllowed)
+    /**
+     * PlatesStrategy constructor.
+     * @param PlatesEngine $viewEngine
+     * @param NotFoundDecorator $notFound
+     * @param NotAllowedDecorator $notAllowed
+     * @param string $layout
+     */
+    public function __construct(PlatesEngine $viewEngine, NotFoundDecorator $notFound, NotAllowedDecorator $notAllowed, string $layout)
     {
         $this->viewEngine = $viewEngine;
-        $this->exceptionDecorator = $exception;
         $this->notFoundDecorator = $notFound;
         $this->notAllowedDecorator = $notAllowed;
+        $this->setLayout($layout);
     }
 
     /**
@@ -53,7 +60,7 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
      */
     public function invokeRouteCallable(Route $route, ServerRequestInterface $request): ResponseInterface
     {
-//        try {
+        try {
             $controller = $route->getCallable($this->container);
             $controllerClass = get_class($controller[0]);
             $actionMethod = $controller[1];
@@ -68,33 +75,42 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
             $response = parent::invokeRouteCallable($route, $request);
 
             $body = json_decode($response->getBody(), true);
-            $body = json_encode([
-                'body' => $body,
-                'module' => $module,
-                'controller' => $controller,
-                'action' => $action,
+
+            $folder = 'src/' . $module.'/View';
+
+            if (is_dir($folder)) {
+                $this->viewEngine->addFolder($module, $folder);
+            }
+
+            $viewName = $module . '::' . $controller . '/' . $action;
+            $body = $this->viewEngine->render($viewName, $body);
+            $body = $this->viewEngine->render($this->layout, ['content' => $body]);
+
+            return $this->getResponseWithBodyAndStatus($body, 200);
+
+        } catch (Exception $e) {
+            $body = $this->viewEngine->render('error/error', [
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'trace' => $e->getTrace(),
             ]);
-            $stream = new Stream('php://memory', 'r+');
-            $stream->write($body);
-            return $response->withBody($stream);
+            $body = $this->viewEngine->render($this->layout, [
+                'content' => $body,
+            ]);
+            $status = ($e->getCode() >= 100 && $e->getCode() < 600) ? $e->getCode() : 500;
 
-//        } catch (Exception $e) {
-//            $body = $this->viewEngine->render('error/error', [
-//                'message' => $e->getMessage(),
-//                'code' => $e->getCode(),
-//                'trace' => $e->getTrace(),
-//            ]);
-//            $body = $this->viewEngine->render('layouts/layout', [
-//                'content' => $body,
-//            ]);
-//
-//            $stream = new Stream('php://memory', 'r+');
-//            $stream->write($body);
-//            $response = (new Response())->withStatus(500)->withBody($stream);
-//
-//            return $response;
-//        }
+            return $this->getResponseWithBodyAndStatus($body, $status);
+        }
 
+    }
+
+    private function getResponseWithBodyAndStatus(string $body, int $status = 200)
+    {
+        $stream = new Stream('php://memory', 'r+');
+        $stream->write($body);
+        $response = (new Response())->withStatus($status)->withBody($stream);
+
+        return $response;
     }
 
     /**
@@ -109,18 +125,6 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
         return $this->notFoundDecorator;
     }
 
-    private function getErrorResponse(string $body, int $code = 500)
-    {
-        $body = $this->viewEngine->render('layouts/layout', [
-            'content' => $body,
-        ]);
-        $stream = new Stream('php://memory', 'r+');
-        $stream->write($body);
-        $response = (new Response())->withStatus($code)->withBody($stream);
-
-        return $response;
-    }
-
     /**
      * Get a middleware that will decorate a NotAllowedException
      *
@@ -132,16 +136,4 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     {
         return $this->notAllowedDecorator;
     }
-
-    /**
-     * Get a middleware that acts as an exception handler, it should wrap the rest of the
-     * middleware stack and catch eny exceptions.
-     *
-     * @return \Psr\Http\Server\MiddlewareInterface
-     */
-    public function getExceptionHandler(): MiddlewareInterface
-    {
-        return $this->exceptionDecorator;
-    }
-
 }

@@ -30,7 +30,7 @@ class ApplicationPackage implements RegistrationInterface
      * @param array $config
      * @param \League\Route\Router $router
      */
-    public function __construct(array $config, \League\Route\Router $router)
+    public function __construct(array $config, Router $router)
     {
         $this->config = $config;
         $this->router = $router;
@@ -48,9 +48,9 @@ class ApplicationPackage implements RegistrationInterface
         }
 
         $this->setupPdoConnection($c);
-        $this->setupModules($c);
         $this->setupViewEngine($c);
         $this->setupTranslator($c);
+        $this->setupModules($c);
     }
 
     /**
@@ -62,15 +62,19 @@ class ApplicationPackage implements RegistrationInterface
         $c[PlatesEngine::class] = new PlatesEngine($c->get('viewFolder'));
 
         $c[NotFoundDecorator::class] = $c->factory(function (Container $c) {
+            $layout = $c->get('default_layout');
             $viewEngine = $c->get(PlatesEngine::class);
             $notFoundDecorator = new NotFoundDecorator($viewEngine);
+            $notFoundDecorator->setLayout($layout);
 
             return $notFoundDecorator;
         });
 
         $c[NotAllowedDecorator::class] = $c->factory(function (Container $c) {
+            $layout = $c->get('default_layout');
             $viewEngine = $c->get(PlatesEngine::class);
             $notAllowedDecorator = new NotAllowedDecorator($viewEngine);
+            $notAllowedDecorator->setLayout($layout);
 
             return $notAllowedDecorator;
         });
@@ -86,26 +90,15 @@ class ApplicationPackage implements RegistrationInterface
             $viewEngine = $c->get(PlatesEngine::class);
             $notFoundDecorator = $c->get(NotFoundDecorator::class);
             $notAllowedDecorator = $c->get(NotAllowedDecorator::class);
-            $exceptionDecorator = $c->get(ExceptionDecorator::class);
-            $strategy = new PlatesStrategy($viewEngine, $exceptionDecorator, $notFoundDecorator, $notAllowedDecorator);
+            $layout = $c->get('default_layout');
+            $strategy = new PlatesStrategy($viewEngine, $notFoundDecorator, $notAllowedDecorator, $layout);
 
             return $strategy;
-        });
-
-        $c[ViewRenderer::class] = $c->factory(function (Container $c) {
-            $viewEngine = $c->get(PlatesEngine::class);
-            $layouts = $c->get('layouts');
-            $viewRenderer = new ViewRenderer($viewEngine, $layouts[0]);
-
-            return $viewRenderer;
         });
 
         $strategy = $c->get(PlatesStrategy::class);
         $strategy->setContainer($c);
         $this->router->setStrategy($strategy);
-
-        $viewRenderer = $c->get(ViewRenderer::class);
-        $this->router->prependMiddleware($viewRenderer);
     }
 
     /**

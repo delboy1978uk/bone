@@ -3,6 +3,7 @@
 namespace Bone\Mvc\Router\Decorator;
 
 use Bone\Mvc\View\ViewEngine;
+use Bone\Traits\LayoutAwareTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -12,6 +13,9 @@ use Zend\Diactoros\Stream;
 
 class NotFoundDecorator implements MiddlewareInterface
 {
+    use LayoutAwareTrait;
+
+
     /** @var ViewEngine  */
     private $viewEngine;
 
@@ -44,7 +48,7 @@ class NotFoundDecorator implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $body = $this->viewEngine->render($this->view);
-        $body = $this->viewEngine->render('layouts/layout', [
+        $body = $this->viewEngine->render($this->getLayout(), [
             'content' => $body,
         ]);
 

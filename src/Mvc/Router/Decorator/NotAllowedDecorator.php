@@ -2,6 +2,7 @@
 
 namespace Bone\Mvc\Router\Decorator;
 
+use Bone\Mvc\View\ViewEngine;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -9,7 +10,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class NotAllowedDecorator extends NotFoundDecorator
 {
-
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler

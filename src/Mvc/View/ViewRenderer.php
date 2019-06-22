@@ -45,8 +45,6 @@ class ViewRenderer implements MiddlewareInterface
         }
 
         $body = $this->viewEngine->render($data['module'] . '::' . $data['controller'] . '/' . $data['action'], $data['body']);
-
-
         $body = $this->viewEngine->render($this->layout, ['content' => $body]);
 
         $response = new Response();
