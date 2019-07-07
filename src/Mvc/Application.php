@@ -91,6 +91,7 @@ class Application
                 $response = new RedirectResponse($e->getMessage());
             }
         } else {
+            $request = $this->i18nRequestCheck($request, false);
             $response = $router->dispatch($request);
         }
 
@@ -111,15 +112,20 @@ class Application
 
     /**
      * @param ServerRequestInterface $request
+     * @param bool $handle
      * @return ServerRequestInterface
      * @throws NotFoundException
      */
-    private function i18nRequestCheck(ServerRequestInterface $request): ServerRequestInterface
+    private function i18nRequestCheck(ServerRequestInterface $request, bool $handle = true): ServerRequestInterface
     {
         $i18n = $this->treasureChest->get('i18n');
         $translator = $this->treasureChest->get('translator');
         $i18nHandler = new I18nHandler($translator, $i18n['supported_locales']);
-        $request = $i18nHandler->handleI18n($request);
+        if ($handle){
+            $request = $i18nHandler->handleI18n($request);
+        } else {
+            $request = $i18nHandler->removeI18n($request);
+        }
 
         return $request;
     }

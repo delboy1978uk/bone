@@ -13,6 +13,8 @@ use Bone\Mvc\View\Extension\Plates\Translate;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewRenderer;
 use Bone\Service\TranslatorFactory;
+use JMS\Serializer\SerializerBuilder;
+use JMS\Serializer\SerializerInterface;
 use League\Route\Router;
 use Locale;
 use Psr\Http\Server\MiddlewareInterface;
@@ -50,6 +52,7 @@ class ApplicationPackage implements RegistrationInterface
     {
         $this->setConfigArray($c);
         $this->setLocale($c);
+        $this->setSerializer($c);
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
         $this->setupTranslator($c);
@@ -77,6 +80,14 @@ class ApplicationPackage implements RegistrationInterface
         $this->supportedLocales = $i18n['supported_locales'];
         $defaultLocale = $i18n['default_locale'];
         Locale::setDefault($defaultLocale);
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setSerializer(Container $c)
+    {
+        $c[SerializerInterface::class] = $serializer = SerializerBuilder::create()->build();;
     }
 
     /**

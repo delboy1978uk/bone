@@ -55,4 +55,28 @@ class I18nHandler
 
         return $request;
     }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
+     */
+    public function removeI18n(ServerRequestInterface $request): ServerRequestInterface
+    {
+        $uri = $request->getUri();
+        $path = $uri->getPath();
+
+        if (! preg_match(self::REGEX_LOCALE, $path, $matches)) {
+            return $request;
+        }
+
+        $locale = $matches['locale'];
+        $locale = Locale::canonicalize($locale);
+        Locale::setDefault($locale);
+        $this->translator->setLocale($locale);
+        $path = substr($path, strlen($locale) + 1);
+        $uri = $uri->withPath($path);
+        $request = $request->withUri($uri);
+
+        return $request;
+    }
 }

@@ -99,7 +99,7 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
             }
             $response = parent::invokeRouteCallable($route, $request);
 
-            $body = json_decode($response->getBody(), true);
+            $body = $this->getBody($response);
 
             $folder = 'src/' . $module.'/View';
 
@@ -129,6 +129,34 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
 
     }
 
+    /**
+     * @param ResponseInterface $response
+     * @return array|mixed
+     */
+    private function getBody(ResponseInterface $response)
+    {
+        switch (true) {
+            case $response instanceof Response\JsonResponse:
+                $contents = $response->getBody()->getContents();
+                $body = json_decode($contents, true);
+                $body = ($body === null) ? [] : $body;
+                break;
+
+            case $response instanceof Response:
+                $body = ['content' => $response->getBody()->getContents()];
+                break;
+            default:
+
+        }
+
+        return $body;
+    }
+
+    /**
+     * @param string $body
+     * @param int $status
+     * @return \Psr\Http\Message\MessageInterface|Response
+     */
     private function getResponseWithBodyAndStatus(string $body, int $status = 200)
     {
         $stream = new Stream('php://memory', 'r+');
