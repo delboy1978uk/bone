@@ -13,8 +13,6 @@ use Bone\Mvc\View\Extension\Plates\Translate;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewRenderer;
 use Bone\Service\TranslatorFactory;
-use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\SerializerInterface;
 use League\Route\Router;
 use Locale;
 use Psr\Http\Server\MiddlewareInterface;
@@ -52,7 +50,6 @@ class ApplicationPackage implements RegistrationInterface
     {
         $this->setConfigArray($c);
         $this->setLocale($c);
-        $this->setSerializer($c);
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
         $this->setupTranslator($c);

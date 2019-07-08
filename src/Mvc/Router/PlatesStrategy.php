@@ -21,6 +21,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Stream;
 
 class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
@@ -97,21 +98,12 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
             if (preg_match('#(?<action>\w+)Action#', $actionMethod, $action)) {
                 $action = $action['action'];
             }
+
             $response = parent::invokeRouteCallable($route, $request);
-
             $body = $this->getBody($response);
+            $body = $this->viewEngine->render($this->layout, $body);
 
-            $folder = 'src/' . $module.'/View';
-
-            if (is_dir($folder)) {
-                $this->viewEngine->addFolder($module, $folder);
-            }
-
-            $viewName = $module . '::' . $controller . '/' . $action;
-            $body = $this->viewEngine->render($viewName, $body);
-            $body = $this->viewEngine->render($this->layout, ['content' => $body]);
-
-            return $this->getResponseWithBodyAndStatus($body, 200);
+            return $this->getResponseWithBodyAndStatus($response, $body, $response->getStatusCode());
 
         } catch (Exception $e) {
             $body = $this->viewEngine->render('error/error', [
@@ -124,7 +116,7 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
             ]);
             $status = ($e->getCode() >= 100 && $e->getCode() < 600) ? $e->getCode() : 500;
 
-            return $this->getResponseWithBodyAndStatus($body, $status);
+            return $this->getResponseWithBodyAndStatus(new HtmlResponse($body), $body, $status);
         }
 
     }
@@ -153,15 +145,16 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     }
 
     /**
+     * @param Response $response
      * @param string $body
      * @param int $status
      * @return \Psr\Http\Message\MessageInterface|Response
      */
-    private function getResponseWithBodyAndStatus(string $body, int $status = 200)
+    private function getResponseWithBodyAndStatus(Response $response, string $body, int $status = 200)
     {
         $stream = new Stream('php://memory', 'r+');
         $stream->write($body);
-        $response = (new Response())->withStatus($status)->withBody($stream);
+        $response = $response->withStatus($status)->withBody($stream);
 
         return $response;
     }
