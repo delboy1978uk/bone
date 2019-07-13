@@ -10,6 +10,7 @@ use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\Extension\Plates\Translate;
+use Bone\Mvc\View\Helper\Paginator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Mvc\View\ViewRenderer;
 use Bone\Service\TranslatorFactory;
@@ -53,6 +54,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
         $this->setupTranslator($c);
+        $this->setupPaginator($c);
         $this->setupModules($c);
     }
 
@@ -162,7 +164,9 @@ class ApplicationPackage implements RegistrationInterface
                 $package = new $packageName();
 
                 if ($package->hasEntityPath()) {
-                    $c['entity_paths'][] = $package->getEntityPath();
+                    $paths = $c['entity_paths'];
+                    $paths[] = $package->getEntityPath();
+                    $c['entity_paths'] = $paths;
                 }
 
                 $package->addToContainer($c);
@@ -203,12 +207,28 @@ class ApplicationPackage implements RegistrationInterface
             $c['translator'] = $translator;
             $engine->loadExtension(new Translate($translator));
             $defaultLocale = $config['default_locale'] ?: 'en_GB';
-            if (!in_array($locale, $config['supported_locales'])) {
-                $locale = $defaultLocale;
-            }
-            $translator->setLocale($locale);
+//            if (!in_array($locale, $config['supported_locales'])) {
+//                $locale = $defaultLocale;
+//            }
+            $translator->setLocale($defaultLocale);
             $c[Translator::class] = $translator;
         }
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setupPaginator(Container $c)
+    {
+        $c[Paginator::class] = $c->factory(function (Container $c, string $urlPart) {
+            $config = $c->get('paginator');
+            $numPerPage = $config['num _per_page'];
+            $pagerSize = $config['pager_size'];
+            $urlPart = $config['url_part'];
+            $pager = new Paginator();
+            $pager->setPagerSize(5);
+            $pager->setUrlPart($urlPart);
+        });
     }
 
 
