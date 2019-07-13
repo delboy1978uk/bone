@@ -118,10 +118,6 @@ class Paginator
             throw new PaginatorException(PaginatorException::NO_URL);
         }
 
-        if (!$this->urlPart) {
-            throw new PaginatorException(PaginatorException::NO_URL_PART);
-        }
-
         if (!$this->currentPage) {
             throw new PaginatorException(PaginatorException::NO_CURRENT_PAGE);
         }
@@ -148,10 +144,10 @@ class Paginator
             $start = 1;
         }
 
-        $html .= ($start === 1) ? '<li class="page-item disabled">' :'<li class="page-item">';
+        $html .= ($this->currentPage === 1) ? '<li class="page-item disabled">' :'<li class="page-item">';
         if (isset($this->customPrev)) {
             $html .= $this->customPrev;
-        } elseif ($start === 1) {
+        } elseif ($this->currentPage === 1) {
             $html .= '<a class="page-link"  href ="#">' . Icon::custom(Icon::FAST_BACKWARD, 'disabled') . '</a>';
         } else {
             $html .= '<a class="page-link"  href ="' . $this->url(1) . '">' . Icon::FAST_BACKWARD . '</a>';
@@ -182,20 +178,20 @@ class Paginator
             $html .= '</li>';
         }
 
-        $html .= (($start + ($pages - 1)) >= $this->currentPage) ? '<li class="page-item disabled">' :'<li class="page-item">';
+        $html .= ($this->currentPage >= $this->pageCount) ? '<li class="page-item disabled">' :'<li class="page-item">';
         if (isset($this->customNext)) {
             $html .= $this->customNext;
-        } elseif (($start + ($pages - 1)) >= $this->currentPage) {
+        } elseif ($this->currentPage >= $this->pageCount) {
             $html .= '<a class="page-link" href="#">' . Icon::custom(Icon::FORWARD, 'disabled') . '</a>';
         } else {
             $html .= '<a class="page-link"  href ="' . $this->url($this->currentPage + 1) . '">' . Icon::FORWARD . '</i></a>';
         }
         $html .= '</li>';
 
-        $html .= (($start + ($pages - 1)) >= $this->pageCount) ? '<li class="page-item disabled">' :'<li class="page-item">';
+        $html .= ($this->currentPage >= $this->pageCount) ? '<li class="page-item disabled">' : '<li class="page-item">';
         if (isset($this->customNext)) {
             $html .= $this->customNext;
-        } elseif (($start + ($pages - 1)) >= $this->pageCount) {
+        } elseif ($this->currentPage >= $this->pageCount) {
             $html .= '<a class="page-link" href="#">' . Icon::custom(Icon::FAST_FORWARD, 'disabled') . '</a>';
         } else {
             $html .= '<a class="page-link"  href ="' . $this->url($this->pageCount) . '">' . Icon::FAST_FORWARD . '</i></a>';
