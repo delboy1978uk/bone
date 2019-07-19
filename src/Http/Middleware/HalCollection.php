@@ -69,9 +69,16 @@ class HalCollection implements MiddlewareInterface
             'href' => $uri->getScheme() . '://' . $uri->getHost() . $uri->getPath() . '?page=' . $pageCount,
         ];
 
-        // @todo add _self links for entities in collection
+        /** @todo add _self links for entities in collection */
 
         $data = array_merge($hal, $data);
+        foreach ($data['_embedded'] as $key => $value) {
+            $data['_embedded'][$key]['_links'] = [
+                'self' => [
+                    'href' => $uri->getScheme() . '://' . $uri->getHost() . $uri->getPath() . '/' . $value['id'],
+                ],
+            ];
+        }
         $body = $response->getBody();
         $body->rewind();
         $body->write(json_encode($data));

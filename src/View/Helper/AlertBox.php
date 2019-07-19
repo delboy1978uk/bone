@@ -7,12 +7,12 @@ class AlertBox
 {
     /**
      * @param $message
-     * @return bool|string
+     * @return string
      */
     public static function alertBox($message): string
     {
         if (!$message) {
-            return false;
+            return '';
         }
         
         if (!is_array($message)) {
