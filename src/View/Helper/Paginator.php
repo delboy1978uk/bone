@@ -37,7 +37,7 @@ class Paginator
      */
     public function setPageCountByTotalRecords(int $rowCount, int $numPerPage): void
     {
-        $this->pageCount = (int) ceil($rowCount / $numPerPage);
+        $this->pageCount = (int) ceil($rowCount / $numPerPage) ?: 1;
     }
 
     /**
