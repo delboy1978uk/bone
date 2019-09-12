@@ -154,11 +154,9 @@ class ApplicationPackage implements RegistrationInterface
     private function setupModules(Container $c)
     {
         // set up the modules and vendor package modules
-        $modules = $c->get('modules');
         $packages = $c->get('packages');
 
-        foreach ($modules as $module) {
-            $packageName  = '\BoneMvc\Module\\'.$module.'\\'.$module . 'Package';
+        foreach ($packages as $packageName) {
             if (class_exists($packageName)) {
                 /** @var RegistrationInterface $package */
                 $package = new $packageName();
@@ -169,22 +167,6 @@ class ApplicationPackage implements RegistrationInterface
                     $c['entity_paths'] = $paths;
                 }
 
-                $package->addToContainer($c);
-
-                if ($package instanceof RouterConfigInterface) {
-                    $package->addRoutes($c, $this->router);
-                }
-            }
-        }
-
-        foreach ($packages as $module) {
-            $packageName  = '\BoneMvc\Module\\'.$module.'\\'.$module . 'Package';
-            if (class_exists($packageName)) {
-                /** @var RegistrationInterface $package */
-                $package = new $packageName();
-                if ($package->hasEntityPath()) {
-                    $c['entity_paths'][] = $package->getEntityPath();
-                }
                 $package->addToContainer($c);
 
                 if ($package instanceof RouterConfigInterface) {
