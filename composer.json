@@ -7,6 +7,12 @@
       "email": "delboy1978uk@gmail.com"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/delboy1978uk/route"
+    }
+  ],
   "require": {
     "php": ">7.0",
     "delboy1978uk/barnacle": "^2.1",
@@ -17,7 +23,7 @@
     "monolog/monolog": "^1.23",
     "zendframework/zend-i18n": "^2.9",
     "zendframework/zend-httphandlerrunner": "^1.1",
-    "league/route": "^4.3"
+    "league/route": "dev-master"
   },
   "require-dev": {
     "codeception/codeception": "^2.2"
