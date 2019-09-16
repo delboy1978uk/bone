@@ -9,7 +9,7 @@
   ],
   "require": {
     "php": ">7.0",
-    "delboy1978uk/barnacle": "^2.1",
+    "delboy1978uk/barnacle": "^2.2",
     "zendframework/zend-diactoros": "2.*",
     "league/plates": "^3.3",
     "zendframework/zend-mail": "^2.10",
@@ -17,9 +17,12 @@
     "monolog/monolog": "^1.23",
     "zendframework/zend-i18n": "^2.9",
     "zendframework/zend-httphandlerrunner": "^1.1",
-    "league/route": "dev-master"
+    "league/route": "dev-master",
+    "delboy1978uk/icon": "^1.0"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-master"
+    ,
     "codeception/codeception": "^2.2"
   },
   "autoload": {

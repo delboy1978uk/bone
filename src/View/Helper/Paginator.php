@@ -77,7 +77,7 @@ class Paginator
     /**
      * @param $url
      */
-    public function setCustomNext(string $url)
+    public function setCustomNext(string $url): void
     {
         $this->customNext = '<a href="' . $url . '/"><i class="icon-forward"></i></a>';
     }
@@ -105,40 +105,70 @@ class Paginator
     }
 
     /**
+     * @throws PaginatorException
+     */
+    private function ensurePageCount()
+    {
+        if (!$this->pageCount) {
+            throw new PaginatorException(PaginatorException::NO_PAGE_COUNT);
+        }
+    }
+
+    /**
+     * @throws PaginatorException
+     */
+    private function ensureUrl()
+    {
+        if (!$this->url) {
+            throw new PaginatorException(PaginatorException::NO_URL);
+        }
+    }
+
+    /**
+     * @throws PaginatorException
+     */
+    private function ensureCurrentPage()
+    {
+        if (!$this->url) {
+            throw new PaginatorException(PaginatorException::NO_CURRENT_PAGE);
+        }
+    }
+
+    /**
+     * @return int
+     */
+    private function calculateStart(int $pages): int
+    {
+        $half = ($pages - 1) / 2;
+        if ($this->currentPage < 3) {
+            $start = 1;
+        } elseif ($this->currentPage >= ($this->pageCount - $half)) {
+            $start = $this->pageCount - ($this->getPagerSize() - 1);
+        } else {
+            $start = $this->currentPage - $half;
+            if ($start < 1) {
+                $start = 1;
+            }
+        }
+
+        return $start;
+    }
+
+    /**
      * @return string
      * @throws PaginatorException
      */
     public function render(): string
     {
-        if (!$this->pageCount) {
-            throw new PaginatorException(PaginatorException::NO_PAGE_COUNT);
-        }
-
-        if (!$this->url) {
-            throw new PaginatorException(PaginatorException::NO_URL);
-        }
-
-        if (!$this->currentPage) {
-            throw new PaginatorException(PaginatorException::NO_CURRENT_PAGE);
-        }
+        $this->ensurePageCount();
+        $this->ensureUrl();
+        $this->ensureCurrentPage();
 
         $html = '<nav><ul class="pagination">';
 
         if ($this->pageCount > ($this->getPagerSize() - 1)) {
             $pages = $this->getPagerSize();
-            $half = ($pages - 1) / 2;
-            if ($this->currentPage === 1) {
-                $start = 1;
-            } elseif ($this->currentPage === 2) {
-                $start = 1;
-            } elseif ($this->currentPage >= ($this->pageCount - $half)) {
-                $start = $this->pageCount - ($this->getPagerSize() - 1);
-            } else {
-                $start = $this->currentPage - $half;
-                if ($start < 1) {
-                    $start = 1;
-                }
-            }
+            $start = $this->calculateStart($pages);
         } else {
             $pages = $this->pageCount;
             $start = 1;

@@ -19,6 +19,7 @@ class BoneMvcApplicationTest extends Test
     {
         $this->response = new Response();
         $this->response->getBody()->write('All hands on deck!');
+        define('APPLICATION_ENV', 'dev');
     }
 
     protected function _after()
