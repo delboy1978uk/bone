@@ -14,7 +14,7 @@ install:
 
 before_script:
   - export APPLICATION_ENV=travis
-  - echo "CREATE DATABASE bone_db; USE mysql;\nUPDATE user SET password=PASSWORD('drinkgrog') WHERE user='travis';\nFLUSH PRIVILEGES;\n " | mysql -u root
+  - echo "CREATE DATABASE bone_db; USE mysql;\nUPDATE user SET authentication_string=PASSWORD('drinkgrog') WHERE user='travis';\nFLUSH PRIVILEGES;\n " | mysql -u root
 
 script:
   - php vendor/bin/codecept run unit --coverage-xml --env travis -vvv
