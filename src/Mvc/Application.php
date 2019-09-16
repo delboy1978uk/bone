@@ -2,16 +2,31 @@
 
 namespace Bone\Mvc;
 
+use Barnacle\Container;
+use Barnacle\RegistrationInterface;
+use Bone\Mvc\Router\Decorator\ExceptionDecorator;
+use Bone\Mvc\Router\Decorator\NotFoundDecorator;
+use Bone\Mvc\Router\PlatesStrategy;
+use Bone\Mvc\Router\RouterConfigInterface;
+use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
-use Pimple\Container;
+use Bone\Server\I18nHandler;
+use League\Route\Http\Exception\NotFoundException;
+use League\Route\Router;
+use League\Route\RouteGroup;
+use League\Route\Strategy\ApplicationStrategy;
+use League\Route\Strategy\JsonStrategy;
+use PDO;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\ResponseFactory;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\RedirectResponse;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 class Application
 {
-    /** @var Registry $registry */
-    private $registry;
-
     /** @var Container $registry */
     private $treasureChest;
 
@@ -36,15 +51,13 @@ class Application
      * @param array $config
      * @return Application
      */
-    public static function ahoy(array $config = [])
+    public static function ahoy()
     {
         static $inst = null;
         if ($inst === null)
         {
             $inst = new Application();
-            $inst->registry = Registry::ahoy();
             $inst->treasureChest = new Container();
-            $inst->setConfig($config);
             $env = getenv('APPLICATION_ENV');
             if ($env) {
                 $inst->setEnvironment($env);
@@ -53,17 +66,6 @@ class Application
         return $inst;
     }
 
-    /**
-     * @param array $config
-     */
-    private function setConfig(array $config)
-    {
-        foreach($config as $key => $value)
-        {
-            $this->registry->set($key,$value);
-            $this->treasureChest[$key] = $value;
-        }
-    }
 
     /**
      *
@@ -74,17 +76,58 @@ class Application
      */
     public function setSail()
     {
+        // load in the config and set up the dependency injection container
         $env = new Environment($_SERVER);
-        if (!count($this->registry->getAll())) {
-            $config = $env->fetchConfig($this->configFolder, $this->environment);
-            $this->setConfig($config);
-        }
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-        $response = new Response();
-        $dispatcher = new Dispatcher($request, $response, $env);
-        $dispatcher->fireCannons();
+        $router = $this->treasureChest[Router::class] = new Router();
+        $config = $env->fetchConfig($this->configFolder, $this->environment);
+        $package = new ApplicationPackage($config, $router);
+        $package->addToContainer($this->treasureChest);
+        if ($this->isMultilingual()) {
+            try {
+                $request = $this->i18nRequestCheck($request);
+                $response = $router->dispatch($request);
+            } catch (NotFoundException $e) {
+                $response = new RedirectResponse($e->getMessage());
+            }
+        } else {
+            $request = $this->i18nRequestCheck($request, false);
+            $response = $router->dispatch($request);
+        }
+
+        (new SapiEmitter)->emit($response);
 
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultilingual(): bool
+    {
+        $i18n = $this->treasureChest->get('i18n');
+        return $i18n['enabled'];
+    }
+
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param bool $handle
+     * @return ServerRequestInterface
+     * @throws NotFoundException
+     */
+    private function i18nRequestCheck(ServerRequestInterface $request, bool $handle = true): ServerRequestInterface
+    {
+        $i18n = $this->treasureChest->get('i18n');
+        $translator = $this->treasureChest->get('translator');
+        $i18nHandler = new I18nHandler($translator, $i18n['supported_locales']);
+        if ($handle){
+            $request = $i18nHandler->handleI18n($request);
+        } else {
+            $request = $i18nHandler->removeI18n($request);
+        }
+
+        return $request;
     }
 
     /**
