@@ -27,7 +27,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Bone\\": "src/"
+      "Bone\\": "src/",
       "BoneTest\\": "tests/unit"
     }
   }
