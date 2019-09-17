@@ -5,15 +5,24 @@ namespace BoneTest\Http\Middleware;
 use Bone\Http\Middleware\HalEntity;
 use Codeception\TestCase\Test;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\ServerRequest;
-use Zend\HttpHandlerRunner\RequestHandlerRunner;
 
 class HalEntityTest extends Test
 {
-    /**
-     * @var \UnitTester
-     */
+    private $fakeRequestHandler;
+
+    public function before()
+    {
+        $this->fakeRequestHandler = new class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new JsonResponse(['drink' => 'grog', 'yo ho ho' => 'bottle of rum']);
+            }
+        }
+    }
 
     /**
      * @throws \Exception
@@ -21,10 +30,8 @@ class HalEntityTest extends Test
     public function testProcesss()
     {
         $request = new ServerRequest();
-        $response = new JsonResponse(['drink' => 'grog', 'yo ho ho' => 'bottle of rum']);
-        $handler = $this->make(RequestHandlerRunner::class, ['handle' => $response]);
         $halEntityMiddleware = new HalEntity();
-        $response = $halEntityMiddleware->process($request, $handler);
+        $response = $halEntityMiddleware->process($request, $this->fakeRequestHandler);
         $this->assertInstanceOf(ResponseInterface::class, $response);
 //        echo $response->getBody()->getContents(); die;
     }
