@@ -21,7 +21,7 @@ class HalEntityTest extends Test
             {
                 return new JsonResponse(['drink' => 'grog', 'yo ho ho' => 'bottle of rum']);
             }
-        }
+        };
     }
 
     /**
