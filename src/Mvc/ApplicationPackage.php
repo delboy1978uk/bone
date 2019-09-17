@@ -202,7 +202,7 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setupPaginator(Container $c)
     {
-        $c[Paginator::class] = $c->factory(function (Container $c, string $urlPart) {
+        $c[Paginato::class] = $c->factory(function (Container $c, string $urlPart) {
             $config = $c->get('paginator');
             $numPerPage = $config['num _per_page'];
             $pagerSize = $config['pager_size'];

@@ -16,7 +16,6 @@ class HalEntity implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $id = (int) $request->getQueryParams()['id'];
         $uri = $request->getUri();
 
         $hal = [
