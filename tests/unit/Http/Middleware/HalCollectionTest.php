@@ -57,4 +57,17 @@ class HalCollectionTest extends Test
         $json = $body->getContents();
         $this->assertEquals('{"_links":{"self":{"href":"https:\/\/awesome.scot"},"first":{"href":"https:\/\/awesome.scot"},"next":{"href":"https:\/\/awesome.scot?page=2"},"last":{"href":"https:\/\/awesome.scot?page=2"}},"_embedded":[{"id":1,"drink":"grog","_links":{"self":{"href":"https:\/\/awesome.scot\/1"}}},{"id":1,"yo ho ho":"bottle of rum","_links":{"self":{"href":"https:\/\/awesome.scot\/1"}}},{"id":3,"shiver me":"timbers","_links":{"self":{"href":"https:\/\/awesome.scot\/3"}}}],"total":4}', $json);
     }
+
+    public function testPage2()
+    {
+        $uri =  new Uri('https://awesome.scot');
+        $uri->withQuery('?page=2');
+        $request = new ServerRequest([], [], $uri);
+        $halEntityMiddleware = new HalCollection(3);
+        $response = $halEntityMiddleware->process($request, $this->fakeRequestHandler);
+        $body = $response->getBody();
+        $body->rewind();
+        $json = $body->getContents();
+        $this->assertEquals('{"_links":{"self":{"href":"https:\/\/awesome.scot"},"first":{"href":"https:\/\/awesome.scot"},"next":{"href":"https:\/\/awesome.scot?page=2"},"last":{"href":"https:\/\/awesome.scot?page=2"}},"_embedded":[{"id":1,"drink":"grog","_links":{"self":{"href":"https:\/\/awesome.scot\/1"}}},{"id":1,"yo ho ho":"bottle of rum","_links":{"self":{"href":"https:\/\/awesome.scot\/1"}}},{"id":3,"shiver me":"timbers","_links":{"self":{"href":"https:\/\/awesome.scot\/3"}}}],"total":4}', $json);
+    }
 }
