@@ -5,8 +5,8 @@ namespace BoneTest\Http\Middleware;
 use Bone\Http\Middleware\HalEntity;
 use Codeception\TestCase\Test;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Request;
 use Zend\Diactoros\Response\JsonResponse;
+use Zend\Diactoros\ServerRequest;
 use Zend\HttpHandlerRunner\RequestHandlerRunner;
 
 class HalEntityTest extends Test
@@ -20,7 +20,7 @@ class HalEntityTest extends Test
      */
     public function testProcesss()
     {
-        $request = new Request();
+        $request = new ServerRequest();
         $response = new JsonResponse(['drink' => 'grog', 'yo ho ho' => 'bottle of rum']);
         $handler = $this->make(RequestHandlerRunner::class, ['handle' => $response]);
         $halEntityMiddleware = new HalEntity();
