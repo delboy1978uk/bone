@@ -34,6 +34,17 @@ class BoneMvcApplicationTest extends Test
         $this->assertInstanceOf(Application::class, $app);
     }
 
+
+    /**
+     * @throws Exception
+     */
+    public function testGetContainer()
+    {
+        $application = Application::ahoy();
+        $container = $application->getContainer();
+        $this->assertInstanceOf('Barnacle\Container', $container);
+    }
+
     /**
      * @throws Exception
      */
@@ -50,6 +61,24 @@ class BoneMvcApplicationTest extends Test
         $contents = ob_get_contents();
         ob_end_clean();
         $this->assertEquals('<!DOCTYPE html><html lang="en"><head></head><body><h1>Template</h1><h3>Content Below</h3><h1>TestPackage</h1><p class="lead">Lorem ipsum dolor sit amet</p></body></html>', $contents);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test404Request()
+    {
+        global $_SERVER;
+        $application = Application::ahoy();
+        $application->setConfigFolder('tests/_data/config');
+        $_SERVER = [
+            'REQUEST_URI' => '/blistering-barnacles'
+        ];
+        ob_start();
+        $this->assertTrue($application->setSail());
+        $contents = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals('<!DOCTYPE html><html lang="en"><head></head><body><h1>Template</h1><h3>Content Below</h3>Th\' page canna be found, Cap\'n.</body></html>', $contents);
     }
 }
 
