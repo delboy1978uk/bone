@@ -1,0 +1,1 @@
+<!DOCTYPE html><html lang="en"><head></head><body><h1>Template</h1><h3>Content Below</h3><?= $content ;?></body></html>

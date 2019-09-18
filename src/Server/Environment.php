@@ -24,7 +24,7 @@ class Environment
      */
     public function fetchConfig(string $configFolder, string $applicationEnvironment): array
     {
-        $config = $this->loadLegacyConfig($configFolder);
+        $config = $this->loadConfig($configFolder);
 
         if (!empty($applicationEnvironment)) {
             $config = $this->loadEnvironmentConfig($configFolder, $applicationEnvironment, $config);
@@ -37,7 +37,7 @@ class Environment
      * @param string $configFolder
      * @return array
      */
-    private function loadLegacyConfig(string $configFolder): array
+    private function loadConfig(string $configFolder): array
     {
         $config = [];
         $config = $this->globLoadConfig($configFolder, $config);

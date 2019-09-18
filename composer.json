@@ -8,7 +8,7 @@
     }
   ],
   "require": {
-    "php": ">7.0",
+    "php": ">7.1",
     "delboy1978uk/barnacle": "^2.2",
     "zendframework/zend-diactoros": "2.*",
     "league/plates": "^3.3",
@@ -21,8 +21,7 @@
     "delboy1978uk/icon": "^1.0"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master"
-    ,
+    "roave/security-advisories": "dev-master",
     "codeception/codeception": "^2.2"
   },
   "autoload": {

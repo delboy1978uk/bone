@@ -34,6 +34,7 @@ class I18nHandler
     /**
      * @param ServerRequestInterface $request
      * @return ServerRequestInterface
+     * @throws NotFoundException
      */
     public function handleI18n(ServerRequestInterface $request): ServerRequestInterface
     {

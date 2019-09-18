@@ -4,19 +4,16 @@ namespace Bone\Mvc;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
-use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\Extension\Plates\Translate;
-use Bone\Mvc\View\Helper\Paginator;
+use Bone\View\Helper\Paginator;
 use Bone\Mvc\View\PlatesEngine;
-use Bone\Mvc\View\ViewRenderer;
 use Bone\Service\TranslatorFactory;
 use League\Route\Router;
 use Locale;
-use Psr\Http\Server\MiddlewareInterface;
 use Zend\I18n\Translator\Translator;
 
 class ApplicationPackage implements RegistrationInterface
@@ -84,14 +81,6 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param Container $c
      */
-    private function setSerializer(Container $c)
-    {
-        $c[SerializerInterface::class] = $serializer = SerializerBuilder::create()->build();;
-    }
-
-    /**
-     * @param Container $c
-     */
     private function setupViewEngine(Container $c)
     {
         // set up the view engine dependencies
@@ -117,13 +106,6 @@ class ApplicationPackage implements RegistrationInterface
             $notAllowedDecorator->setLayout($layout);
 
             return $notAllowedDecorator;
-        });
-
-        $c[ExceptionDecorator::class] = $c->factory(function (Container $c) {
-            $viewEngine = $c->get(PlatesEngine::class);
-            $notFoundDecorator = new ExceptionDecorator($viewEngine);
-
-            return $notFoundDecorator;
         });
 
         $c[PlatesStrategy::class] = $c->factory(function (Container $c) {

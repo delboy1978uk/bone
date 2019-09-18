@@ -41,7 +41,8 @@ class Application
      *  There be nay copyin' o' th'ship either
      *  This ship is a singleton!
      */
-    public function __construct(){}
+    private function __construct(){}
+
     public function __clone(){}
 
 
@@ -54,8 +55,7 @@ class Application
     public static function ahoy()
     {
         static $inst = null;
-        if ($inst === null)
-        {
+        if ($inst === null) {
             $inst = new Application();
             $inst->treasureChest = new Container();
             $env = getenv('APPLICATION_ENV');
@@ -83,13 +83,18 @@ class Application
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $package = new ApplicationPackage($config, $router);
         $package->addToContainer($this->treasureChest);
+
         if ($this->isMultilingual()) {
+
             try {
                 $request = $this->i18nRequestCheck($request);
+                codecept_debug($request);
                 $response = $router->dispatch($request);
             } catch (NotFoundException $e) {
+                codecept_debug($e->getMessage());
                 $response = new RedirectResponse($e->getMessage());
             }
+
         } else {
             $request = $this->i18nRequestCheck($request, false);
             $response = $router->dispatch($request);
@@ -121,7 +126,7 @@ class Application
         $i18n = $this->treasureChest->get('i18n');
         $translator = $this->treasureChest->get('translator');
         $i18nHandler = new I18nHandler($translator, $i18n['supported_locales']);
-        if ($handle){
+        if ($handle) {
             $request = $i18nHandler->handleI18n($request);
         } else {
             $request = $i18nHandler->removeI18n($request);

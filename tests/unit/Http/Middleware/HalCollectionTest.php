@@ -46,28 +46,28 @@ class HalCollectionTest extends Test
     /**
      * @throws \Exception
      */
-    public function testProcesss()
+    public function testProcess()
     {
-        $request = new ServerRequest([], [], new Uri('https://awesome.scot'));
+        $request = new ServerRequest([], [], new Uri('https://awesome.scot/skull'));
         $halEntityMiddleware = new HalCollection(3);
         $response = $halEntityMiddleware->process($request, $this->fakeRequestHandler);
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $body = $response->getBody();
         $body->rewind();
         $json = $body->getContents();
-        $this->assertEquals('{"_links":{"self":{"href":"https:\/\/awesome.scot"},"first":{"href":"https:\/\/awesome.scot"},"next":{"href":"https:\/\/awesome.scot?page=2"},"last":{"href":"https:\/\/awesome.scot?page=2"}},"_embedded":[{"id":1,"drink":"grog","_links":{"self":{"href":"https:\/\/awesome.scot\/1"}}},{"id":1,"yo ho ho":"bottle of rum","_links":{"self":{"href":"https:\/\/awesome.scot\/1"}}},{"id":3,"shiver me":"timbers","_links":{"self":{"href":"https:\/\/awesome.scot\/3"}}}],"total":4}', $json);
+        $this->assertEquals('{"_links":{"self":{"href":"https:\/\/awesome.scot\/skull"},"first":{"href":"https:\/\/awesome.scot\/skull"},"next":{"href":"https:\/\/awesome.scot\/skull?page=2"},"last":{"href":"https:\/\/awesome.scot\/skull?page=2"}},"_embedded":[{"id":1,"drink":"grog","_links":{"self":{"href":"https:\/\/awesome.scot\/skull\/1"}}},{"id":1,"yo ho ho":"bottle of rum","_links":{"self":{"href":"https:\/\/awesome.scot\/skull\/1"}}},{"id":3,"shiver me":"timbers","_links":{"self":{"href":"https:\/\/awesome.scot\/skull\/3"}}}],"total":4}', $json);
     }
 
     public function testPage2()
     {
-        $uri =  new Uri('https://awesome.scot');
-        $uri->withQuery('?page=2');
+        $uri =  new Uri('https://awesome.scot/crossbones');
         $request = new ServerRequest([], [], $uri);
+        $request = $request->withQueryParams(['page' => 2]);
         $halEntityMiddleware = new HalCollection(3);
         $response = $halEntityMiddleware->process($request, $this->fakeRequestHandler);
         $body = $response->getBody();
         $body->rewind();
         $json = $body->getContents();
-        $this->assertEquals('{"_links":{"self":{"href":"https:\/\/awesome.scot"},"first":{"href":"https:\/\/awesome.scot"},"next":{"href":"https:\/\/awesome.scot?page=2"},"last":{"href":"https:\/\/awesome.scot?page=2"}},"_embedded":[{"id":1,"drink":"grog","_links":{"self":{"href":"https:\/\/awesome.scot\/1"}}},{"id":1,"yo ho ho":"bottle of rum","_links":{"self":{"href":"https:\/\/awesome.scot\/1"}}},{"id":3,"shiver me":"timbers","_links":{"self":{"href":"https:\/\/awesome.scot\/3"}}}],"total":4}', $json);
+        $this->assertEquals('{"_links":{"self":{"href":"https:\/\/awesome.scot\/crossbones"},"first":{"href":"https:\/\/awesome.scot\/crossbones"},"prev":{"href":"https:\/\/awesome.scot\/crossbones?page=1"},"last":{"href":"https:\/\/awesome.scot\/crossbones?page=2"}},"_embedded":[{"id":1,"drink":"grog","_links":{"self":{"href":"https:\/\/awesome.scot\/crossbones\/1"}}},{"id":1,"yo ho ho":"bottle of rum","_links":{"self":{"href":"https:\/\/awesome.scot\/crossbones\/1"}}},{"id":3,"shiver me":"timbers","_links":{"self":{"href":"https:\/\/awesome.scot\/crossbones\/3"}}}],"total":4}', $json);
     }
 }
