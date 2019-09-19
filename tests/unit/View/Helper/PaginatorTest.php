@@ -17,7 +17,7 @@ class PaginatorTest extends Test
         $pager->setPagerSize(4);
         $pager->setUrl('https://bottlesofrum.com/cannons/:page');
         $pager->setUrlPart(':page');
-        $this->assertEquals('', $pager->render());
+        $this->assertEquals('<nav><ul class="pagination"><li class="page-item"><a class="page-link"  href ="https://bottlesofrum.com/cannons/1"><i class="fa fa-fast-backward"></i></a></li><li class="page-item"><a class="page-link"  href ="https://bottlesofrum.com/cannons/1"><i class="fa fa-backward"></i></a></li><li class="page-item "><a class="page-link" href="https://bottlesofrum.com/cannons/1">1</a></li><li class="page-item  active" aria-current="page"><a class="page-link" href="#">2</a></li><li class="page-item "><a class="page-link" href="https://bottlesofrum.com/cannons/3">3</a></li><li class="page-item"><a class="page-link"  href ="https://bottlesofrum.com/cannons/3"><i class="fa fa-forward"></i></i></a></li><li class="page-item"><a class="page-link"  href ="https://bottlesofrum.com/cannons/5"><i class="fa fa-fast-forward"></i></i></a></li></ul></nav>', $pager->render());
     }
     /**
      * @throws Exception
