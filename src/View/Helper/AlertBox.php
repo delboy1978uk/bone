@@ -22,15 +22,16 @@ class AlertBox
                 'message' => $text
             );
         }
+        $message['class'] = $message['class']?: 'info';
         
         $alert = '<div class="alert ';
-        if ($message['class'] != 'alert') {
+        if ($message['class'] !== 'alert') {
             $alert .= 'alert-' . $message['class'];
         }
         
         $alert .= '"><button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>';
+  <span aria-hidden="true">&times;</span>
+</button>';
         
         if (!is_array($message['message'])) {
             $alert .= $message['message'];
@@ -38,8 +39,8 @@ class AlertBox
         } else {
             $num = count($message['message']);
             $x = 1;
-            foreach ($message['message'] as $message) {
-                $alert .= $message;
+            foreach ($message['message'] as $line) {
+                $alert .= $line;
                 if ($x < $num) {
                     $alert .= '<br />';
                 }
