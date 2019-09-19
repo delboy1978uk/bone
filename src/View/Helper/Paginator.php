@@ -8,8 +8,6 @@ use Del\Icon;
 class Paginator
 {
     private $currentPage = 1;
-    private $customNext;
-    private $customPrev;
     private $pageCount;
     private $pagerSize = 5;
     private $url;
@@ -64,24 +62,6 @@ class Paginator
         $this->currentPage = $page_no;
     }
 
-
-    /**
-     * @param $url
-     */
-    public function setCustomPrev($url): void
-    {
-        $this->customPrev = '<a href="' . $url . '/"><i class="icon-backward"></i></a>';
-    }
-
-
-    /**
-     * @param $url
-     */
-    public function setCustomNext(string $url): void
-    {
-        $this->customNext = '<a href="' . $url . '/"><i class="icon-forward"></i></a>';
-    }
-
     /**
      * @param int $numBoxes an ODD number!
      */
@@ -98,9 +78,6 @@ class Paginator
      */
     public function getPagerSize(): int
     {
-        if (!$this->pagerSize) {
-            $this->pagerSize = 5;
-        }
         return $this->pagerSize;
     }
 
@@ -129,7 +106,7 @@ class Paginator
      */
     private function ensureCurrentPage()
     {
-        if (!$this->url) {
+        if (!$this->currentPage) {
             throw new PaginatorException(PaginatorException::NO_CURRENT_PAGE);
         }
     }
@@ -175,9 +152,7 @@ class Paginator
         }
 
         $html .= ($this->currentPage === 1) ? '<li class="page-item disabled">' :'<li class="page-item">';
-        if (isset($this->customPrev)) {
-            $html .= $this->customPrev;
-        } elseif ($this->currentPage === 1) {
+        if ($this->currentPage === 1) {
             $html .= '<a class="page-link"  href ="#">' . Icon::custom(Icon::FAST_BACKWARD, 'disabled') . '</a>';
         } else {
             $html .= '<a class="page-link"  href ="' . $this->url(1) . '">' . Icon::FAST_BACKWARD . '</a>';
@@ -185,9 +160,7 @@ class Paginator
         $html .= '</li>';
 
         $html .= ($this->currentPage === 1) ? '<li class="page-item disabled">' :'<li class="page-item">';
-        if (isset($this->customPrev)) {
-            $html .= $this->customPrev;
-        } elseif ($this->currentPage === 1) {
+        if ($this->currentPage === 1) {
             $html .= '<a class="page-link"  href ="#">' . Icon::custom(Icon::BACKWARD, 'disabled') . '</a>';
         } else {
             $html .= '<a class="page-link"  href ="' . $this->url($this->currentPage - 1) . '">' . Icon::BACKWARD . '</a>';
@@ -209,9 +182,7 @@ class Paginator
         }
 
         $html .= ($this->currentPage >= $this->pageCount) ? '<li class="page-item disabled">' :'<li class="page-item">';
-        if (isset($this->customNext)) {
-            $html .= $this->customNext;
-        } elseif ($this->currentPage >= $this->pageCount) {
+        if ($this->currentPage >= $this->pageCount) {
             $html .= '<a class="page-link" href="#">' . Icon::custom(Icon::FORWARD, 'disabled') . '</a>';
         } else {
             $html .= '<a class="page-link"  href ="' . $this->url($this->currentPage + 1) . '">' . Icon::FORWARD . '</i></a>';
@@ -219,9 +190,7 @@ class Paginator
         $html .= '</li>';
 
         $html .= ($this->currentPage >= $this->pageCount) ? '<li class="page-item disabled">' : '<li class="page-item">';
-        if (isset($this->customNext)) {
-            $html .= $this->customNext;
-        } elseif ($this->currentPage >= $this->pageCount) {
+        if ($this->currentPage >= $this->pageCount) {
             $html .= '<a class="page-link" href="#">' . Icon::custom(Icon::FAST_FORWARD, 'disabled') . '</a>';
         } else {
             $html .= '<a class="page-link"  href ="' . $this->url($this->pageCount) . '">' . Icon::FAST_FORWARD . '</i></a>';
