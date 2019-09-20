@@ -193,6 +193,7 @@ class ApplicationPackage implements RegistrationInterface
             $user = $credentials['user'];
             $pass = $credentials['pass'];
 
+            codecept_debug('mysql:host='.$host.';dbname='.$db, $user, $pass);
             $dbConnection = new PDO('mysql:host='.$host.';dbname='.$db, $user, $pass, [
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
