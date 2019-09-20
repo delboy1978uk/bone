@@ -43,7 +43,7 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
      */
     public function getEntityPath(): string
     {
-        return '';
+        return 'TestPackage/Entity';
     }
 
     /**
@@ -51,7 +51,7 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
      */
     public function hasEntityPath(): bool
     {
-        return false;
+        return true;
     }
 
     /**

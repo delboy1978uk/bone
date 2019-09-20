@@ -54,7 +54,7 @@ class BoneMvcApplicationTest extends Test
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER = [
-            'REQUEST_URI' => '/testpackage'
+            'REQUEST_URI' => '/en_GB/testpackage'
         ];
         ob_start();
         $this->assertTrue($application->setSail());
@@ -72,7 +72,7 @@ class BoneMvcApplicationTest extends Test
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER = [
-            'REQUEST_URI' => '/blistering-barnacles'
+            'REQUEST_URI' => '/en_GB/blistering-barnacles'
         ];
         ob_start();
         $this->assertTrue($application->setSail());

@@ -2,21 +2,15 @@
 
 namespace Bone\Mvc\Router;
 
-use Bone\Http\Response as BoneResponse;
-use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
-use Bone\Mvc\View\ViewEngine;
-use Bone\Mvc\View\ViewRenderer;
-use Bone\Server\I18nHandler;
 use Bone\Traits\LayoutAwareTrait;
 use Exception;
 use League\Route\Http\Exception\{MethodNotAllowedException, NotFoundException};
 use League\Route\Route;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\StrategyInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -87,18 +81,6 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     {
         try {
 
-            $controller = $route->getCallable($this->container);
-            $controllerClass = get_class($controller[0]);
-            $actionMethod = $controller[1];
-            if (preg_match('#(?<module>\w+)\\\Controller\\\(?<controller>\w+)Controller$#', $controllerClass, $matches)) {
-                $module = $matches['module'];
-                $controller = $matches['controller'];
-            }
-
-            if (preg_match('#(?<action>\w+)Action#', $actionMethod, $action)) {
-                $action = $action['action'];
-            }
-
             $response = parent::invokeRouteCallable($route, $request);
             $body = $this->getBody($response);
             $body = $this->viewEngine->render($this->layout, $body);
@@ -145,7 +127,7 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     }
 
     /**
-     * @param Response $response
+     * @param ResponseInterface $response
      * @param string $body
      * @param int $status
      * @return \Psr\Http\Message\MessageInterface|Response
