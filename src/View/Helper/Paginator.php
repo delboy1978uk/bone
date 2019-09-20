@@ -86,7 +86,7 @@ class Paginator
      */
     private function ensurePageCount()
     {
-        if (!$this->pageCount) {
+        if (null === $this->pageCount) {
             throw new PaginatorException(PaginatorException::NO_PAGE_COUNT);
         }
     }
@@ -96,18 +96,9 @@ class Paginator
      */
     private function ensureUrl()
     {
-        if (!$this->url) {
+        codecept_debug($this->url);
+        if (null === $this->url) {
             throw new PaginatorException(PaginatorException::NO_URL);
-        }
-    }
-
-    /**
-     * @throws PaginatorException
-     */
-    private function ensureCurrentPage()
-    {
-        if (!$this->currentPage) {
-            throw new PaginatorException(PaginatorException::NO_CURRENT_PAGE);
         }
     }
 
@@ -139,7 +130,6 @@ class Paginator
     {
         $this->ensurePageCount();
         $this->ensureUrl();
-        $this->ensureCurrentPage();
 
         $html = '<nav><ul class="pagination">';
 

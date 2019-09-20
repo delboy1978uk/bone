@@ -41,25 +41,12 @@ class PaginatorTest extends Test
         $pager->render();
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testCreatePagerThrowsExceptionWithoutCurrentPage()
-    {
-        $this->expectException(PaginatorException::class);
-        $pager = new Paginator();
-        $pager->setPageCountByTotalRecords(100, 20);
-        $pager->setUrl('https://yes.scot');
-        $pager->render();
-    }
-
 
     /**
      * @throws Exception
      */
     public function testPagerSize()
     {
-        $this->expectException(PaginatorException::class);
         $pager = new Paginator();
         $this->assertEquals(5, $pager->getPagerSize());
         $pager->setPagerSize(7);
@@ -72,6 +59,5 @@ class PaginatorTest extends Test
         $this->assertEquals(11, $pager->getPagerSize());
         $pager->setPagerSize(12);
         $this->assertEquals(11, $pager->getPagerSize());
-
     }
 }
