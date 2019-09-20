@@ -96,7 +96,6 @@ class Paginator
      */
     private function ensureUrl()
     {
-        codecept_debug($this->url);
         if (null === $this->url) {
             throw new PaginatorException(PaginatorException::NO_URL);
         }
@@ -108,12 +107,14 @@ class Paginator
     private function calculateStart(int $pages): int
     {
         $half = ($pages - 1) / 2;
+
         if ($this->currentPage < 3) {
             $start = 1;
         } elseif ($this->currentPage >= ($this->pageCount - $half)) {
             $start = $this->pageCount - ($this->getPagerSize() - 1);
         } else {
             $start = $this->currentPage - $half;
+
             if ($start < 1) {
                 $start = 1;
             }
