@@ -2,7 +2,6 @@
 
 use Bone\Server\I18nHandler;
 use Bone\Service\TranslatorFactory;
-use Codeception\Coverage\Subscriber\Local;
 use Codeception\TestCase\Test;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
@@ -18,6 +17,8 @@ class I18HandlerTest extends Test
     /** @var I18nHandler $middleware */
     private $middleware;
 
+    private $translator;
+
     public function _before()
     {
         $factory = new TranslatorFactory();
@@ -29,8 +30,8 @@ class I18HandlerTest extends Test
             'supported_locales' => ['en_PI', 'en_GB', 'nl_BE', 'fr_BE'],
             'date_format' => 'd/m/Y',
         ];
-        $translator = $factory->createTranslator($config);
-        $this->middleware = new I18nHandler($translator, $config['supported_locales']);
+        $this->translator = $factory->createTranslator($config);
+        $this->middleware = new I18nHandler($this->translator, $config['supported_locales']);
 
     }
 
