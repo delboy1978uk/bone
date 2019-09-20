@@ -35,7 +35,7 @@ class Paginator
      */
     public function setPageCountByTotalRecords(int $rowCount, int $numPerPage): void
     {
-        $this->pageCount = (int) ceil($rowCount / $numPerPage) ?: 1;
+        $this->pageCount = (int)ceil($rowCount / $numPerPage) ?: 1;
     }
 
     /**
@@ -142,52 +142,75 @@ class Paginator
             $start = 1;
         }
 
-        $html .= ($this->currentPage === 1) ? '<li class="page-item disabled">' :'<li class="page-item">';
-        if ($this->currentPage === 1) {
-            $html .= '<a class="page-link"  href ="#">' . Icon::custom(Icon::FAST_BACKWARD, 'disabled') . '</a>';
-        } else {
-            $html .= '<a class="page-link"  href ="' . $this->url(1) . '">' . Icon::FAST_BACKWARD . '</a>';
-        }
-        $html .= '</li>';
-
-        $html .= ($this->currentPage === 1) ? '<li class="page-item disabled">' :'<li class="page-item">';
-        if ($this->currentPage === 1) {
-            $html .= '<a class="page-link"  href ="#">' . Icon::custom(Icon::BACKWARD, 'disabled') . '</a>';
-        } else {
-            $html .= '<a class="page-link"  href ="' . $this->url($this->currentPage - 1) . '">' . Icon::BACKWARD . '</a>';
-        }
-        $html .= '</li>';
+        $html .= $this->renderRewind(Icon::FAST_BACKWARD, true);
+        $html .= $this->renderRewind();
 
         for ($x = $start; $x <= ($start + ($pages - 1)); $x++) {
-            $html .= '<li class="page-item ';
-            if ($this->currentPage === $x) {
-                $html .= ' active" aria-current="page';
-            }
-            $html .= '">';
-            if ($this->currentPage === $x) {
-                $html .= '<a class="page-link" href="#">' . $x . '</a>';
-            } else {
-                $html .= '<a class="page-link" href="' . $this->url($x) .'">' . $x . '</a>';
-            }
-            $html .= '</li>';
+            $html .= $this->renderBox($x);
         }
 
-        $html .= ($this->currentPage >= $this->pageCount) ? '<li class="page-item disabled">' :'<li class="page-item">';
-        if ($this->currentPage >= $this->pageCount) {
-            $html .= '<a class="page-link" href="#">' . Icon::custom(Icon::FORWARD, 'disabled') . '</a>';
-        } else {
-            $html .= '<a class="page-link"  href ="' . $this->url($this->currentPage + 1) . '">' . Icon::FORWARD . '</i></a>';
-        }
-        $html .= '</li>';
-
-        $html .= ($this->currentPage >= $this->pageCount) ? '<li class="page-item disabled">' : '<li class="page-item">';
-        if ($this->currentPage >= $this->pageCount) {
-            $html .= '<a class="page-link" href="#">' . Icon::custom(Icon::FAST_FORWARD, 'disabled') . '</a>';
-        } else {
-            $html .= '<a class="page-link"  href ="' . $this->url($this->pageCount) . '">' . Icon::FAST_FORWARD . '</i></a>';
-        }
-        $html .= '</li>';
+        $html .= $this->renderForward();
+        $html .= $this->renderForward(Icon::FAST_FORWARD, true);
         $html .= '</ul></nav>';
+
+        return $html;
+    }
+
+    /**
+     * @param string $icon
+     * @param bool $fastBackward
+     * @return string
+     */
+    private function renderRewind($icon = Icon::BACKWARD, $fastBackward = false)
+    {
+        $urlPageNo = $fastBackward ? 1 : $this->currentPage - 1;
+        $html = ($this->currentPage === 1) ? '<li class="page-item disabled">' : '<li class="page-item">';
+        if ($this->currentPage === 1) {
+            $html .= '<a class="page-link"  href ="#">' . Icon::custom($icon, 'disabled') . '</a>';
+        } else {
+            $html .= '<a class="page-link"  href ="' . $this->url($urlPageNo) . '">' . $icon . '</a>';
+        }
+        $html .= '</li>';
+
+        return $html;
+    }
+
+    /**
+     * @param string $icon
+     * @param bool $fastBackward
+     * @return string
+     */
+    private function renderForward($icon = Icon::FORWARD, $fastForward = false)
+    {
+        $urlPageNo = $fastForward ? $this->pageCount : $this->currentPage + 1;
+        $html = ($this->currentPage >= $this->pageCount) ? '<li class="page-item disabled">' : '<li class="page-item">';
+        if ($this->currentPage >= $this->pageCount) {
+            $html .= '<a class="page-link" href="#">' . Icon::custom($icon, 'disabled') . '</a>';
+        } else {
+            $html .= '<a class="page-link"  href ="' . $this->url($urlPageNo) . '">' . $icon . '</i></a>';
+        }
+        $html .= '</li>';
+
+        return $html;
+    }
+
+    /**
+     * @param int $pageNo
+     * @return string
+     */
+    private function renderBox(int $pageNo): string
+    {
+        $html = '<li class="page-item ';
+        if ($this->currentPage === $pageNo) {
+            $html .= ' active" aria-current="page';
+        }
+        $html .= '">';
+        if ($this->currentPage === $pageNo) {
+            $html .= '<a class="page-link" href="#">' . $pageNo . '</a>';
+        } else {
+            $html .= '<a class="page-link" href="' . $this->url($pageNo) . '">' . $pageNo . '</a>';
+        }
+        $html .= '</li>';
 
         return $html;
     }
