@@ -161,7 +161,7 @@ class Paginator
      * @param bool $fastBackward
      * @return string
      */
-    private function renderRewind($icon = Icon::BACKWARD, $fastBackward = false)
+    private function renderRewind($icon = Icon::BACKWARD, bool $fastBackward = false): string
     {
         $urlPageNo = $fastBackward ? 1 : $this->currentPage - 1;
         $html = ($this->currentPage === 1) ? '<li class="page-item disabled">' : '<li class="page-item">';
@@ -177,10 +177,10 @@ class Paginator
 
     /**
      * @param string $icon
-     * @param bool $fastBackward
+     * @param bool $fastForward
      * @return string
      */
-    private function renderForward($icon = Icon::FORWARD, $fastForward = false)
+    private function renderForward($icon = Icon::FORWARD, bool $fastForward = false): string
     {
         $urlPageNo = $fastForward ? $this->pageCount : $this->currentPage + 1;
         $html = ($this->currentPage >= $this->pageCount) ? '<li class="page-item disabled">' : '<li class="page-item">';

@@ -20,7 +20,7 @@ class EnvironmentTest extends Test
         $this->assertArrayHasKey('legacy config', $config);
         $this->assertArrayHasKey('db', $config);
         $this->assertEquals('hello', $config['legacy config']);
-        $this->assertEquals('whatever', $config['db']);
+        $this->assertTrue(is_array($config['db']));
     }
 
     public function testCanGetDevConfig()
@@ -32,7 +32,7 @@ class EnvironmentTest extends Test
         $this->assertArrayHasKey('development config', $config);
         $this->assertArrayHasKey('db', $config);
         $this->assertEquals('hello', $config['legacy config']);
-        $this->assertEquals('dev value', $config['db']);
+        $this->assertTrue(is_array($config['db']));
     }
 
     public function testCanGetProdConfig()

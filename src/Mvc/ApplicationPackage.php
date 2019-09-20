@@ -14,6 +14,7 @@ use Bone\Mvc\View\PlatesEngine;
 use Bone\Service\TranslatorFactory;
 use League\Route\Router;
 use Locale;
+use PDO;
 use Zend\I18n\Translator\Translator;
 
 class ApplicationPackage implements RegistrationInterface
@@ -51,7 +52,6 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
         $this->setupTranslator($c);
-        $this->setupPaginator($c);
         $this->setupModules($c);
     }
 
@@ -177,22 +177,6 @@ class ApplicationPackage implements RegistrationInterface
             $translator->setLocale($defaultLocale);
             $c[Translator::class] = $translator;
         }
-    }
-
-    /**
-     * @param Container $c
-     */
-    private function setupPaginator(Container $c)
-    {
-        $c[Paginato::class] = $c->factory(function (Container $c, string $urlPart) {
-            $config = $c->get('paginator');
-            $numPerPage = $config['num _per_page'];
-            $pagerSize = $config['pager_size'];
-            $urlPart = $config['url_part'];
-            $pager = new Paginator();
-            $pager->setPagerSize(5);
-            $pager->setUrlPart($urlPart);
-        });
     }
 
 

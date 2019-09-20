@@ -88,10 +88,8 @@ class Application
 
             try {
                 $request = $this->i18nRequestCheck($request);
-                codecept_debug($request);
                 $response = $router->dispatch($request);
             } catch (NotFoundException $e) {
-                codecept_debug($e->getMessage());
                 $response = new RedirectResponse($e->getMessage());
             }
 
