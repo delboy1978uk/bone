@@ -3,7 +3,7 @@
 return [
     'db' => [
         'driver' => 'pdo_mysql',
-        'host' => 'locaslhost',
+        'host' => 'localhost',
         'database' => 'bone_db',
         'dbname' => 'bone_db',
         'user' => 'travis',
