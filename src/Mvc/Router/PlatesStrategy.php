@@ -16,6 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Stream;
 
 class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
@@ -82,7 +83,11 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
         try {
 
             $response = parent::invokeRouteCallable($route, $request);
-            $body = $this->getBody($response);
+            if ($response instanceof JsonResponse) {
+                return $response;
+            }
+
+            $body = ['content' => $response->getBody()->getContents()];
             $body = $this->viewEngine->render($this->layout, $body);
 
             return $this->getResponseWithBodyAndStatus($response, $body, $response->getStatusCode());
@@ -101,29 +106,6 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
             return $this->getResponseWithBodyAndStatus(new HtmlResponse($body), $body, $status);
         }
 
-    }
-
-    /**
-     * @param ResponseInterface $response
-     * @return array|mixed
-     */
-    private function getBody(ResponseInterface $response)
-    {
-        switch (true) {
-            case $response instanceof Response\JsonResponse:
-                $contents = $response->getBody()->getContents();
-                $body = json_decode($contents, true);
-                $body = ($body === null) ? [] : $body;
-                break;
-
-            case $response instanceof Response:
-                $body = ['content' => $response->getBody()->getContents()];
-                break;
-            default:
-
-        }
-
-        return $body;
     }
 
     /**

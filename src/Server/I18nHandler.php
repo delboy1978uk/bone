@@ -74,9 +74,6 @@ class I18nHandler
         }
 
         $locale = $matches['locale'];
-        $locale = Locale::canonicalize($locale);
-        Locale::setDefault($locale);
-        $this->translator->setLocale($locale);
         $path = substr($path, strlen($locale) + 1);
         $uri = $uri->withPath($path);
         $request = $request->withUri($uri);

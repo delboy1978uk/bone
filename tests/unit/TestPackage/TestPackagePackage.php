@@ -62,6 +62,8 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
     public function addRoutes(Container $c, Router $router): Router
     {
         $router->map('GET', '/testpackage', [TestPackageController::class, 'indexAction']);
+        $router->map('GET', '/another', [TestPackageController::class, 'anotherAction']);
+        $router->map('GET', '/bad', [TestPackageController::class, 'badAction']);
 
         $factory = new ResponseFactory();
         $strategy = new JsonStrategy($factory);
