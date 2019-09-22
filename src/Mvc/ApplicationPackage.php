@@ -148,7 +148,13 @@ class ApplicationPackage implements RegistrationInterface
                     $paths[] = $package->getEntityPath();
                     $c['entity_paths'] = $paths;
                 }
-
+            }
+        }
+        reset($packages);
+        foreach ($packages as $packageName) {
+            if (class_exists($packageName)) {
+                /** @var RegistrationInterface $package */
+                $package = new $packageName();
                 $package->addToContainer($c);
 
                 if ($package instanceof RouterConfigInterface) {
