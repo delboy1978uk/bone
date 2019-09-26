@@ -38,8 +38,9 @@ class AlertBox
     private function renderMessage(array $message)
     {
         $alert = '';
-        codecept_debug($message);
-        array_pop($message);
+        if (count($message) < 2) {
+            array_pop($message);
+        }
         $num = count($message);
         $x = 1;
         foreach ($message as $msg) {
