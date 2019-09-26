@@ -38,6 +38,7 @@ class AlertBox
     private function renderMessage(array $message)
     {
         $alert = '';
+        array_pop($message);
         $num = count($message);
         $x = 1;
         foreach ($message as $msg) {
