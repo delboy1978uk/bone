@@ -12,9 +12,7 @@ class AlertBox
     {
         $class = $this->getClass($message);
 
-        $alert = '<div class="alert '.$class.'"><button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>'.$this->renderMessage($message).'</div>';
+        $alert = '<div class="alert '.$class.'"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->renderMessage($message).'</div>';
         return $alert;
     }
 
