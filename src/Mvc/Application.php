@@ -11,6 +11,7 @@ use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\Server\I18nHandler;
+use Bone\Server\SiteConfig;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
 use League\Route\RouteGroup;
@@ -80,7 +81,11 @@ class Application
         $env = new Environment($_SERVER);
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         $router = $this->treasureChest[Router::class] = new Router();
+        
         $config = $env->fetchConfig($this->configFolder, $this->environment);
+        $config[Environment::class] = $env;
+        $config[SiteConfig::class] = new SiteConfig($config['site'], $env);
+        
         $package = new ApplicationPackage($config, $router);
         $package->addToContainer($this->treasureChest);
 

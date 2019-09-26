@@ -2,54 +2,54 @@
 
 namespace Bone\View\Helper;
 
-
 class AlertBox
 {
     /**
-     * @param $message
+     * @param array $message array of messages, last item in array should be alert class
+     * @return bool|string
+     */
+    public function alertBox(array $message)
+    {
+        $class = $this->getClass($message);
+
+        $alert = '<div class="alert '.$class.'"><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>'.$this->renderMessage($message).'</div>';
+        return $alert;
+    }
+
+    /**
+     * @param array $message
      * @return string
      */
-    public static function alertBox($message): string
+    private function getClass(array $message)
     {
-        if (!$message) {
-            return '';
+        if(count($message) < 2) {
+            return 'alert-info';
         }
-        
-        if (!is_array($message)) {
-            $text = $message;
-            $message = array(
-                'class' => 'warning',
-                'message' => $text
-            );
+        $class = array_pop($message);
+        $class = (!strstr($class, 'alert-')) ? 'alert-'.$class : '';
+        return $class;
+    }
+
+    /**
+     * @param array $message
+     * @return string
+     */
+    private function renderMessage(array $message)
+    {
+        if (isset($message[1])) {
+            unset($message[1]);
         }
-        $message['class'] = $message['class']?: 'info';
-        
-        $alert = '<div class="alert ';
-        if ($message['class'] !== 'alert') {
-            $alert .= 'alert-' . $message['class'];
+        $alert = '';
+        $num = count($message);
+        $x = 1;
+        foreach($message as $msg)
+        {
+            $alert .= $msg;
+            if($x < $num){$alert .= '<br />';}
+            $x ++;
         }
-        
-        $alert .= '"><button type="button" class="close" data-dismiss="alert" aria-label="Close">
-  <span aria-hidden="true">&times;</span>
-</button>';
-        
-        if (!is_array($message['message'])) {
-            $alert .= $message['message'];
-            
-        } else {
-            $num = count($message['message']);
-            $x = 1;
-            foreach ($message['message'] as $line) {
-                $alert .= $line;
-                if ($x < $num) {
-                    $alert .= '<br />';
-                }
-                $x++;
-            }
-        }
-        
-        $alert .= '</div>';
-        
         return $alert;
     }
 }
