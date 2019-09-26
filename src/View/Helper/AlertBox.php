@@ -38,7 +38,7 @@ class AlertBox
     private function renderMessage(array $message)
     {
         $alert = '';
-        if (count($message) < 2) {
+        if (count($message) > 1) {
             array_pop($message);
         }
         $num = count($message);
