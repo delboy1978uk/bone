@@ -11,8 +11,8 @@ class AlertBox
     public function alertBox(array $message)
     {
         $class = $this->getClass($message);
+        $alert = '<div class="alert ' . $class . '"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $this->renderMessage($message) . '</div>';
 
-        $alert = '<div class="alert '.$class.'"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'.$this->renderMessage($message).'</div>';
         return $alert;
     }
 
@@ -22,11 +22,12 @@ class AlertBox
      */
     private function getClass(array $message)
     {
-        if(count($message) < 2) {
+        if (count($message) < 2) {
             return 'alert-info';
         }
         $class = array_pop($message);
-        $class = (!strstr($class, 'alert-')) ? 'alert-'.$class : '';
+        $class = (!strstr($class, 'alert-')) ? 'alert-' . $class : '';
+
         return $class;
     }
 
@@ -36,17 +37,15 @@ class AlertBox
      */
     private function renderMessage(array $message)
     {
-        if (isset($message[1])) {
-            unset($message[1]);
-        }
         $alert = '';
         $num = count($message);
         $x = 1;
-        foreach($message as $msg)
-        {
+        foreach ($message as $msg) {
             $alert .= $msg;
-            if($x < $num){$alert .= '<br />';}
-            $x ++;
+            if ($x < $num) {
+                $alert .= '<br />';
+            }
+            $x++;
         }
         return $alert;
     }
