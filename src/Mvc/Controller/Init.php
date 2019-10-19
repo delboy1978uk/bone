@@ -4,6 +4,7 @@ namespace Bone\Mvc\Controller;
 
 use Barnacle\Container;
 use Bone\Mvc\Controller;
+use Bone\Mvc\View\PlatesEngine;
 use Zend\I18n\Translator\Translator;
 
 class Init
@@ -17,6 +18,10 @@ class Init
     {
         if ($controller instanceof LocaleAwareInterface) {
             $controller->setTranslator($container->get(Translator::class));
+        }
+
+        if ($controller instanceof ViewAwareInterface) {
+            $controller->setView($container->get(PlatesEngine::class));
         }
 
         return $controller;

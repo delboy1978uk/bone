@@ -4,6 +4,7 @@ namespace Bone\Mvc;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\I18n\I18nRegistrationInterface;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
@@ -15,6 +16,7 @@ use Bone\Service\TranslatorFactory;
 use League\Route\Router;
 use Locale;
 use PDO;
+use Zend\I18n\Translator\Loader\Gettext;
 use Zend\I18n\Translator\Translator;
 
 class ApplicationPackage implements RegistrationInterface
@@ -137,6 +139,8 @@ class ApplicationPackage implements RegistrationInterface
     {
         // set up the modules and vendor package modules
         $packages = $c->get('packages');
+        $translator = $c->get(Translator::class);
+        $config = $c->get('i18n');
 
         foreach ($packages as $packageName) {
             if (class_exists($packageName)) {
@@ -153,6 +157,13 @@ class ApplicationPackage implements RegistrationInterface
 
                 if ($package instanceof RouterConfigInterface) {
                     $package->addRoutes($c, $this->router);
+                }
+
+                if ($package instanceof I18nRegistrationInterface) {
+                    $dir = $package->getTranslationsDirectory();
+                    foreach ($config['supported_locales'] as $locale) {
+                        $translator->addTranslationFilePattern(Gettext::class, $dir, '%1$s/' . $locale . '.mo');
+                    }
                 }
             }
         }
