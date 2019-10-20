@@ -4,6 +4,7 @@ namespace Bone\Mvc\View\Extension\Plates;
 
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
+use Locale;
 use Zend\I18n\Translator\Translator;
 
 class Translate implements ExtensionInterface
@@ -31,10 +32,11 @@ class Translate implements ExtensionInterface
 
     /**
      * @param string $string
+     * @param string $domain
      * @return string
      */
-    public function translate(string $string) : string
+    public function translate(string $string, string $domain = 'default') : string
     {
-        return $this->translator->translate($string);
+        return $this->translator->translate($string, $domain, Locale::getDefault());
     }
 }

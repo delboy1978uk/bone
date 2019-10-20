@@ -25,6 +25,7 @@ use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use Zend\I18n\Translator\Translator;
 
 class Application
 {
@@ -127,7 +128,7 @@ class Application
     private function i18nRequestCheck(ServerRequestInterface $request, bool $handle = true): ServerRequestInterface
     {
         $i18n = $this->treasureChest->get('i18n');
-        $translator = $this->treasureChest->get('translator');
+        $translator = $this->treasureChest->get(Translator::class);
         $i18nHandler = new I18nHandler($translator, $i18n['supported_locales']);
         if ($handle) {
             $request = $i18nHandler->handleI18n($request);

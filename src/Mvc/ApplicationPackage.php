@@ -87,8 +87,6 @@ class ApplicationPackage implements RegistrationInterface
     {
         // set up the view engine dependencies
         $viewEngine = new PlatesEngine($c->get('viewFolder'));
-//        $i18nExtension = new Translate();
-//        $viewEngine->loadExtension();
 
         $c[PlatesEngine::class] = $viewEngine;
 
@@ -139,8 +137,9 @@ class ApplicationPackage implements RegistrationInterface
     {
         // set up the modules and vendor package modules
         $packages = $c->get('packages');
+        $i18n = $c->get('i18n');
+        /** @var Translator $translator */
         $translator = $c->get(Translator::class);
-        $config = $c->get('i18n');
 
         foreach ($packages as $packageName) {
             if (class_exists($packageName)) {
@@ -167,8 +166,13 @@ class ApplicationPackage implements RegistrationInterface
 
                 if ($package instanceof I18nRegistrationInterface) {
                     $dir = $package->getTranslationsDirectory();
-                    foreach ($config['supported_locales'] as $locale) {
-                        $translator->addTranslationFilePattern(Gettext::class, $dir, '%1$s/' . $locale . '.mo');
+                    foreach ($i18n['supported_locales'] as $locale) {
+                        $translator->addTranslationFile(
+                            Gettext::class,
+                            $dir . '/' . $locale . '/' . $locale . '.mo',
+                            'user',
+                            $locale
+                        );
                     }
                 }
             }
@@ -185,7 +189,6 @@ class ApplicationPackage implements RegistrationInterface
         if (is_array($config)) {
             $factory = new TranslatorFactory();
             $translator = $factory->createTranslator($config);
-            $c['translator'] = $translator;
             $engine->loadExtension(new Translate($translator));
             $defaultLocale = $config['default_locale'] ?: 'en_GB';
 //            if (!in_array($locale, $config['supported_locales'])) {
