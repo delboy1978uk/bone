@@ -23,10 +23,11 @@ class TranslateTest extends Test
             'enabled' => false,
             'translations_dir' => 'tests/_data/translations',
             'type' => Gettext::class,
-            'default_locale' => 'en_PI',
+            'default_locale' => 'en_GB',
             'supported_locales' => ['en_PI', 'en_GB', 'nl_BE', 'fr_BE'],
             'date_format' => 'd/m/Y',
         ];
+        Locale::setDefault($config['default_locale']);
         $translator = $factory->createTranslator($config);
         $this->translator = $translator;
     }
@@ -37,7 +38,7 @@ class TranslateTest extends Test
         $translate = new Translate($this->translator);
         $greeting = $translate->translate('greeting');
         $this->assertEquals('Hello', $greeting);
-        $this->translator->setLocale('nl_BE');
+        Locale::setDefault('nl_BE');
         $greeting = $translate->translate('greeting');
         $this->assertEquals('Hoi', $greeting);
     }

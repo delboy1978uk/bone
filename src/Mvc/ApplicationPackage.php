@@ -165,14 +165,9 @@ class ApplicationPackage implements RegistrationInterface
                 }
 
                 if ($package instanceof I18nRegistrationInterface) {
-                    $dir = $package->getTranslationsDirectory();
                     foreach ($i18n['supported_locales'] as $locale) {
-                        $translator->addTranslationFile(
-                            Gettext::class,
-                            $dir . '/' . $locale . '/' . $locale . '.mo',
-                            'user',
-                            $locale
-                        );
+                        $factory = new TranslatorFactory();
+                        $factory->addPackageTranslations($translator, $package, $locale);
                     }
                 }
             }
