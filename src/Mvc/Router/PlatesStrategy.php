@@ -5,7 +5,7 @@ namespace Bone\Mvc\Router;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
-use Bone\Traits\LayoutAwareTrait;
+use Bone\Traits\HasLayoutTrait;
 use Exception;
 use League\Route\Http\Exception\{MethodNotAllowedException, NotFoundException};
 use League\Route\Route;
@@ -21,7 +21,7 @@ use Zend\Diactoros\Stream;
 
 class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
 {
-    use LayoutAwareTrait;
+    use HasLayoutTrait;
 
     /** @var PlatesEngine $viewEngine */
     private $viewEngine;

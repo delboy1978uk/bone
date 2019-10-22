@@ -2,14 +2,16 @@
 
 namespace Bone\Mvc;
 
-use Bone\Mvc\Controller\LocaleAwareInterface;
-use Bone\Mvc\Controller\Traits\HasTranslatorTrait;
-use Bone\Mvc\Controller\Traits\HasViewTrait;
-use Bone\Mvc\Controller\ViewAwareInterface;
-use Bone\Server\SiteConfig;
+use Bone\I18n\I18nAwareInterface;
+use Bone\Traits\HasSiteConfigTrait;
+use Bone\Traits\HasTranslatorTrait;
+use Bone\Traits\HasViewTrait;
+use Bone\View\ViewAwareInterface;
+use Bone\Server\SiteConfigAwareInterface;
 
-class Controller implements LocaleAwareInterface, ViewAwareInterface
+class Controller implements I18nAwareInterface, ViewAwareInterface, SiteConfigAwareInterface
 {
+    use HasSiteConfigTrait;
     use HasTranslatorTrait;
     use HasViewTrait;
 }

@@ -3,7 +3,7 @@
 namespace Bone\Mvc\Router\Decorator;
 
 use Bone\Mvc\View\ViewEngine;
-use Bone\Traits\LayoutAwareTrait;
+use Bone\Traits\HasLayoutTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -13,7 +13,7 @@ use Zend\Diactoros\Stream;
 
 class NotFoundDecorator implements MiddlewareInterface
 {
-    use LayoutAwareTrait;
+    use HasLayoutTrait;
 
 
     /** @var ViewEngine  */

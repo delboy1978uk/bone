@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Mvc\Controller\Traits;
+namespace Bone\Traits;
 
 use Bone\Mvc\Controller\ViewAwareInterface;
 use Bone\Mvc\View\PlatesEngine;

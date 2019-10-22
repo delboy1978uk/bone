@@ -2,7 +2,7 @@
 
 namespace Bone\Traits;
 
-trait LayoutAwareTrait
+trait HasLayoutTrait
 {
     /** @var string $layout */
     private $layout;
