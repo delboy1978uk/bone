@@ -6,9 +6,12 @@ class SiteConfig
 {
     /** @var string $title */
     private $title;
-    
+
     /** @var string $domain  */
     private $domain;
+
+    /** @var string $baseUrl  */
+    private $baseUrl;
     
     /** @var string $contactEmail  */
     private $contactEmail;
@@ -24,6 +27,9 @@ class SiteConfig
 
     /** @var string $logo */
     private $logo;
+
+    /** @var string $emailLogo */
+    private $emailLogo;
     
     /** @var Environment $environment */
     private $environment;
@@ -37,11 +43,13 @@ class SiteConfig
     {
         $this->title = $config['title'];
         $this->domain = $config['domain'];
+        $this->baseUrl = $config['baseUrl'];
         $this->contactEmail = $config['contactEmail'];
         $this->serverEmail = $config['serverEmail'];
         $this->company = $config['company'];
         $this->address = $config['address'];
         $this->logo = $config['logo'];
+        $this->emailLogo = $config['emailLogo'];
         $this->environment = $environment;
     }
 
@@ -54,27 +62,11 @@ class SiteConfig
     }
 
     /**
-     * @param string $title
-     */
-    public function setTitle(string $title): void
-    {
-        $this->title = $title;
-    }
-
-    /**
      * @return string
      */
     public function getDomain(): string
     {
         return $this->domain;
-    }
-
-    /**
-     * @param string $domain
-     */
-    public function setDomain(string $domain): void
-    {
-        $this->domain = $domain;
     }
 
     /**
@@ -86,27 +78,11 @@ class SiteConfig
     }
 
     /**
-     * @param string $contactEmail
-     */
-    public function setContactEmail(string $contactEmail): void
-    {
-        $this->contactEmail = $contactEmail;
-    }
-
-    /**
      * @return string
      */
     public function getServerEmail(): string
     {
         return $this->serverEmail;
-    }
-
-    /**
-     * @param string $serverEmail
-     */
-    public function setServerEmail(string $serverEmail): void
-    {
-        $this->serverEmail = $serverEmail;
     }
 
     /**
@@ -118,10 +94,44 @@ class SiteConfig
     }
 
     /**
-     * @param Environment $environment
+     * @return string
      */
-    public function setEnvironment(Environment $environment): void
+    public function getBaseUrl(): string
     {
-        $this->environment = $environment;
+        return $this->baseUrl;
     }
+
+    /**
+     * @return string
+     */
+    public function getCompany(): string
+    {
+        return $this->company;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogo(): string
+    {
+        return $this->logo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailLogo(): string
+    {
+        return $this->emailLogo;
+    }
+
+
 }

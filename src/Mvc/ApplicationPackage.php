@@ -9,6 +9,7 @@ use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
+use Bone\Mvc\View\Extension\Plates\LocaleLink;
 use Bone\Mvc\View\Extension\Plates\Translate;
 use Bone\View\Helper\Paginator;
 use Bone\Mvc\View\PlatesEngine;
@@ -185,6 +186,7 @@ class ApplicationPackage implements RegistrationInterface
             $factory = new TranslatorFactory();
             $translator = $factory->createTranslator($config);
             $engine->loadExtension(new Translate($translator));
+            $engine->loadExtension(new LocaleLink());
             $defaultLocale = $config['default_locale'] ?: 'en_GB';
 //            if (!in_array($locale, $config['supported_locales'])) {
 //                $locale = $defaultLocale;
