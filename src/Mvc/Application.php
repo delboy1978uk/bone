@@ -12,6 +12,7 @@ use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\Server\I18nHandler;
 use Bone\Server\SiteConfig;
+use Del\SessionManager;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
 use League\Route\RouteGroup;
@@ -45,7 +46,7 @@ class Application
      */
     private function __construct(){}
 
-    public function __clone(){}
+    private function __clone(){}
 
 
     /**
@@ -59,7 +60,10 @@ class Application
         static $inst = null;
         if ($inst === null) {
             $inst = new Application();
+            $session = SessionManager::getInstance();
+            SessionManager::sessionStart('app');
             $inst->treasureChest = new Container();
+            $inst->treasureChest[SessionManager::class] = $session;
             $env = getenv('APPLICATION_ENV');
             if ($env) {
                 $inst->setEnvironment($env);

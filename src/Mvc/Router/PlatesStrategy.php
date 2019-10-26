@@ -2,6 +2,7 @@
 
 namespace Bone\Mvc\Router;
 
+use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\View\PlatesEngine;
@@ -32,6 +33,9 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     /** @var NotAllowedDecorator $notAllowedDecorator */
     private $notAllowedDecorator;
 
+    /** @var ExceptionDecorator $exceptionDecorator */
+    private $exceptionDecorator;
+
     /** @var bool  */
     private $i18nEnabled = false;
 
@@ -45,11 +49,12 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
      * @param NotAllowedDecorator $notAllowed
      * @param string $layout
      */
-    public function __construct(PlatesEngine $viewEngine, NotFoundDecorator $notFound, NotAllowedDecorator $notAllowed, string $layout)
+    public function __construct(PlatesEngine $viewEngine, NotFoundDecorator $notFound, NotAllowedDecorator $notAllowed, string $layout, ExceptionDecorator $exceptionDecorator)
     {
         $this->viewEngine = $viewEngine;
         $this->notFoundDecorator = $notFound;
         $this->notAllowedDecorator = $notAllowed;
+        $this->exceptionDecorator = $exceptionDecorator;
         $this->setLayout($layout);
     }
 
@@ -145,5 +150,13 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     public function getMethodNotAllowedDecorator(MethodNotAllowedException $e): MiddlewareInterface
     {
         return $this->notAllowedDecorator;
+    }
+
+    /**
+     * @return MiddlewareInterface
+     */
+    public function getExceptionHandler(): MiddlewareInterface
+    {
+        return $this->exceptionDecorator;
     }
 }

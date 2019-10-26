@@ -6,9 +6,11 @@ use Barnacle\Container;
 use Bone\I18n\I18nAwareInterface;
 use Bone\Mvc\Controller;
 use Bone\Mvc\View\PlatesEngine;
+use Bone\Server\SessionAwareInterface;
 use Bone\Server\SiteConfig;
 use Bone\Server\SiteConfigAwareInterface;
 use Bone\View\ViewAwareInterface;
+use Del\SessionManager;
 use Zend\I18n\Translator\Translator;
 
 class Init
@@ -30,6 +32,10 @@ class Init
 
         if ($controller instanceof SiteConfigAwareInterface) {
             $controller->setSiteConfig($container->get(SiteConfig::class));
+        }
+
+        if ($controller instanceof SessionAwareInterface) {
+            $controller->setSession($container->get(SessionManager::class));
         }
 
         return $controller;
