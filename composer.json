@@ -10,6 +10,7 @@
   "require": {
     "php": ">7.1",
     "delboy1978uk/barnacle": "^2.2",
+    "delboy1978uk/session": "^1.1",
     "zendframework/zend-diactoros": "2.*",
     "league/plates": "^3.3",
     "zendframework/zend-mail": "^2.10",
