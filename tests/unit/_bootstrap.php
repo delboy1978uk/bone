@@ -7,4 +7,5 @@ $_SERVER = [
     'REMOTE_ADDR' => '192.168.6.6',
     'HTTP_USER_AGENT' => 'Some brand new smart phone',
     'REQUEST_TIME_FLOAT' => microtime(true),
+    'REQUEST_TIME' => time(),
 ];
