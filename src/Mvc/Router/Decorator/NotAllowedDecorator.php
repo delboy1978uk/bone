@@ -7,8 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Diactoros\Response\HtmlResponse;
 
-class NotAllowedDecorator extends NotFoundDecorator
+class NotAllowedDecorator extends ExceptionDecorator
 {
     /**
      * @param ServerRequestInterface $request
@@ -17,7 +18,12 @@ class NotAllowedDecorator extends NotFoundDecorator
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->setView('error/not-allowed');
+        $body = $this->viewEngine->render('error/not-allowed');
+        $body = $this->viewEngine->render($this->getLayout(), [
+            'content' => $body,
+        ]);
+
+        return $this->getResponseWithBodyAndStatus(new HtmlResponse(''), $body, 405);
 
         return parent::process($request, $handler);
     }

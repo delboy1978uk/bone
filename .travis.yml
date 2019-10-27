@@ -9,7 +9,6 @@ services:
   - mysql
 
 install:
-  - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
   - composer install
 
 before_script:

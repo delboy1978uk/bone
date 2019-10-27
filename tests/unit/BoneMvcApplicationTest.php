@@ -50,7 +50,6 @@ class BoneMvcApplicationTest extends Test
      */
     public function testCanSetSail()
     {
-        global $_SERVER;
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER = [
@@ -71,10 +70,8 @@ class BoneMvcApplicationTest extends Test
         global $_SERVER;
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
-        $_SERVER = [
-            'REQUEST_URI' => '/en_GB/testpackage',
-            'REQUEST_METHOD' => 'POST',
-        ];
+        $_SERVER['REQUEST_URI'] = '/en_GB/testpackage';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
@@ -99,7 +96,6 @@ class BoneMvcApplicationTest extends Test
      */
     public function testApi()
     {
-        global $_SERVER;
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER = [
@@ -117,7 +113,6 @@ class BoneMvcApplicationTest extends Test
      */
     public function testException()
     {
-        global $_SERVER;
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER = [
@@ -136,7 +131,6 @@ class BoneMvcApplicationTest extends Test
      */
     public function testJsonResponse()
     {
-        global $_SERVER;
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER = [
@@ -154,7 +148,6 @@ class BoneMvcApplicationTest extends Test
      */
     public function test404Request()
     {
-        global $_SERVER;
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER = [
@@ -174,7 +167,6 @@ class BoneMvcApplicationTest extends Test
      */
     public function testRedirectToLocalisedURL()
     {
-        global $_SERVER;
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER = [
@@ -194,7 +186,6 @@ class BoneMvcApplicationTest extends Test
      */
     public function testWithoutI18n()
     {
-        global $_SERVER;
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config2');
         $_SERVER = [

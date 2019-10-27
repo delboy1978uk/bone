@@ -25,10 +25,6 @@ class NotFoundDecorator extends ExceptionDecorator implements MiddlewareInterfac
             'content' => $body,
         ]);
 
-        $stream = new Stream('php://memory', 'r+');
-        $stream->write($body);
-        $response = (new Response())->withStatus(404)->withBody($stream);
-
-        return $response;
+        return $this->getResponseWithBodyAndStatus(new Response\HtmlResponse(''), $body, 404);
     }
 }
