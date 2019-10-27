@@ -52,9 +52,7 @@ class BoneMvcApplicationTest extends Test
     {
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
-        $_SERVER = [
-            'REQUEST_URI' => '/en_GB/testpackage'
-        ];
+        $_SERVER['REQUEST_URI'] = '/en_GB/testpackage';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
@@ -98,9 +96,7 @@ class BoneMvcApplicationTest extends Test
     {
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
-        $_SERVER = [
-            'REQUEST_URI' => '/en_GB/api/testpackage',
-        ];
+        $_SERVER['REQUEST_URI'] = '/en_GB/api/testpackage';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
@@ -115,9 +111,7 @@ class BoneMvcApplicationTest extends Test
     {
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
-        $_SERVER = [
-            'REQUEST_URI' => '/en_GB/bad',
-        ];
+        $_SERVER['REQUEST_URI'] = '/en_GB/bad';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
@@ -133,9 +127,7 @@ class BoneMvcApplicationTest extends Test
     {
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
-        $_SERVER = [
-            'REQUEST_URI' => '/en_GB/another',
-        ];
+        $_SERVER['REQUEST_URI'] = '/en_GB/another';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
@@ -150,9 +142,7 @@ class BoneMvcApplicationTest extends Test
     {
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
-        $_SERVER = [
-            'REQUEST_URI' => '/en_GB/blistering-barnacles'
-        ];
+        $_SERVER['REQUEST_URI'] = '/en_GB/blistering-barnacles';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
@@ -169,9 +159,7 @@ class BoneMvcApplicationTest extends Test
     {
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
-        $_SERVER = [
-            'REQUEST_URI' => '/testpackage'
-        ];
+        $_SERVER['REQUEST_URI'] = '/testpackage';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
@@ -188,9 +176,7 @@ class BoneMvcApplicationTest extends Test
     {
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config2');
-        $_SERVER = [
-            'REQUEST_URI' => '/testpackage'
-        ];
+        $_SERVER['REQUEST_URI'] = '/testpackage';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
