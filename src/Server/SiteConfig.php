@@ -2,8 +2,12 @@
 
 namespace Bone\Server;
 
+use Bone\Traits\HasAttributesTrait;
+
 class SiteConfig
 {
+    use HasAttributesTrait;
+
     /** @var string $title */
     private $title;
 
@@ -41,16 +45,17 @@ class SiteConfig
      */
     public function __construct(array $config, Environment $environment)
     {
-        $this->title = $config['title'];
-        $this->domain = $config['domain'];
-        $this->baseUrl = $config['baseUrl'];
-        $this->contactEmail = $config['contactEmail'];
-        $this->serverEmail = $config['serverEmail'];
-        $this->company = $config['company'];
-        $this->address = $config['address'];
-        $this->logo = $config['logo'];
-        $this->emailLogo = $config['emailLogo'];
+        $this->title = $config['site']['title'];
+        $this->domain = $config['site']['domain'];
+        $this->baseUrl = $config['site']['baseUrl'];
+        $this->contactEmail = $config['site']['contactEmail'];
+        $this->serverEmail = $config['site']['serverEmail'];
+        $this->company = $config['site']['company'];
+        $this->address = $config['site']['address'];
+        $this->logo = $config['site']['logo'];
+        $this->emailLogo = $config['site']['emailLogo'];
         $this->environment = $environment;
+        $this->setAttributes($config);
     }
 
     /**

@@ -89,7 +89,7 @@ class Application
         
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $config[Environment::class] = $env;
-        $config[SiteConfig::class] = new SiteConfig($config['site'], $env);
+        $config[SiteConfig::class] = new SiteConfig($config, $env);
         
         $package = new ApplicationPackage($config, $router);
         $package->addToContainer($this->treasureChest);

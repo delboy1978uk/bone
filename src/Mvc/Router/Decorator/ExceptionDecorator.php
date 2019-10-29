@@ -78,7 +78,7 @@ class ExceptionDecorator implements MiddlewareInterface
             ]);
             $status = ($e->getCode() >= 100 && $e->getCode() < 600) ? $e->getCode() : 500;
 
-            return $this->getResponseWithBodyAndStatus(new HtmlResponse(), $body, $status);
+            return $this->getResponseWithBodyAndStatus(new HtmlResponse($body), $body, $status);
         }
     }
 
