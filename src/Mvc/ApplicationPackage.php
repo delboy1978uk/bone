@@ -5,6 +5,7 @@ namespace Bone\Mvc;
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
 use Bone\I18n\I18nRegistrationInterface;
+use Bone\Mvc\Controller\DownloadController;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
@@ -17,8 +18,11 @@ use Bone\View\Helper\Paginator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Service\TranslatorFactory;
 use League\Route\Router;
+use League\Route\Strategy\ApplicationStrategy;
+use League\Route\Strategy\JsonStrategy;
 use Locale;
 use PDO;
+use Zend\Diactoros\ResponseFactory;
 use Zend\I18n\Translator\Loader\Gettext;
 use Zend\I18n\Translator\Translator;
 
@@ -30,7 +34,7 @@ class ApplicationPackage implements RegistrationInterface
     /** @var Router $router */
     private $router;
 
-   /** @var bool $i18nEnabledSite */
+    /** @var bool $i18nEnabledSite */
     private $i18nEnabledSite = false;
 
     /** @var array $supportedLocales */
@@ -54,10 +58,12 @@ class ApplicationPackage implements RegistrationInterface
     {
         $this->setConfigArray($c);
         $this->setLocale($c);
+        $this->setupLogs($c);
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
         $this->setupTranslator($c);
         $this->setupModules($c);
+        $this->setupDownloadController($c);
     }
 
     /**
@@ -65,8 +71,7 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setConfigArray(Container $c)
     {
-        foreach($this->config as $key => $value)
-        {
+        foreach ($this->config as $key => $value) {
             $c[$key] = $value;
         }
     }
@@ -219,14 +224,14 @@ class ApplicationPackage implements RegistrationInterface
     private function setupPdoConnection(Container $c)
     {
         // set up a db connection
-        $c[PDO::class] = $c->factory(function(Container $c): PDO {
+        $c[PDO::class] = $c->factory(function (Container $c): PDO {
             $credentials = $c->get('db');
-            $host =$credentials['host'];
+            $host = $credentials['host'];
             $db = $credentials['database'];
             $user = $credentials['user'];
             $pass = $credentials['pass'];
 
-            $dbConnection = new PDO('mysql:host='.$host.';dbname='.$db, $user, $pass, [
+            $dbConnection = new PDO('mysql:host=' . $host . ';dbname=' . $db, $user, $pass, [
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]);
@@ -236,9 +241,44 @@ class ApplicationPackage implements RegistrationInterface
     }
 
     /**
+     * @param Container $c
+     */
+    private function setupDownloadController(Container $c): void
+    {
+        $uploadDirectory = $c->get('uploads_dir');
+        $c[DownloadController::class] = new DownloadController($uploadDirectory);
+        $strategy = new JsonStrategy(new ResponseFactory());
+        $strategy->setContainer($c);
+        $this->router->map('GET', '/download', [DownloadController::class, 'downloadAction'])->setStrategy($strategy);
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setupLogs(Container $c)
+    {
+        if ($c->has('display_errors')) {
+            ini_set('display_errors', $c->get('display_errors'));
+        }
+
+        if ($c->has('error_reporting')) {
+            error_reporting($c->get('error_reporting'));
+        }
+
+        if ($c->has('error_log')) {
+            $errorLog = $c->get('error_log');
+            if (!file_exists($errorLog)) {
+                file_put_contents($errorLog, '');
+                chmod($errorLog, 0775);
+            }
+            ini_set($c->get('error_log'), $errorLog);
+        }
+    }
+
+    /**
      * @return string
      */
-    function getEntityPath(): string
+    public function getEntityPath(): string
     {
         return '';
     }
@@ -246,7 +286,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @return bool
      */
-    function hasEntityPath(): bool
+    public function hasEntityPath(): bool
     {
         return false;
     }

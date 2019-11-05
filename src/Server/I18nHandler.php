@@ -43,7 +43,9 @@ class I18nHandler
 
         if (! preg_match(self::REGEX_LOCALE, $path, $matches)) {
             $path = '/' . Locale::getDefault() . $path;
-            $e = new NotFoundException($path);
+            $query = $request->getUri()->getQuery();
+            $query = $query !== null ? '?' . $query : null;
+            $e = new NotFoundException($path . $query);
             $e->setRequest($request);
             
             throw $e;
