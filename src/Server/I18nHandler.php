@@ -2,7 +2,7 @@
 
 namespace Bone\Server;
 
-use League\Route\Http\Exception\NotFoundException;
+use Bone\Mvc\Router\NotFoundException;
 use Locale;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,7 +43,10 @@ class I18nHandler
 
         if (! preg_match(self::REGEX_LOCALE, $path, $matches)) {
             $path = '/' . Locale::getDefault() . $path;
-            throw new NotFoundException($path);
+            $e = new NotFoundException($path);
+            $e->setRequest($request);
+            
+            throw $e;
         }
 
         $locale = $matches['locale'];

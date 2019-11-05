@@ -6,6 +6,7 @@ use Barnacle\Container;
 use Barnacle\RegistrationInterface;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
+use Bone\Mvc\Router\NotFoundException;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\PlatesEngine;
@@ -13,7 +14,6 @@ use Bone\Server\Environment;
 use Bone\Server\I18nHandler;
 use Bone\Server\SiteConfig;
 use Del\SessionManager;
-use League\Route\Http\Exception\NotFoundException;
 use League\Route\Router;
 use League\Route\RouteGroup;
 use League\Route\Strategy\ApplicationStrategy;
@@ -25,6 +25,7 @@ use Zend\Diactoros\ResponseFactory;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\RedirectResponse;
+use Zend\Diactoros\Uri;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 use Zend\I18n\Translator\Translator;
 
@@ -101,6 +102,9 @@ class Application
                 $response = $router->dispatch($request);
             } catch (NotFoundException $e) {
                 $response = new RedirectResponse($e->getMessage());
+                if ($e->getRequest()->getMethod() !== 'GET') {
+                    $response = $router->dispatch($request);
+                }
             }
 
         } else {
