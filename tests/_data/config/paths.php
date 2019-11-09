@@ -2,6 +2,6 @@
 
 return [
     'proxy_dir' => 'data/proxies/',
-    'uploads_dir' => 'data/uploads/',
+    'uploads_dir' => 'tests/_data/uploads/',
     'entity_paths' => [],
 ];
