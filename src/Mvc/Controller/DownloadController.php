@@ -17,7 +17,7 @@ class DownloadController
     public function __construct(string $uploadsDirectory)
     {
         if (!is_dir($uploadsDirectory)) {
-            throw new InvalidArgumentException('Directory not found');
+            throw new InvalidArgumentException('Directory ' . $uploadsDirectory . 'not found');
         }
 
         $this->uploadsDirectory = $uploadsDirectory;
