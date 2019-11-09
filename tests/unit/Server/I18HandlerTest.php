@@ -31,7 +31,7 @@ class I18HandlerTest extends Test
             'date_format' => 'd/m/Y',
         ];
         $this->translator = $factory->createTranslator($config);
-        $this->middleware = new I18nHandler($this->translator, $config['supported_locales']);
+        $this->middleware = new I18nHandler($this->translator, $config['supported_locales'], $config['default_locale']);
 
     }
 
