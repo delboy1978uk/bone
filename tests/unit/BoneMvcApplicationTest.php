@@ -155,23 +155,6 @@ class BoneMvcApplicationTest extends Test
     /**
      * @throws Exception
      */
-    public function testRedirectToLocalisedURL()
-    {
-        $application = Application::ahoy();
-        $application->setConfigFolder('tests/_data/config');
-        $_SERVER['REQUEST_URI'] = '/testpackage';
-        ob_start();
-        $this->assertTrue($application->setSail());
-        $contents = ob_get_contents();
-        ob_end_clean();
-        $this->assertEquals('', $contents);
-    }
-
-
-
-    /**
-     * @throws Exception
-     */
     public function testWithoutI18n()
     {
         $application = Application::ahoy();
