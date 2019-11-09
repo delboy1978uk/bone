@@ -137,7 +137,7 @@ class Application
     {
         $i18n = $this->treasureChest->get('i18n');
         $translator = $this->treasureChest->get(Translator::class);
-        $i18nHandler = new I18nHandler($translator, $i18n['supported_locales']);
+        $i18nHandler = new I18nHandler($translator, $i18n['supported_locales'], $i18n['default_locale']);
         if ($handle) {
             $request = $i18nHandler->handleI18n($request);
         } else {

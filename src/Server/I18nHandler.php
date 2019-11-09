@@ -20,15 +20,19 @@ class I18nHandler
     /** @var array $supportedLocales */
     private $supportedLocales;
 
+    /** @var string $defaultLocale */
+    private $defaultLocale;
+
     /**
      * InternationalisationMiddleware constructor.
      * @param  $helper
      * @param string|null $defaultLocale
      */
-    public function __construct(Translator $translator, array $supportedLocales)
+    public function __construct(Translator $translator, array $supportedLocales, string $defaultLocale)
     {
         $this->translator = $translator;
         $this->supportedLocales = $supportedLocales;
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
@@ -42,13 +46,10 @@ class I18nHandler
         $path = $uri->getPath();
 
         if (! preg_match(self::REGEX_LOCALE, $path, $matches)) {
-            $path = '/' . Locale::getDefault() . $path;
-            $query = $request->getUri()->getQuery();
-            $query = $query !== null ? '?' . $query : null;
-            $e = new NotFoundException($path . $query);
-            $e->setRequest($request);
-            
-            throw $e;
+            $locale = Locale::canonicalize($this->defaultLocale);
+            Locale::setDefault($this->defaultLocale);
+
+            return $request;
         }
 
         $locale = $matches['locale'];

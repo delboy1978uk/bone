@@ -31,10 +31,13 @@ class DownloadController
     public function downloadAction(ServerRequestInterface $request, array $args): ResponseInterface
     {
         $file = $request->getQueryParams()['file'];
-        $path = $this->uploadsDirectory . $file;
 
-        if (!file_exists($path)) {
+        if (file_exists('public' . $file)) {
+            $path = 'public' . $file;
+        } else if (!file_exists($this->uploadsDirectory . $file)) {
             throw new Exception($path . ' not found.', 404);
+        } else {
+            $path = $this->uploadsDirectory . $file;
         }
         
         // magic_mime module installed?
