@@ -2,6 +2,7 @@
 
 namespace Bone\Mvc\Controller;
 
+use Bone\Exception;
 use League\Route\Http\Exception\NotFoundException;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
