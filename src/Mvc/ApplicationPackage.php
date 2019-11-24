@@ -14,9 +14,11 @@ use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\Extension\Plates\AlertBox;
 use Bone\Mvc\View\Extension\Plates\LocaleLink;
 use Bone\Mvc\View\Extension\Plates\Translate;
+use Bone\Mvc\View\ViewEngine;
 use Bone\View\Helper\Paginator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Service\TranslatorFactory;
+use League\Plates\Template\Folders;
 use League\Route\Router;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\JsonStrategy;
@@ -63,6 +65,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupViewEngine($c);
         $this->setupTranslator($c);
         $this->setupModules($c);
+        $this->setupModuleViewOverrides($c);
         $this->setupDownloadController($c);
     }
 
@@ -209,9 +212,6 @@ class ApplicationPackage implements RegistrationInterface
             $engine->loadExtension(new Translate($translator));
             $engine->loadExtension(new LocaleLink());
             $defaultLocale = $config['default_locale'] ?: 'en_GB';
-//            if (!in_array($locale, $config['supported_locales'])) {
-//                $locale = $defaultLocale;
-//            }
             $translator->setLocale($defaultLocale);
             $c[Translator::class] = $translator;
         }
@@ -272,6 +272,36 @@ class ApplicationPackage implements RegistrationInterface
                 chmod($errorLog, 0775);
             }
             ini_set($c->get('error_log'), $errorLog);
+        }
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setupModuleViewOverrides(Container $c): void
+    {
+        /** @var PlatesEngine $viewEngine */
+        $viewEngine = $c->get(PlatesEngine::class);
+        $views = $c->get('views');
+        $registeredViews = $viewEngine->getFolders();
+
+        foreach ($views as $view => $folder) {
+            $this->overrideViewFolder($view, $folder, $registeredViews);
+        }
+    }
+
+    /**
+     * @param string $view
+     * @param string $folder
+     * @param array $registeredViews
+     * @param PlatesEngine $viewEngine
+     */
+    private function overrideViewFolder(string $view, string $folder, Folders $registeredViews):  void
+    {
+        if ($registeredViews->exists($view)) {
+            /** @var \League\Plates\Template\Folder $currentFolder */
+            $currentFolder = $registeredViews->get($view);
+            $currentFolder->setPath($folder);
         }
     }
 
