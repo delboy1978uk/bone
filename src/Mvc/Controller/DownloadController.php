@@ -45,7 +45,7 @@ class DownloadController
     }
 
     /**
-     * @param array $queryParams
+     * @param string $path
      * @return string
      */
     private function getMimeType(string $path): string
