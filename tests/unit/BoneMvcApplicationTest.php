@@ -164,7 +164,8 @@ class BoneMvcApplicationTest extends Test
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
         ob_end_clean();
-        unlink('tests/_data/log/error_log');
+        $log = 'tests/_data/log/error_log';
+        file_exists($log) ? unlink($log) : null;
         $this->assertEquals('<!DOCTYPE html><html lang="en"><head></head><body><h1>Template</h1><h3>Content Below</h3><h1>Override</h1><p class="lead">Lorem ipsum dolor sit amet</p></body></html>', $contents);
     }
 }
