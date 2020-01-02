@@ -28,7 +28,7 @@ class ExceptionDecoratorTest extends Test
             404 => 'error/not-found',
             405 => 'error/not-allowed',
             500 => 'error/error',
-        ],);
+        ]);
         $decorator->setLayout('layouts/bonemvc');
         $request = new ServerRequest();
         $handler = new class implements RequestHandlerInterface {
