@@ -7,6 +7,7 @@
       "email": "delboy1978uk@gmail.com"
     }
   ],
+  "license": "MIT",
   "require": {
     "php": ">7.1",
     "delboy1978uk/barnacle": "^2.2",
