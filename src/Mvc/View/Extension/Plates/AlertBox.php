@@ -17,10 +17,10 @@ class AlertBox implements ExtensionInterface
     }
 
     /**
-     * @param $message
+     * @param array $message
      * @return string
      */
-    public function alertBox($message) : string
+    public function alertBox(array $message) : string
     {
         $box = new AlertBoxHelper();
 
