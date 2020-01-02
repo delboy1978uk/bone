@@ -14,7 +14,7 @@ class LocaleLinkTest extends Test
     protected $tester;
 
 
-    public function testTranslate()
+    public function testLink()
     {
         $locale = Locale::getDefault();
         $viewHelper = new LocaleLink();
