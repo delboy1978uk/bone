@@ -74,4 +74,17 @@ class I18HandlerTest extends Test
         $newLocale = Locale::getDefault();
         $this->assertTrue($locale === $newLocale);
     }
+
+    /**
+     * @throws \League\Route\Http\Exception\NotFoundException
+     */
+    public function testPathWithoutLocale()
+    {
+        $locale = Locale::getDefault();
+        $request = new ServerRequest([], [], new Uri('https://awesome.scot/somepage'));
+        $request = $this->middleware->handleI18n($request);
+        $this->assertEquals('/somepage', $request->getUri()->getPath());
+        $newLocale = Locale::getDefault();
+        $this->assertTrue($locale === $newLocale);
+    }
 }

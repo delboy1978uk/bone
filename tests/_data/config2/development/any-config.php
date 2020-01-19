@@ -11,4 +11,7 @@ return [
         'pass' => '[123456]',
         'password' => '[123456]',
     ],
+    'error_log' => 'tests/_data/log/error_log',
+    'error_reporting' => -1,
+    'display_errors' => false,
 ];

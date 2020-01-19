@@ -138,6 +138,21 @@ class BoneMvcApplicationTest extends Test
     /**
      * @throws Exception
      */
+    public function testJsonResponseWithmissingLocale()
+    {
+        $application = Application::ahoy();
+        $application->setConfigFolder('tests/_data/config');
+        $_SERVER['REQUEST_URI'] = '/another';
+        ob_start();
+        $this->assertTrue($application->setSail());
+        $contents = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals('{"drink":"grog","pieces":"of eight","shiver":"me timbers"}', $contents);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function test404Request()
     {
         $application = Application::ahoy();
@@ -163,8 +178,11 @@ class BoneMvcApplicationTest extends Test
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_contents();
+
         ob_end_clean();
-        $this->assertEquals('<!DOCTYPE html><html lang="en"><head></head><body><h1>Template</h1><h3>Content Below</h3><h1>TestPackage</h1><p class="lead">Lorem ipsum dolor sit amet</p></body></html>', $contents);
+        $log = 'tests/_data/log/error_log';
+        file_exists($log) ? unlink($log) : null;
+        $this->assertEquals('<!DOCTYPE html><html lang="en"><head></head><body><h1>Template</h1><h3>Content Below</h3><h1>Override</h1><p class="lead">Lorem ipsum dolor sit amet</p></body></html>', $contents);
     }
 }
 

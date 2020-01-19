@@ -18,7 +18,7 @@ class DownloadController
     public function __construct(string $uploadsDirectory)
     {
         if (!is_dir($uploadsDirectory)) {
-            throw new InvalidArgumentException('Directory ' . $uploadsDirectory . 'not found');
+            throw new InvalidArgumentException('Directory ' . $uploadsDirectory . ' not found');
         }
 
         $this->uploadsDirectory = $uploadsDirectory;
@@ -31,25 +31,9 @@ class DownloadController
      */
     public function downloadAction(ServerRequestInterface $request, array $args): ResponseInterface
     {
-        $file = $request->getQueryParams()['file'];
-
-        if (file_exists('public' . $file)) {
-            $path = 'public' . $file;
-        } else if (!file_exists($this->uploadsDirectory . $file)) {
-            throw new Exception($path . ' not found.', 404);
-        } else {
-            $path = $this->uploadsDirectory . $file;
-        }
-        
-        // magic_mime module installed?
-        if (function_exists('mime_content_type')) {
-            $mimeType = mime_content_type($path);
-        } else if (function_exists('finfo_file')) { // or fileinfo module installed?
-            $finfo = finfo_open(FILEINFO_MIME); // return mime type
-            $mimeType = finfo_file($finfo, $path);
-            finfo_close($finfo);
-        }
-
+        $queryParams = $request->getQueryParams();
+        $path = $this->getFilePath($queryParams);
+        $mimeType = $this->getMimeType($path);
         $contents = file_get_contents($path);
         $stream = new Stream('php://memory', 'r+');
         $stream->write($contents);
@@ -58,5 +42,40 @@ class DownloadController
         $response = $response->withHeader('Content-Type', $mimeType);
 
         return $response;
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    private function getMimeType(string $path): string
+    {
+        $finfo = finfo_open(FILEINFO_MIME); // return mime type
+        $mimeType = finfo_file($finfo, $path);
+        finfo_close($finfo);
+
+        return $mimeType;
+    }
+
+    /**
+     * @param array $queryParams
+     * @return string
+     */
+    private function getFilePath(array $queryParams): string
+    {
+        if (!isset($queryParams['file'])) {
+            throw new Exception('Invalid Request.', 400);
+        }
+
+        $file = $queryParams['file'];
+        $path = $this->uploadsDirectory . $file;
+
+        if (file_exists('public' . $file)) {
+            $path = 'public' . $file;
+        } else if (!file_exists($path)) {
+            throw new Exception($path . ' not found.', 404);
+        }
+
+        return $path;
     }
 }

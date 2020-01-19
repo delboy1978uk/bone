@@ -3,6 +3,7 @@
 namespace Bone\Mvc;
 
 use Barnacle\Container;
+use Barnacle\Exception\NotFoundException;
 use Barnacle\RegistrationInterface;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Mvc\Controller\DownloadController;
@@ -296,7 +297,7 @@ class ApplicationPackage implements RegistrationInterface
      * @param array $registeredViews
      * @param PlatesEngine $viewEngine
      */
-    private function overrideViewFolder(string $view, string $folder, Folders $registeredViews):  void
+    private function overrideViewFolder(string $view, string $folder, Folders $registeredViews): void
     {
         if ($registeredViews->exists($view)) {
             /** @var \League\Plates\Template\Folder $currentFolder */

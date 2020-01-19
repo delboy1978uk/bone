@@ -7,6 +7,7 @@
       "email": "delboy1978uk@gmail.com"
     }
   ],
+  "license": "MIT",
   "require": {
     "php": ">7.1",
     "delboy1978uk/barnacle": "^2.2",
@@ -19,7 +20,8 @@
     "zendframework/zend-i18n": "^2.9",
     "zendframework/zend-httphandlerrunner": "^1.1",
     "league/route": "dev-master",
-    "delboy1978uk/icon": "^1.0"
+    "delboy1978uk/icon": "^1.0",
+    "delboy1978uk/form": "^2.1"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",

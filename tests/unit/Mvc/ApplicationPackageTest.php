@@ -2,6 +2,7 @@
 
 use Barnacle\Container;
 use Bone\Mvc\ApplicationPackage;
+use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\Server\I18nHandler;
 use Bone\Service\TranslatorFactory;
@@ -40,6 +41,7 @@ class ApplicationPackageTest extends Test
         $pdo = $container->get(PDO::class);
         $this->assertInstanceOf(PDO::class, $pdo);
     }
+
 
     /**
      * @param $object

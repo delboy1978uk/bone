@@ -2,6 +2,6 @@
 
 return [
     'views' => [
-        'bonemvcuser' => 'src/App/View/bone-user',
+        'testpackage' => 'tests/_data/view/TestPackage',
     ],
 ];

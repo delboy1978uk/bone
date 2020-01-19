@@ -37,7 +37,7 @@ class ExceptionDecorator implements MiddlewareInterface
     {
         $this->viewEngine = $viewEngine;
         $this->templates = $templates;
-        $this->view = 'error/error';
+        $this->setView('error/error');
     }
 
     /**
@@ -59,7 +59,7 @@ class ExceptionDecorator implements MiddlewareInterface
             return $handler->handle($request);
         } catch (Exception $e) {
 
-            $template = 'error/error';
+            $template = $this->view;
             $code = $e->getCode();
 
             if (array_key_exists($code, $this->templates)) {
