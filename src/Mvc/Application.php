@@ -73,6 +73,25 @@ class Application
         return $inst;
     }
 
+    /**
+     *  Use this to bootstrap Bone without dispatching any request
+     *  i.e. for when using the framework in a CLI application
+     */
+    public function bootstrap(): Container
+    {
+        $env = new Environment($_SERVER);
+        $router = $this->treasureChest[Router::class] = new Router();
+
+        $config = $env->fetchConfig($this->configFolder, $this->environment);
+        $config[Environment::class] = $env;
+        $config[SiteConfig::class] = new SiteConfig($config, $env);
+
+        $package = new ApplicationPackage($config, $router);
+        $package->addToContainer($this->treasureChest);
+
+        return $this->treasureChest;
+    }
+
 
     /**
      *
@@ -84,16 +103,9 @@ class Application
     public function setSail()
     {
         // load in the config and set up the dependency injection container
-        $env = new Environment($_SERVER);
+        $this->bootstrap();
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-        $router = $this->treasureChest[Router::class] = new Router();
-        
-        $config = $env->fetchConfig($this->configFolder, $this->environment);
-        $config[Environment::class] = $env;
-        $config[SiteConfig::class] = new SiteConfig($config, $env);
-        
-        $package = new ApplicationPackage($config, $router);
-        $package->addToContainer($this->treasureChest);
+        $router = $this->treasureChest->get(Router::class);
 
         if ($this->isMultilingual()) {
 
