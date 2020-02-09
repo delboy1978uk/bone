@@ -88,8 +88,9 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
         try {
 
             $response = parent::invokeRouteCallable($route, $request);
+            $contentType = $response->getHeader('Content-Type');
 
-            if (strstr($response->getHeader('Content-Type')[0], 'application/json')) {
+            if ($contentType && strstr($contentType[0], 'application/json')) {
                 return $response;
             }
 
