@@ -8,8 +8,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Stream;
 
 class NotFoundDecorator extends ExceptionDecorator implements MiddlewareInterface
 {

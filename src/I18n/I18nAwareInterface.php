@@ -2,7 +2,7 @@
 
 namespace Bone\I18n;
 
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 interface I18nAwareInterface
 {

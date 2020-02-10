@@ -15,10 +15,10 @@ use League\Route\Strategy\StrategyInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Diactoros\Stream;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Stream;
 
 class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
 {

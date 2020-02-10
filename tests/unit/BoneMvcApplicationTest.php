@@ -7,7 +7,7 @@ use BoneMvc\Module\BoneMvcDoctrine\BoneMvcDoctrinePackage;
 use BoneMvc\Module\BoneMvcUser\BoneMvcUserPackage;
 use BoneTest\TestPackage\TestPackagePackage;
 use Codeception\TestCase\Test;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 
 class BoneMvcApplicationTest extends Test
 {

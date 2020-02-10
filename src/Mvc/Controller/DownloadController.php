@@ -7,8 +7,8 @@ use League\Route\Http\Exception\NotFoundException;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Stream;
 
 class DownloadController
 {

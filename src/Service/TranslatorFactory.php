@@ -4,8 +4,8 @@ namespace Bone\Service;
 
 use Bone\I18n\I18nRegistrationInterface;
 use Locale;
-use Zend\I18n\Translator\Loader\Gettext;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Loader\Gettext;
+use Laminas\I18n\Translator\Translator;
 
 class TranslatorFactory
 {

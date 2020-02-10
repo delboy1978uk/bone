@@ -7,9 +7,9 @@ use Codeception\TestCase\Test;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Uri;
+use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\Uri;
 
 class HalCollectionTest extends Test
 {

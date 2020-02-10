@@ -11,7 +11,7 @@ use Bone\Server\SiteConfig;
 use Bone\Server\SiteConfigAwareInterface;
 use Bone\View\ViewAwareInterface;
 use Del\SessionManager;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 class Init
 {

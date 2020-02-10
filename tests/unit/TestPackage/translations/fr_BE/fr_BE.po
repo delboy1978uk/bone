@@ -205,7 +205,7 @@ msgstr ""
 #: src/App/View/index/learn.php:195
 msgid "learn.logs.usage"
 msgstr ""
-"Bone utilise Zend Mail. Pour configurer le client de messagerie, il suffit "
+"Bone utilise Laminas Mail. Pour configurer le client de messagerie, il suffit "
 "de déposer votre configuration (voir zend mail docs)"
 
 #: src/App/View/index/learn.php:200
@@ -215,7 +215,7 @@ msgstr "Courrier"
 #: src/App/View/index/learn.php:201
 msgid "learn.mail"
 msgstr ""
-"Bone utilise Zend Mail. Pour configurer le client de messagerie, il suffit "
+"Bone utilise Laminas Mail. Pour configurer le client de messagerie, il suffit "
 "de déposer votre configuration (voir zend mail docs)"
 
 #: src/App/View/index/learn.php:218

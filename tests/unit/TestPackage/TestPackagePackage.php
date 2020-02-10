@@ -14,7 +14,7 @@ use Bone\Mvc\View\PlatesEngine;
 use League\Route\RouteGroup;
 use League\Route\Router;
 use League\Route\Strategy\JsonStrategy;
-use Zend\Diactoros\ResponseFactory;
+use Laminas\Diactoros\ResponseFactory;
 
 class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface
 {

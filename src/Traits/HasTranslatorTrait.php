@@ -2,7 +2,7 @@
 
 namespace Bone\Traits;
 
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 trait HasTranslatorTrait
 {
