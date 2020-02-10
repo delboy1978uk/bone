@@ -9,9 +9,9 @@ use Bone\Service\TranslatorFactory;
 use Codeception\Coverage\Subscriber\Local;
 use Codeception\TestCase\Test;
 use League\Route\Router;
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Uri;
-use Zend\I18n\Translator\Loader\Gettext;
+use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\Uri;
+use Laminas\I18n\Translator\Loader\Gettext;
 
 class ApplicationPackageTest extends Test
 {

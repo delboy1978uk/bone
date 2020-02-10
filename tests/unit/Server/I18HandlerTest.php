@@ -3,9 +3,9 @@
 use Bone\Server\I18nHandler;
 use Bone\Service\TranslatorFactory;
 use Codeception\TestCase\Test;
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Uri;
-use Zend\I18n\Translator\Loader\Gettext;
+use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\Uri;
+use Laminas\I18n\Translator\Loader\Gettext;
 
 class I18HandlerTest extends Test
 {

@@ -3,7 +3,7 @@
 use Bone\Mvc\Router\NotFoundException;
 use Codeception\TestCase\Test;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\ServerRequest;
+use Laminas\Diactoros\ServerRequest;
 
 class NotFoundExceptionTest extends Test
 {

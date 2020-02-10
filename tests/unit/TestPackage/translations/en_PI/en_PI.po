@@ -208,7 +208,7 @@ msgstr "Messages in bottles"
 #: src/App/View/index/learn.php:201
 msgid "learn.mail"
 msgstr ""
-"Bone uses Zend Mail. T' configure th' mail client, jus' drop in yer config "
+"Bone uses Laminas Mail. T' configure th' mail client, jus' drop in yer config "
 "(see zend mail docs)"
 
 #: src/App/View/index/learn.php:218

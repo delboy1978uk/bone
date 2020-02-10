@@ -3,8 +3,8 @@
 use Bone\Mvc\View\Extension\Plates\Translate;
 use Bone\Service\TranslatorFactory;
 use Codeception\TestCase\Test;
-use Zend\I18n\Translator\Loader\Gettext;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Loader\Gettext;
+use Laminas\I18n\Translator\Translator;
 
 class TranslateTest extends Test
 {

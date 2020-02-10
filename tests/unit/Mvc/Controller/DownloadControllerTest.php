@@ -8,7 +8,7 @@ use Bone\Mvc\View\Extension\Plates\AlertBox;
 use Codeception\TestCase\Test;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\ServerRequest;
+use Laminas\Diactoros\ServerRequest;
 
 class DownloadControllerTest extends Test
 {
