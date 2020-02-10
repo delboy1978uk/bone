@@ -5,7 +5,7 @@ namespace Bone\Mvc\View\Extension\Plates;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use Locale;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 class Translate implements ExtensionInterface
 {

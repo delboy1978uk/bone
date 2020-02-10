@@ -25,9 +25,9 @@ use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\JsonStrategy;
 use Locale;
 use PDO;
-use Zend\Diactoros\ResponseFactory;
-use Zend\I18n\Translator\Loader\Gettext;
-use Zend\I18n\Translator\Translator;
+use Laminas\Diactoros\ResponseFactory;
+use Laminas\I18n\Translator\Loader\Gettext;
+use Laminas\I18n\Translator\Translator;
 
 class ApplicationPackage implements RegistrationInterface
 {

@@ -21,13 +21,13 @@ use League\Route\Strategy\JsonStrategy;
 use PDO;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\ResponseFactory;
-use Zend\Diactoros\ServerRequestFactory;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Response\RedirectResponse;
-use Zend\Diactoros\Uri;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
-use Zend\I18n\Translator\Translator;
+use Laminas\Diactoros\ResponseFactory;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Laminas\Diactoros\Uri;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\I18n\Translator\Translator;
 
 class Application
 {

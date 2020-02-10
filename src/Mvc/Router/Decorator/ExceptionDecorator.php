@@ -9,8 +9,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Stream;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Stream;
 
 class ExceptionDecorator implements MiddlewareInterface
 {

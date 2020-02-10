@@ -6,7 +6,7 @@ use Bone\I18n\I18nAwareInterface;
 use Bone\Traits\HasTranslatorTrait;
 use Del\Form\AbstractForm;
 use Del\Form\Form as BaseForm;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 class Form extends AbstractForm implements I18nAwareInterface
 {
