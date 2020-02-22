@@ -7,12 +7,12 @@ namespace BoneTest\TestPackage;
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
 use Bone\I18n\I18nRegistrationInterface;
-use BoneTest\TestPackage\Controller\TestPackageApiController;
-use BoneTest\TestPackage\Controller\TestPackageController;
+use Bone\Mvc\Router;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\PlatesEngine;
+use BoneTest\TestPackage\Controller\TestPackageApiController;
+use BoneTest\TestPackage\Controller\TestPackageController;
 use League\Route\RouteGroup;
-use League\Route\Router;
 use League\Route\Strategy\JsonStrategy;
 use Laminas\Diactoros\ResponseFactory;
 

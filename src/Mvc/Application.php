@@ -4,6 +4,7 @@ namespace Bone\Mvc;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\Mvc\Router;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\NotFoundException;
@@ -14,7 +15,6 @@ use Bone\Server\Environment;
 use Bone\Server\I18nHandler;
 use Bone\Server\SiteConfig;
 use Del\SessionManager;
-use League\Route\Router;
 use League\Route\RouteGroup;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\JsonStrategy;

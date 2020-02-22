@@ -7,6 +7,7 @@ use Barnacle\Exception\NotFoundException;
 use Barnacle\RegistrationInterface;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Mvc\Controller\DownloadController;
+use Bone\Mvc\Router;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
@@ -20,7 +21,6 @@ use Bone\View\Helper\Paginator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Service\TranslatorFactory;
 use League\Plates\Template\Folders;
-use League\Route\Router;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\JsonStrategy;
 use Locale;
@@ -46,7 +46,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * ApplicationPackage constructor.
      * @param array $config
-     * @param \League\Route\Router $router
+     * @param \Bone\Mvc\Router $router
      */
     public function __construct(array $config, Router $router)
     {
