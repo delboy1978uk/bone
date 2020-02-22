@@ -2,7 +2,7 @@
 
 namespace Bone\Mvc;
 
-use Bone\Route\Router as LeagueRouter;
+use League\Route\Router as LeagueRouter;
 
 class Router extends LeagueRouter
 {
