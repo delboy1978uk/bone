@@ -4,6 +4,7 @@ namespace Bone\Mvc;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\Http\Middleware\Stack;
 use Bone\Mvc\Router;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
@@ -28,6 +29,7 @@ use Laminas\Diactoros\Response\RedirectResponse;
 use Laminas\Diactoros\Uri;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\I18n\Translator\Translator;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class Application
 {
@@ -105,23 +107,24 @@ class Application
         // load in the config and set up the dependency injection container
         $this->bootstrap();
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-        $router = $this->treasureChest->get(Router::class);
+        /** @var RequestHandlerInterface $stack */
+        $stack = $this->treasureChest->get(Stack::class);
 
         if ($this->isMultilingual()) {
 
             try {
                 $request = $this->i18nRequestCheck($request);
-                $response = $router->dispatch($request);
+                $response = $stack->handle($request);
             } catch (NotFoundException $e) {
                 $response = new RedirectResponse($e->getMessage());
                 if ($e->getRequest()->getMethod() !== 'GET') {
-                    $response = $router->dispatch($request);
+                    $response = $stack->handle($request);
                 }
             }
 
         } else {
             $request = $this->i18nRequestCheck($request, false);
-            $response = $router->dispatch($request);
+            $response = $stack->handle($request);
         }
 
         (new SapiEmitter)->emit($response);

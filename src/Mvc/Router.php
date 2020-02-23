@@ -3,8 +3,11 @@
 namespace Bone\Mvc;
 
 use League\Route\Router as LeagueRouter;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class Router extends LeagueRouter
+class Router extends LeagueRouter implements RequestHandlerInterface
 {
     /**
      * @return Route[]
@@ -24,5 +27,14 @@ class Router extends LeagueRouter
                 unset($this->routes[$index]);
             }
         }
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        return $this->dispatch($request);
     }
 }

@@ -5,6 +5,7 @@ namespace Bone\Mvc;
 use Barnacle\Container;
 use Barnacle\Exception\NotFoundException;
 use Barnacle\RegistrationInterface;
+use Bone\Http\Middleware\Stack;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Mvc\Controller\DownloadController;
 use Bone\Mvc\Router;
@@ -28,6 +29,7 @@ use PDO;
 use Laminas\Diactoros\ResponseFactory;
 use Laminas\I18n\Translator\Loader\Gettext;
 use Laminas\I18n\Translator\Translator;
+use Psr\Http\Server\MiddlewareInterface;
 
 class ApplicationPackage implements RegistrationInterface
 {
@@ -68,6 +70,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupModules($c);
         $this->setupModuleViewOverrides($c);
         $this->setupDownloadController($c);
+        $this->setupMiddlewareStack($c);
     }
 
     /**
@@ -320,5 +323,29 @@ class ApplicationPackage implements RegistrationInterface
     public function hasEntityPath(): bool
     {
         return false;
+    }
+
+    /**
+     * @param Container $c
+     */
+    public function setupMiddlewareStack(Container $c): void
+    {
+        $c[Stack::class] = $c->factory(function (Container $c) {
+            $router = $c->get(Router::class);
+            $stack = new Stack($router);
+            $middlewareStack = $c->has('stack') ? $c->get('stack') : [];
+
+            foreach ($middlewareStack as $middleware) {
+                if ($middleware instanceof MiddlewareInterface) {
+                    $stack->addMiddleWare($middleware);
+                } elseif ($c->has($middleware)) {
+                    $stack->addMiddleWare($c->get($middleware));
+                } else {
+                    $stack->addMiddleWare(new $middleware());
+                }
+            }
+
+            return $stack;
+        });
     }
 }
