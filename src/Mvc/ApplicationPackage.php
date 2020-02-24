@@ -5,6 +5,7 @@ namespace Bone\Mvc;
 use Barnacle\Container;
 use Barnacle\Exception\NotFoundException;
 use Barnacle\RegistrationInterface;
+use Bone\Firewall\FirewallPackage;
 use Bone\Http\Middleware\Stack;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Mvc\Controller\DownloadController;
@@ -70,6 +71,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupModules($c);
         $this->setupModuleViewOverrides($c);
         $this->setupDownloadController($c);
+        $this->setupRouteFirewall($c);
         $this->setupMiddlewareStack($c);
     }
 
@@ -254,6 +256,15 @@ class ApplicationPackage implements RegistrationInterface
         $strategy = new JsonStrategy(new ResponseFactory());
         $strategy->setContainer($c);
         $this->router->map('GET', '/download', [DownloadController::class, 'downloadAction'])->setStrategy($strategy);
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setupRouteFirewall(Container $c): void
+    {
+        $firewallPackage = new FirewallPackage();
+        $firewallPackage->addToContainer($c);
     }
 
     /**

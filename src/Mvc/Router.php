@@ -2,6 +2,7 @@
 
 namespace Bone\Mvc;
 
+use League\Route\Route;
 use League\Route\Router as LeagueRouter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
