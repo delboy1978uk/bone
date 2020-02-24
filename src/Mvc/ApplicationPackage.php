@@ -49,7 +49,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * ApplicationPackage constructor.
      * @param array $config
-     * @param \Bone\Mvc\Router $router
+     * @param Router $router
      */
     public function __construct(array $config, Router $router)
     {

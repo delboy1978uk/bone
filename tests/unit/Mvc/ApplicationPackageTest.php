@@ -34,7 +34,8 @@ class ApplicationPackageTest extends Test
         $container = new Container();
         $env = new Environment($_SERVER);
         $config = $env->fetchConfig('tests/_data/config', getenv('APPLICATION_ENV'));
-        $package = new ApplicationPackage($config, new Router());
+        $router = $container[Router::class] = new Router();
+        $package = new ApplicationPackage($config, $router);
         $this->assertEquals('', $package->getEntityPath());
         $this->assertFalse($package->hasEntityPath());
         $package->addToContainer($container);
