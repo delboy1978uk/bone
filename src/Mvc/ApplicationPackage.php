@@ -65,7 +65,6 @@ class ApplicationPackage implements RegistrationInterface
     public function addToContainer(Container $c)
     {
         $this->setConfigArray($c);
-        $this->setLocale($c);
         $this->setupLogs($c);
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
@@ -86,18 +85,6 @@ class ApplicationPackage implements RegistrationInterface
         foreach ($this->config as $key => $value) {
             $c[$key] = $value;
         }
-    }
-
-    /**
-     * @param Container $c
-     */
-    private function setLocale(Container $c)
-    {
-        $i18n = $c->get('i18n');
-        $this->i18nEnabledSite = $i18n['enabled'];
-        $this->supportedLocales = $i18n['supported_locales'];
-        $defaultLocale = $i18n['default_locale'];
-        Locale::setDefault($defaultLocale);
     }
 
     /**
@@ -155,11 +142,6 @@ class ApplicationPackage implements RegistrationInterface
         /** @var PlatesStrategy $strategy */
         $strategy = $c->get(PlatesStrategy::class);
         $strategy->setContainer($c);
-
-        if ($this->i18nEnabledSite === true) {
-            $strategy->setI18nEnabled(true);
-            $strategy->setSupportedLocales($this->supportedLocales);
-        }
 
         $this->router->setStrategy($strategy);
     }

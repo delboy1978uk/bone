@@ -36,12 +36,6 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
     /** @var ExceptionDecorator $exceptionDecorator */
     private $exceptionDecorator;
 
-    /** @var bool  */
-    private $i18nEnabled = false;
-
-    /** @var array  */
-    private $supportedLocales = [];
-
     /**
      * PlatesStrategy constructor.
      * @param PlatesEngine $viewEngine
@@ -57,23 +51,6 @@ class PlatesStrategy extends ApplicationStrategy implements StrategyInterface
         $this->exceptionDecorator = $exceptionDecorator;
         $this->setLayout($layout);
     }
-
-    /**
-     * @param bool $i18nEnabled
-     */
-    public function setI18nEnabled(bool $i18nEnabled): void
-    {
-        $this->i18nEnabled = $i18nEnabled;
-    }
-
-    /**
-     * @param array $locales
-     */
-    public function setSupportedLocales(array $locales): void
-    {
-        $this->supportedLocales = $locales;
-    }
-
 
     /**
      * Invoke the route callable based on the strategy.
