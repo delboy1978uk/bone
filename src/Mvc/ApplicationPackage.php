@@ -7,6 +7,7 @@ use Barnacle\Exception\NotFoundException;
 use Barnacle\RegistrationInterface;
 use Bone\Firewall\FirewallPackage;
 use Bone\Http\Middleware\Stack;
+use Bone\I18n\I18nPackage;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Mvc\Controller\DownloadController;
 use Bone\Mvc\Router;
@@ -210,17 +211,8 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setupTranslator(Container $c)
     {
-        $config = $c->get('i18n');
-        $engine = $c->get(PlatesEngine::class);
-        if (is_array($config)) {
-            $factory = new TranslatorFactory();
-            $translator = $factory->createTranslator($config);
-            $engine->loadExtension(new Translate($translator));
-            $engine->loadExtension(new LocaleLink());
-            $defaultLocale = $config['default_locale'] ?: 'en_GB';
-            $translator->setLocale($defaultLocale);
-            $c[Translator::class] = $translator;
-        }
+        $package = new I18nPackage();
+        $package->addToContainer($c);
     }
 
 
