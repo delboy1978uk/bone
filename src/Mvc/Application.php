@@ -13,7 +13,7 @@ use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
-use Bone\Server\I18nHandler;
+use Bone\I18n\Http\Middleware\I18nHandler;
 use Bone\Server\SiteConfig;
 use Del\SessionManager;
 use League\Route\RouteGroup;

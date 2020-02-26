@@ -5,7 +5,7 @@ use Bone\Mvc\ApplicationPackage;
 use Bone\Mvc\Router;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
-use Bone\Server\I18nHandler;
+use Bone\I18n\Http\Middleware\I18nHandler;
 use Bone\I18n\Service\TranslatorFactory;
 use Codeception\Coverage\Subscriber\Local;
 use Codeception\TestCase\Test;
