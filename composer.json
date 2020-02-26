@@ -22,7 +22,7 @@
     "league/route": "dev-master",
     "delboy1978uk/icon": "^1.0",
     "delboy1978uk/form": "^2.1",
-    "delboy1978uk/bone-firewall": "^0.1"
+    "delboy1978uk/bone-firewall": "^1.1"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
