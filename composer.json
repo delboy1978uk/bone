@@ -17,7 +17,6 @@
     "laminas/laminas-mail": "^2.10",
     "laminas/laminas-servicemanager": "^3.3",
     "monolog/monolog": "^1.23",
-    "laminas/laminas-i18n": "^2.9",
     "laminas/laminas-httphandlerrunner": "^1.1",
     "league/route": "dev-master",
     "delboy1978uk/icon": "^1.0",
