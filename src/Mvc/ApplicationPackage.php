@@ -14,8 +14,6 @@ use Bone\I18n\View\Extension\LocaleLink;
 use Bone\I18n\View\Extension\Translate;
 use Bone\Mvc\Controller\DownloadController;
 use Bone\Mvc\Router;
-use Bone\Mvc\Router;
-use Bone\Mvc\Router;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
@@ -206,7 +204,7 @@ class ApplicationPackage implements RegistrationInterface
                         $factory->addPackageTranslations($translator, $package, $locale);
                     }
                 }
-                
+
                 if ($package instanceof MiddlewareAwareInterface) {
                     $stack = $c->get(Stack::class);
                     $package->addMiddleware($stack);
