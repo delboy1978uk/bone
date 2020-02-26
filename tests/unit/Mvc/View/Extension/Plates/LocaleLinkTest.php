@@ -17,7 +17,7 @@ class LocaleLinkTest extends Test
     public function testLink()
     {
         $locale = Locale::getDefault();
-        $viewHelper = new LocaleLink();
+        $viewHelper = new LocaleLink(true);
         $this->assertEquals('/' . $locale, $viewHelper->locale());
     }
 }
