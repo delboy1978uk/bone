@@ -220,6 +220,7 @@ class ApplicationPackage implements RegistrationInterface
     {
         $package = new I18nPackage();
         $package->addToContainer($c);
+        $package->addMiddleware($c->get(Stack::class), $c);
     }
 
 

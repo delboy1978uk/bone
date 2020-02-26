@@ -110,56 +110,18 @@ class Application
         /** @var RequestHandlerInterface $stack */
         $stack = $this->treasureChest->get(Stack::class);
 
-        if ($this->isMultilingual()) {
-
-            try {
-                $request = $this->i18nRequestCheck($request);
-                $response = $stack->handle($request);
-            } catch (NotFoundException $e) {
-                $response = new RedirectResponse($e->getMessage());
-                if ($e->getRequest()->getMethod() !== 'GET') {
-                    $response = $stack->handle($request);
-                }
-            }
-
-        } else {
-            $request = $this->i18nRequestCheck($request, false);
+        try {
             $response = $stack->handle($request);
+        } catch (NotFoundException $e) {
+            $response = new RedirectResponse($e->getMessage());
+            if ($e->getRequest()->getMethod() !== 'GET') {
+                $response = $stack->handle($request);
+            }
         }
 
         (new SapiEmitter)->emit($response);
 
         return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isMultilingual(): bool
-    {
-        $i18n = $this->treasureChest->get('i18n');
-        return $i18n['enabled'];
-    }
-
-
-    /**
-     * @param ServerRequestInterface $request
-     * @param bool $handle
-     * @return ServerRequestInterface
-     * @throws NotFoundException
-     */
-    private function i18nRequestCheck(ServerRequestInterface $request, bool $handle = true): ServerRequestInterface
-    {
-        $i18n = $this->treasureChest->get('i18n');
-        $translator = $this->treasureChest->get(Translator::class);
-        $i18nHandler = new I18nHandler($translator, $i18n['supported_locales'], $i18n['default_locale']);
-        if ($handle) {
-            $request = $i18nHandler->handleI18n($request);
-        } else {
-            $request = $i18nHandler->removeI18n($request);
-        }
-
-        return $request;
     }
 
     /**
