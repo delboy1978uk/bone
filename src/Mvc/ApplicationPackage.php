@@ -22,7 +22,7 @@ use Bone\Mvc\View\Extension\Plates\AlertBox;
 use Bone\Mvc\View\ViewEngine;
 use Bone\View\Helper\Paginator;
 use Bone\Mvc\View\PlatesEngine;
-use Bone\I18n\ervice\TranslatorFactory;
+use Bone\I18n\Service\TranslatorFactory;
 use League\Plates\Template\Folders;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\JsonStrategy;
