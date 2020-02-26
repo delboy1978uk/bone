@@ -5,6 +5,7 @@ namespace Bone\Mvc;
 use Barnacle\Container;
 use Barnacle\Exception\NotFoundException;
 use Barnacle\RegistrationInterface;
+use Bone\Db\DbPackage;
 use Bone\Firewall\FirewallPackage;
 use Bone\Http\Middleware\Stack;
 use Bone\Http\MiddlewareAwareInterface;
@@ -211,21 +212,8 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setupPdoConnection(Container $c)
     {
-        // set up a db connection
-        $c[PDO::class] = $c->factory(function (Container $c): PDO {
-            $credentials = $c->get('db');
-            $host = $credentials['host'];
-            $db = $credentials['database'];
-            $user = $credentials['user'];
-            $pass = $credentials['pass'];
-
-            $dbConnection = new PDO('mysql:host=' . $host . ';dbname=' . $db, $user, $pass, [
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ]);
-
-            return $dbConnection;
-        });
+        $package = new DbPackage();
+        $package->addToContainer($c);
     }
 
     /**
