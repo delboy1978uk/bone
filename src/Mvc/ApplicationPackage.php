@@ -7,11 +7,14 @@ use Barnacle\Exception\NotFoundException;
 use Barnacle\RegistrationInterface;
 use Bone\Firewall\FirewallPackage;
 use Bone\Http\Middleware\Stack;
+use Bone\Http\MiddlewareAwareInterface;
 use Bone\I18n\I18nPackage;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\I18n\View\Extension\LocaleLink;
 use Bone\I18n\View\Extension\Translate;
 use Bone\Mvc\Controller\DownloadController;
+use Bone\Mvc\Router;
+use Bone\Mvc\Router;
 use Bone\Mvc\Router;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
@@ -68,6 +71,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupLogs($c);
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
+        $this->initMiddlewareStack($c);
         $this->setupTranslator($c);
         $this->setupModules($c);
         $this->setupModuleViewOverrides($c);
@@ -202,6 +206,11 @@ class ApplicationPackage implements RegistrationInterface
                         $factory->addPackageTranslations($translator, $package, $locale);
                     }
                 }
+                
+                if ($package instanceof MiddlewareAwareInterface) {
+                    $stack = $c->get(Stack::class);
+                    $package->addMiddleware($stack);
+                }
             }
         }
     }
@@ -331,24 +340,28 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param Container $c
      */
-    public function setupMiddlewareStack(Container $c): void
+    private function initMiddlewareStack(Container $c): void
     {
-        $c[Stack::class] = $c->factory(function (Container $c) {
-            $router = $c->get(Router::class);
-            $stack = new Stack($router);
-            $middlewareStack = $c->has('stack') ? $c->get('stack') : [];
+        $router = $c->get(Router::class);
+        $c[Stack::class] = new Stack($router);
+    }
 
-            foreach ($middlewareStack as $middleware) {
-                if ($middleware instanceof MiddlewareInterface) {
-                    $stack->addMiddleWare($middleware);
-                } elseif ($c->has($middleware)) {
-                    $stack->addMiddleWare($c->get($middleware));
-                } else {
-                    $stack->addMiddleWare(new $middleware());
-                }
+    /**
+     * @param Container $c
+     */
+    private function setupMiddlewareStack(Container $c): void
+    {
+        $stack = $c->get(Stack::class);
+        $middlewareStack = $c->has('stack') ? $c->get('stack') : [];
+
+        foreach ($middlewareStack as $middleware) {
+            if ($middleware instanceof MiddlewareInterface) {
+                $stack->addMiddleWare($middleware);
+            } elseif ($c->has($middleware)) {
+                $stack->addMiddleWare($c->get($middleware));
+            } else {
+                $stack->addMiddleWare(new $middleware());
             }
-
-            return $stack;
-        });
+        }
     }
 }
