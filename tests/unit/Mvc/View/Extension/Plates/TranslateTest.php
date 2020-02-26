@@ -1,7 +1,7 @@
 <?php
 
-use Bone\Mvc\View\Extension\Plates\Translate;
-use Bone\Service\TranslatorFactory;
+use Bone\I18n\View\Extension\Translate;
+use Bone\I18n\Service\TranslatorFactory;
 use Codeception\TestCase\Test;
 use Laminas\I18n\Translator\Loader\Gettext;
 use Laminas\I18n\Translator\Translator;

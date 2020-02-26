@@ -2,7 +2,7 @@
 
 use Bone\Server\Environment;
 use Bone\Server\SiteConfig;
-use Bone\Service\TranslatorFactory;
+use Bone\I18n\Service\TranslatorFactory;
 use Codeception\TestCase\Test;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;

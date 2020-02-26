@@ -1,7 +1,7 @@
 <?php
 
 use Bone\Server\I18nHandler;
-use Bone\Service\TranslatorFactory;
+use Bone\I18n\Service\TranslatorFactory;
 use Codeception\TestCase\Test;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;

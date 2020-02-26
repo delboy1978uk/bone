@@ -6,7 +6,7 @@ use Bone\Mvc\Router;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\Server\I18nHandler;
-use Bone\Service\TranslatorFactory;
+use Bone\I18n\Service\TranslatorFactory;
 use Codeception\Coverage\Subscriber\Local;
 use Codeception\TestCase\Test;
 use Laminas\Diactoros\ServerRequest;
