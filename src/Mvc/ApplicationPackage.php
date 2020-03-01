@@ -26,6 +26,7 @@ use Bone\Mvc\View\ViewEngine;
 use Bone\View\Helper\Paginator;
 use Bone\Mvc\View\PlatesEngine;
 use Bone\I18n\Service\TranslatorFactory;
+use Bone\View\ViewPackage;
 use League\Plates\Template\Folders;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\JsonStrategy;
@@ -94,58 +95,8 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setupViewEngine(Container $c)
     {
-        // set up the view engine dependencies
-        $viewEngine = new PlatesEngine($c->get('viewFolder'));
-        $viewEngine->loadExtension(new AlertBox());
-
-        $c[PlatesEngine::class] = $viewEngine;
-
-        $c[NotFoundDecorator::class] = $c->factory(function (Container $c) {
-            $layout = $c->get('default_layout');
-            $templates = $c->get('error_pages');
-            $viewEngine = $c->get(PlatesEngine::class);
-            $notFoundDecorator = new NotFoundDecorator($viewEngine, $templates);
-            $notFoundDecorator->setLayout($layout);
-
-            return $notFoundDecorator;
-        });
-
-        $c[NotAllowedDecorator::class] = $c->factory(function (Container $c) {
-            $layout = $c->get('default_layout');
-            $templates = $c->get('error_pages');
-            $viewEngine = $c->get(PlatesEngine::class);
-            $notAllowedDecorator = new NotAllowedDecorator($viewEngine, $templates);
-            $notAllowedDecorator->setLayout($layout);
-
-            return $notAllowedDecorator;
-        });
-
-        $c[ExceptionDecorator::class] = $c->factory(function (Container $c) {
-            $viewEngine = $c->get(PlatesEngine::class);
-            $layout = $c->get('default_layout');
-            $templates = $c->get('error_pages');
-            $decorator = new ExceptionDecorator($viewEngine, $templates);
-            $decorator->setLayout($layout);
-
-            return $decorator;
-        });
-
-        $c[PlatesStrategy::class] = $c->factory(function (Container $c) {
-            $viewEngine = $c->get(PlatesEngine::class);
-            $notFoundDecorator = $c->get(NotFoundDecorator::class);
-            $notAllowedDecorator = $c->get(NotAllowedDecorator::class);
-            $exceptionDecorator = $c->get(ExceptionDecorator::class);
-            $layout = $c->get('default_layout');
-            $strategy = new PlatesStrategy($viewEngine, $notFoundDecorator, $notAllowedDecorator, $layout, $exceptionDecorator);
-
-            return $strategy;
-        });
-
-        /** @var PlatesStrategy $strategy */
-        $strategy = $c->get(PlatesStrategy::class);
-        $strategy->setContainer($c);
-
-        $this->router->setStrategy($strategy);
+        $package = new ViewPackage();
+        $package->addToContainer($c);
     }
 
     /**
