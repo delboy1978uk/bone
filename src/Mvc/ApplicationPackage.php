@@ -13,6 +13,7 @@ use Bone\I18n\I18nPackage;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\I18n\View\Extension\LocaleLink;
 use Bone\I18n\View\Extension\Translate;
+use Bone\Log\LogPackage;
 use Bone\Mvc\Controller\DownloadController;
 use Bone\Mvc\Router;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
@@ -233,8 +234,8 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setupRouteFirewall(Container $c): void
     {
-        $firewallPackage = new FirewallPackage();
-        $firewallPackage->addToContainer($c);
+        $pckage = new FirewallPackage();
+        $pckage->addToContainer($c);
     }
 
     /**
@@ -242,22 +243,8 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function  setupLogs(Container $c)
     {
-        if ($c->has('display_errors')) {
-            ini_set('display_errors', $c->get('display_errors'));
-        }
-
-        if ($c->has('error_reporting')) {
-            error_reporting($c->get('error_reporting'));
-        }
-
-        if ($c->has('error_log')) {
-            $errorLog = $c->get('error_log');
-            if (!file_exists($errorLog)) {
-                file_put_contents($errorLog, '');
-                chmod($errorLog, 0775);
-            }
-            ini_set($c->get('error_log'), $errorLog);
-        }
+        $package = new LogPackage();
+        $package->addToContainer($c);
     }
 
     /**
