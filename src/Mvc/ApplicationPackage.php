@@ -240,7 +240,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param Container $c
      */
-    private function setupLogs(Container $c)
+    private function  setupLogs(Container $c)
     {
         if ($c->has('display_errors')) {
             ini_set('display_errors', $c->get('display_errors'));

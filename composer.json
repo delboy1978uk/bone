@@ -23,7 +23,8 @@
     "delboy1978uk/form": "^2.1",
     "delboy1978uk/bone-firewall": "^1.1",
     "delboy1978uk/bone-i18n": "^1.1",
-    "delboy1978uk/bone-db": "^1.0"
+    "delboy1978uk/bone-db": "^1.0",
+    "delboy1978uk/bone-log": "^0.1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
