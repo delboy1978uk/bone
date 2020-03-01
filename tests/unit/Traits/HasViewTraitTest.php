@@ -1,7 +1,7 @@
 <?php
 
 use Bone\Traits\HasViewTrait;
-use Bone\Mvc\View\PlatesEngine;
+use Bone\View\PlatesEngine;
 use Codeception\TestCase\Test;
 
 class HasViewTraitTest extends Test

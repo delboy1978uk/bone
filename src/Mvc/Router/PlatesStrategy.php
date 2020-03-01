@@ -5,7 +5,7 @@ namespace Bone\Mvc\Router;
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
 use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
 use Bone\Mvc\Router\Decorator\NotFoundDecorator;
-use Bone\Mvc\View\PlatesEngine;
+use Bone\View\PlatesEngine;
 use Bone\Traits\HasLayoutTrait;
 use Exception;
 use League\Route\Http\Exception\{MethodNotAllowedException, NotFoundException};

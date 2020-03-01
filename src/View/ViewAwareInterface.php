@@ -2,7 +2,7 @@
 
 namespace Bone\View;
 
-use Bone\Mvc\View\PlatesEngine;
+use Bone\View\PlatesEngine;
 
 interface ViewAwareInterface
 {

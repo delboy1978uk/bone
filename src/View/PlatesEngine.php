@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Mvc\View;
+namespace Bone\View;
 
 use League\Plates\Engine;
 

@@ -2,7 +2,7 @@
 
 namespace BoneTest\TestPackage\Controller;
 
-use Bone\Mvc\View\ViewEngine;
+use Bone\View\ViewEngine;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

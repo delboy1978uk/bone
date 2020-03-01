@@ -2,7 +2,7 @@
 
 namespace Bone\Mvc\Router\Decorator;
 
-use Bone\Mvc\View\ViewEngine;
+use Bone\View\ViewEngine;
 use Bone\Traits\HasLayoutTrait;
 use Exception;
 use Psr\Http\Message\ResponseInterface;

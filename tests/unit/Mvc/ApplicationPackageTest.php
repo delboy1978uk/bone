@@ -3,7 +3,7 @@
 use Barnacle\Container;
 use Bone\Mvc\ApplicationPackage;
 use Bone\Mvc\Router;
-use Bone\Mvc\View\PlatesEngine;
+use Bone\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\I18n\Http\Middleware\I18nHandler;
 use Bone\I18n\Service\TranslatorFactory;

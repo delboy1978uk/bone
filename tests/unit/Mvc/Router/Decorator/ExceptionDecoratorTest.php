@@ -3,7 +3,7 @@
 namespace BoneTest\Mvc\Router\Decorator;
 
 use Bone\Mvc\Router\Decorator\ExceptionDecorator;
-use Bone\Mvc\View\PlatesEngine;
+use Bone\View\PlatesEngine;
 use Codeception\TestCase\Test;
 use Exception;
 use Psr\Http\Message\ResponseInterface;

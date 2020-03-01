@@ -11,7 +11,7 @@ use Bone\Mvc\Router\Decorator\NotFoundDecorator;
 use Bone\Mvc\Router\NotFoundException;
 use Bone\Mvc\Router\PlatesStrategy;
 use Bone\Mvc\Router\RouterConfigInterface;
-use Bone\Mvc\View\PlatesEngine;
+use Bone\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\I18n\Http\Middleware\I18nHandler;
 use Bone\Server\SiteConfig;

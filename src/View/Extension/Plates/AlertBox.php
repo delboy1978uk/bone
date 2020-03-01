@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Mvc\View\Extension\Plates;
+namespace Bone\View\Extension\Plates;
 
 use Bone\View\Helper\AlertBox as AlertBoxHelper;
 use League\Plates\Engine;

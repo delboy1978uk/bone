@@ -2,7 +2,7 @@
 
 namespace BoneTest\Mvc\View\Extension\Plates;
 
-use Bone\Mvc\View\Extension\Plates\AlertBox;
+use Bone\View\Extension\Plates\AlertBox;
 use Codeception\TestCase\Test;
 
 class AlertBoxTest extends Test
