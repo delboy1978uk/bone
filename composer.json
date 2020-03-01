@@ -26,7 +26,7 @@
     "delboy1978uk/bone-db": "^1.0",
     "delboy1978uk/bone-log": "^1.0",
     "delboy1978uk/bone-http": "^0.1.0",
-    "delboy1978uk/bone-view": "^0.1.0"
+    "delboy1978uk/bone-view": "^1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
