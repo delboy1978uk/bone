@@ -1,10 +1,10 @@
 <?php
 
-namespace Bone\Mvc\Controller;
+namespace Bone\Controller;
 
 use Barnacle\Container;
 use Bone\I18n\I18nAwareInterface;
-use Bone\Mvc\Controller;
+use Bone\Controller\Controller;
 use Bone\View\PlatesEngine;
 use Bone\Server\SessionAwareInterface;
 use Bone\Server\SiteConfig;

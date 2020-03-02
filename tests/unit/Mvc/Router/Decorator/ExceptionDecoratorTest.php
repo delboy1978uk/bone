@@ -2,7 +2,7 @@
 
 namespace BoneTest\Mvc\Router\Decorator;
 
-use Bone\Mvc\Router\Decorator\ExceptionDecorator;
+use Bone\Router\Decorator\ExceptionDecorator;
 use Bone\View\PlatesEngine;
 use Codeception\TestCase\Test;
 use Exception;

@@ -3,8 +3,8 @@
 namespace BoneTest\Mvc\Controller;
 
 use Barnacle\Container;
-use Bone\Mvc\Controller;
-use Bone\Mvc\Controller\Init;
+use Bone\Controller\Controller;
+use Bone\Controller\Init;
 use Bone\View\PlatesEngine;
 use Bone\Server\SessionAwareInterface;
 use Bone\Server\SiteConfig;

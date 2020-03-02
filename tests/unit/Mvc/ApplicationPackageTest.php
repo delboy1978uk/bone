@@ -1,7 +1,7 @@
 <?php
 
 use Barnacle\Container;
-use Bone\Mvc\ApplicationPackage;
+use Bone\ApplicationPackage;
 use Bone\Mvc\Router;
 use Bone\View\PlatesEngine;
 use Bone\Server\Environment;

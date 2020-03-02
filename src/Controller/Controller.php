@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Mvc;
+namespace Bone\Controller;
 
 use Bone\I18n\I18nAwareInterface;
 use Bone\Traits\HasSiteConfigTrait;

@@ -1,9 +1,8 @@
 <?php
 
-namespace Bone\Mvc\Controller;
+namespace Bone\Controller;
 
 use Bone\Exception;
-use League\Route\Http\Exception\NotFoundException;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,6 +27,7 @@ class DownloadController
      * @param ServerRequestInterface $request
      * @param array $args
      * @return ResponseInterface
+     * @throws Exception
      */
     public function downloadAction(ServerRequestInterface $request, array $args): ResponseInterface
     {
@@ -60,6 +60,7 @@ class DownloadController
     /**
      * @param array $queryParams
      * @return string
+     * @throws Exception
      */
     private function getFilePath(array $queryParams): string
     {

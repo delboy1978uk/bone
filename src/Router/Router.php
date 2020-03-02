@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Mvc;
+namespace Bone\Router;
 
 use League\Route\Route;
 use League\Route\Router as LeagueRouter;

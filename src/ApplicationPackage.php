@@ -14,13 +14,13 @@ use Bone\I18n\I18nRegistrationInterface;
 use Bone\I18n\View\Extension\LocaleLink;
 use Bone\I18n\View\Extension\Translate;
 use Bone\Log\LogPackage;
-use Bone\Mvc\Controller\DownloadController;
+use Bone\Controller\DownloadController;
 use Bone\Mvc\Router;
-use Bone\Mvc\Router\Decorator\ExceptionDecorator;
-use Bone\Mvc\Router\Decorator\NotAllowedDecorator;
-use Bone\Mvc\Router\Decorator\NotFoundDecorator;
-use Bone\Mvc\Router\PlatesStrategy;
-use Bone\Mvc\Router\RouterConfigInterface;
+use Bone\Router\Decorator\ExceptionDecorator;
+use Bone\Router\Decorator\NotAllowedDecorator;
+use Bone\Router\Decorator\NotFoundDecorator;
+use Bone\Router\PlatesStrategy;
+use Bone\Router\RouterConfigInterface;
 use Bone\View\Extension\Plates\AlertBox;
 use Bone\View\ViewEngine;
 use Bone\View\Helper\Paginator;
@@ -64,6 +64,8 @@ class ApplicationPackage implements RegistrationInterface
 
     /**
      * @param Container $c
+     * @throws \Bone\Exception
+     * @throws \Bone\Exception
      */
     public function addToContainer(Container $c)
     {
@@ -150,6 +152,7 @@ class ApplicationPackage implements RegistrationInterface
 
     /**
      * @param Container $c
+     * @throws \Bone\Exception
      */
     private function setupTranslator(Container $c)
     {
@@ -161,6 +164,7 @@ class ApplicationPackage implements RegistrationInterface
 
     /**
      * @param Container $c
+     * @throws \Bone\Exception
      */
     private function setupPdoConnection(Container $c)
     {
@@ -191,6 +195,7 @@ class ApplicationPackage implements RegistrationInterface
 
     /**
      * @param Container $c
+     * @throws \Exception
      */
     private function  setupLogs(Container $c)
     {

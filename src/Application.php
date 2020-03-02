@@ -1,16 +1,16 @@
 <?php
 
-namespace Bone\Mvc;
+namespace Bone;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
 use Bone\Http\Middleware\Stack;
 use Bone\Mvc\Router;
-use Bone\Mvc\Router\Decorator\ExceptionDecorator;
-use Bone\Mvc\Router\Decorator\NotFoundDecorator;
-use Bone\Mvc\Router\NotFoundException;
-use Bone\Mvc\Router\PlatesStrategy;
-use Bone\Mvc\Router\RouterConfigInterface;
+use Bone\Router\Decorator\ExceptionDecorator;
+use Bone\Router\Decorator\NotFoundDecorator;
+use Bone\Router\NotFoundException;
+use Bone\Router\PlatesStrategy;
+use Bone\Router\RouterConfigInterface;
 use Bone\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\I18n\Http\Middleware\I18nHandler;

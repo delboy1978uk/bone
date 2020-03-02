@@ -1,7 +1,7 @@
 <?php
 
 
-use Bone\Mvc\Application;
+use Bone\Application;
 use BoneMvc\Module\App\AppPackage;
 use BoneMvc\Module\BoneMvcDoctrine\BoneMvcDoctrinePackage;
 use BoneMvc\Module\BoneMvcUser\BoneMvcUserPackage;

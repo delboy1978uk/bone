@@ -3,8 +3,7 @@
 namespace BoneTest\Mvc\Controller;
 
 use Bone\Exception;
-use Bone\Mvc\Controller\DownloadController;
-use Bone\View\Extension\Plates\AlertBox;
+use Bone\Controller\DownloadController;
 use Codeception\TestCase\Test;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;

@@ -2,7 +2,6 @@
 
 namespace Bone\Traits;
 
-use Bone\Mvc\Controller\ViewAwareInterface;
 use Bone\View\PlatesEngine;
 
 trait HasViewTrait

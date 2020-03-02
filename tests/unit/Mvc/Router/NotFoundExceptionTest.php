@@ -1,6 +1,6 @@
 <?php
 
-use Bone\Mvc\Router\NotFoundException;
+use Bone\Router\NotFoundException;
 use Codeception\TestCase\Test;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\ServerRequest;
