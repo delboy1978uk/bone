@@ -1,6 +1,6 @@
 <?php
 
-use Bone\Service\LoggerFactory;
+use Bone\Log\LoggerFactory;
 use Codeception\TestCase\Test;
 
 class LoggerTest extends Test
