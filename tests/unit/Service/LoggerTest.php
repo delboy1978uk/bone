@@ -22,16 +22,4 @@ class LoggerTest extends Test
         $this->assertCount(1, $log);
         $this->assertInstanceOf('Monolog\Logger', $log['default']);
     }
-
-
-    /**
-     * @throws Exception
-     */
-    public function testCreateLoggersThrowsEception()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $config = [];
-        $factory = new LoggerFactory();
-        $factory->createLoggers($config);
-    }
 }
