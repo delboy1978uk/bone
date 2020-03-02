@@ -8,7 +8,7 @@ use Barnacle\Container;
 use Barnacle\RegistrationInterface;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Router\Router;
-use Bone\Router\Router;ConfigInterface;
+use Bone\Router\RouterConfigInterface;
 use Bone\View\PlatesEngine;
 use BoneTest\TestPackage\Controller\TestPackageApiController;
 use BoneTest\TestPackage\Controller\TestPackageController;

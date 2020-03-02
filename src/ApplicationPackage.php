@@ -56,7 +56,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->initMiddlewareStack($c);
         $this->setupTranslator($c);
         $this->setupPackages($c);
-        $this->setupModuleViewOverrides($c);
+        $this->setupVendorViewOverrides($c);
         $this->setupDownloadController($c);
         $this->setupRouteFirewall($c);
         $this->setupMiddlewareStack($c);
@@ -186,7 +186,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param Container $c
      */
-    private function setupModuleViewOverrides(Container $c): void
+    private function setupVendorViewOverrides(Container $c): void
     {
         /** @var PlatesEngine $viewEngine */
         $viewEngine = $c->get(PlatesEngine::class);
