@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Bone\Router\Router;
+namespace Bone\Router;
 
 use League\Route\Http\Exception\NotFoundException as RouteException;
 use Psr\Http\Message\ServerRequestInterface;

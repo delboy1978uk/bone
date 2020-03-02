@@ -1,9 +1,8 @@
 <?php
 
-namespace Bone\Mvc;
+namespace Bone;
 
 use Barnacle\Container;
-use Barnacle\Exception\NotFoundException;
 use Barnacle\RegistrationInterface;
 use Bone\Db\DbPackage;
 use Bone\Firewall\FirewallPackage;
@@ -11,29 +10,16 @@ use Bone\Http\Middleware\Stack;
 use Bone\Http\MiddlewareAwareInterface;
 use Bone\I18n\I18nPackage;
 use Bone\I18n\I18nRegistrationInterface;
-use Bone\I18n\View\Extension\LocaleLink;
-use Bone\I18n\View\Extension\Translate;
 use Bone\Log\LogPackage;
 use Bone\Controller\DownloadController;
 use Bone\Router\Router;
-use Bone\Router\Decorator\ExceptionDecorator;
-use Bone\Router\Decorator\NotAllowedDecorator;
-use Bone\Router\Decorator\NotFoundDecorator;
-use Bone\Router\PlatesStrategy;
-use Bone\Router\Router;ConfigInterface;
-use Bone\View\Extension\Plates\AlertBox;
-use Bone\View\ViewEngine;
-use Bone\View\Helper\Paginator;
+use Bone\Router\RouterConfigInterface;
 use Bone\View\PlatesEngine;
 use Bone\I18n\Service\TranslatorFactory;
 use Bone\View\ViewPackage;
 use League\Plates\Template\Folders;
-use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\JsonStrategy;
-use Locale;
-use PDO;
 use Laminas\Diactoros\ResponseFactory;
-use Laminas\I18n\Translator\Loader\Gettext;
 use Laminas\I18n\Translator\Translator;
 use Psr\Http\Server\MiddlewareInterface;
 
@@ -44,12 +30,6 @@ class ApplicationPackage implements RegistrationInterface
 
     /** @var Router $router */
     private $router;
-
-    /** @var bool $i18nEnabledSite */
-    private $i18nEnabledSite = false;
-
-    /** @var array $supportedLocales */
-    private $supportedLocales = [];
 
     /**
      * ApplicationPackage constructor.
@@ -65,7 +45,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param Container $c
      * @throws \Bone\Exception
-     * @throws \Bone\Exception
+     * @throws \Exception
      */
     public function addToContainer(Container $c)
     {
@@ -75,7 +55,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupViewEngine($c);
         $this->initMiddlewareStack($c);
         $this->setupTranslator($c);
-        $this->setupModules($c);
+        $this->setupPackages($c);
         $this->setupModuleViewOverrides($c);
         $this->setupDownloadController($c);
         $this->setupRouteFirewall($c);
@@ -104,7 +84,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param Container $c
      */
-    private function setupModules(Container $c)
+    private function setupPackages(Container $c)
     {
         // set up the modules and vendor package modules
         $packages = $c->get('packages');
@@ -144,7 +124,7 @@ class ApplicationPackage implements RegistrationInterface
 
                 if ($package instanceof MiddlewareAwareInterface) {
                     $stack = $c->get(Stack::class);
-                    $package->addMiddleware($stack);
+                    $package->addMiddleware($stack, $c);
                 }
             }
         }

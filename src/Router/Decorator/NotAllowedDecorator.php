@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Router\Router\Decorator;
+namespace Bone\Router\Decorator;
 
 use Bone\View\ViewEngine;
 use Psr\Http\Message\ResponseInterface;

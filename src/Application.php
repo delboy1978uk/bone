@@ -3,32 +3,15 @@
 namespace Bone;
 
 use Barnacle\Container;
-use Barnacle\RegistrationInterface;
 use Bone\Http\Middleware\Stack;
 use Bone\Router\Router;
-use Bone\Router\Decorator\ExceptionDecorator;
-use Bone\Router\Decorator\NotFoundDecorator;
 use Bone\Router\NotFoundException;
-use Bone\Router\PlatesStrategy;
-use Bone\Router\Router;ConfigInterface;
-use Bone\View\PlatesEngine;
 use Bone\Server\Environment;
-use Bone\I18n\Http\Middleware\I18nHandler;
 use Bone\Server\SiteConfig;
 use Del\SessionManager;
-use League\Route\RouteGroup;
-use League\Route\Strategy\ApplicationStrategy;
-use League\Route\Strategy\JsonStrategy;
-use PDO;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\RedirectResponse;
-use Laminas\Diactoros\Uri;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Laminas\I18n\Translator\Translator;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class Application

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Router\Router;
+namespace Bone\Router;
 
 use Bone\Router\Decorator\ExceptionDecorator;
 use Bone\Router\Decorator\NotAllowedDecorator;
