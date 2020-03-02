@@ -2,7 +2,7 @@
 
 use Barnacle\Container;
 use Bone\ApplicationPackage;
-use Bone\Router;
+use Bone\Router\Router;
 use Bone\View\PlatesEngine;
 use Bone\Server\Environment;
 use Bone\I18n\Http\Middleware\I18nHandler;

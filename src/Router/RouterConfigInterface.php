@@ -3,7 +3,7 @@
 namespace Bone\Mvc\Router;
 
 use Barnacle\Container;
-use Bone\Router;
+use Bone\Router\Router;
 
 interface RouterConfigInterface
 {
