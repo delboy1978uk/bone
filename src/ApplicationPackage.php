@@ -15,7 +15,7 @@ use Bone\I18n\View\Extension\LocaleLink;
 use Bone\I18n\View\Extension\Translate;
 use Bone\Log\LogPackage;
 use Bone\Controller\DownloadController;
-use Bone\Mvc\Router;
+use Bone\Router;
 use Bone\Router\Decorator\ExceptionDecorator;
 use Bone\Router\Decorator\NotAllowedDecorator;
 use Bone\Router\Decorator\NotFoundDecorator;

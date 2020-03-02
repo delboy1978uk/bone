@@ -5,7 +5,7 @@ namespace Bone;
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
 use Bone\Http\Middleware\Stack;
-use Bone\Mvc\Router;
+use Bone\Router;
 use Bone\Router\Decorator\ExceptionDecorator;
 use Bone\Router\Decorator\NotFoundDecorator;
 use Bone\Router\NotFoundException;
