@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Mvc\Router\Decorator;
+namespace Bone\Router\Router\Decorator;
 
 use Bone\View\ViewEngine;
 use Bone\Traits\HasLayoutTrait;

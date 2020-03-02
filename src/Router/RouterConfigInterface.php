@@ -1,6 +1,6 @@
 <?php
 
-namespace Bone\Mvc\Router;
+namespace Bone\Router\Router;
 
 use Barnacle\Container;
 use Bone\Router\Router;
