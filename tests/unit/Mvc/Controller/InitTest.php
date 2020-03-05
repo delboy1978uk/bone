@@ -5,7 +5,7 @@ namespace BoneTest\Mvc\Controller;
 use Barnacle\Container;
 use Bone\Controller\Controller;
 use Bone\Controller\Init;
-use Bone\View\PlatesEngine;
+use Bone\View\ViewEngine;
 use Bone\Server\SessionAwareInterface;
 use Bone\Server\SiteConfig;
 use Bone\Traits\HasSessionTrait;
@@ -29,12 +29,12 @@ class InitTest extends Test
         $container = new Container();
         $container[SiteConfig::class] = $this->getMockBuilder(SiteConfig::class)->disableOriginalConstructor()->getMock();
         $container[Translator::class] = $this->getMockBuilder(Translator::class)->getMock();
-        $container[PlatesEngine::class] = $this->getMockBuilder(PlatesEngine::class)->getMock();
+        $container[ViewEngine::class] = $this->getMockBuilder(ViewEngine::class)->getMock();
         $container[SessionManager::class] = SessionManager::getInstance();
         $controller = Init::controller($controller, $container);
         $this->assertInstanceOf(SiteConfig::class, $controller->getSiteConfig());
         $this->assertInstanceOf(Translator::class, $controller->getTranslator());
-        $this->assertInstanceOf(PlatesEngine::class, $controller->getView());
+        $this->assertInstanceOf(ViewEngine::class, $controller->getView());
         $this->assertInstanceOf(SessionManager::class, $controller->getSession());
     }
 }

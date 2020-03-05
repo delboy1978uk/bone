@@ -3,7 +3,7 @@
 namespace BoneTest\Mvc\Router\Decorator;
 
 use Bone\Router\Decorator\ExceptionDecorator;
-use Bone\View\PlatesEngine;
+use Bone\View\ViewEngine;
 use Codeception\TestCase\Test;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -20,7 +20,7 @@ class ExceptionDecoratorTest extends Test
 
     public function testDecoreator()
     {
-        $view = new PlatesEngine('tests/_data/view');
+        $view = new ViewEngine('tests/_data/view');
         $decorator = new ExceptionDecorator($view, [
             'exception' => 'error/error',
             401 => 'error/not-authorised',

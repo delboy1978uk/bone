@@ -1,7 +1,7 @@
 <?php
 
 use Bone\Traits\HasViewTrait;
-use Bone\View\PlatesEngine;
+use Bone\View\ViewEngine;
 use Codeception\TestCase\Test;
 
 class HasViewTraitTest extends Test
@@ -17,8 +17,8 @@ class HasViewTraitTest extends Test
             use HasViewTrait;
         };
 
-        $view = new PlatesEngine();
+        $view = new ViewEngine();
         $class->setView($view);
-        $this->assertInstanceOf(PlatesEngine::class, $class->getView());
+        $this->assertInstanceOf(ViewEngine::class, $class->getView());
     }
 }

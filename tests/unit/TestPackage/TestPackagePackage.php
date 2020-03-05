@@ -9,7 +9,7 @@ use Barnacle\RegistrationInterface;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Router\Router;
 use Bone\Router\RouterConfigInterface;
-use Bone\View\PlatesEngine;
+use Bone\View\ViewEngine;
 use BoneTest\TestPackage\Controller\TestPackageApiController;
 use BoneTest\TestPackage\Controller\TestPackageController;
 use League\Route\RouteGroup;
@@ -23,13 +23,13 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
      */
     public function addToContainer(Container $c)
     {
-        /** @var PlatesEngine $viewEngine */
-        $viewEngine = $c->get(PlatesEngine::class);
+        /** @var ViewEngine $viewEngine */
+        $viewEngine = $c->get(ViewEngine::class);
         $viewEngine->addFolder('testpackage', __DIR__ . '/View/TestPackage/');
 
         $c[TestPackageController::class] = $c->factory(function (Container $c) {
-            /** @var PlatesEngine $viewEngine */
-            $viewEngine = $c->get(PlatesEngine::class);
+            /** @var ViewEngine $viewEngine */
+            $viewEngine = $c->get(ViewEngine::class);
 
             return new TestPackageController($viewEngine);
         });

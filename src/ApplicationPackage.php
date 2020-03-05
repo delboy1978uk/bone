@@ -14,7 +14,7 @@ use Bone\Log\LogPackage;
 use Bone\Controller\DownloadController;
 use Bone\Router\Router;
 use Bone\Router\RouterConfigInterface;
-use Bone\View\PlatesEngine;
+use Bone\View\ViewEngine;
 use Bone\I18n\Service\TranslatorFactory;
 use Bone\View\ViewPackage;
 use League\Plates\Template\Folders;
@@ -188,8 +188,8 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setupVendorViewOverrides(Container $c): void
     {
-        /** @var PlatesEngine $viewEngine */
-        $viewEngine = $c->get(PlatesEngine::class);
+        /** @var ViewEngine $viewEngine */
+        $viewEngine = $c->get(ViewEngine::class);
         $views = $c->get('views');
         $registeredViews = $viewEngine->getFolders();
 
@@ -202,7 +202,7 @@ class ApplicationPackage implements RegistrationInterface
      * @param string $view
      * @param string $folder
      * @param array $registeredViews
-     * @param PlatesEngine $viewEngine
+     * @param ViewEngine $viewEngine
      */
     private function overrideViewFolder(string $view, string $folder, Folders $registeredViews): void
     {

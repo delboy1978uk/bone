@@ -3,7 +3,7 @@
 use Barnacle\Container;
 use Bone\ApplicationPackage;
 use Bone\Router\Router;
-use Bone\View\PlatesEngine;
+use Bone\View\ViewEngine;
 use Bone\Server\Environment;
 use Bone\I18n\Http\Middleware\I18nHandler;
 use Bone\I18n\Service\TranslatorFactory;
