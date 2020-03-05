@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Bone;
 
@@ -16,8 +16,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class Application
 {
-    /** @var Container $registry */
-    private $treasureChest;
+    /** @var Container $container */
+    private $container;
 
     /** @var string $configFolder */
     private $configFolder = 'config';
@@ -31,7 +31,6 @@ class Application
      *  This ship is a singleton!
      */
     private function __construct(){}
-
     private function __clone(){}
 
 
@@ -48,9 +47,10 @@ class Application
             $inst = new Application();
             $session = SessionManager::getInstance();
             SessionManager::sessionStart('app');
-            $inst->treasureChest = new Container();
-            $inst->treasureChest[SessionManager::class] = $session;
+            $inst->container = new Container();
+            $inst->container[SessionManager::class] = $session;
             $env = getenv('APPLICATION_ENV');
+
             if ($env) {
                 $inst->setEnvironment($env);
             }
@@ -65,16 +65,14 @@ class Application
     public function bootstrap(): Container
     {
         $env = new Environment($_SERVER);
-        $router = $this->treasureChest[Router::class] = new Router();
-
+        $router = $this->container[Router::class] = new Router();
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $config[Environment::class] = $env;
         $config[SiteConfig::class] = new SiteConfig($config, $env);
-
         $package = new ApplicationPackage($config, $router);
-        $package->addToContainer($this->treasureChest);
+        $package->addToContainer($this->container);
 
-        return $this->treasureChest;
+        return $this->container;
     }
 
 
@@ -91,7 +89,7 @@ class Application
         $this->bootstrap();
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         /** @var RequestHandlerInterface $stack */
-        $stack = $this->treasureChest->get(Stack::class);
+        $stack = $this->container->get(Stack::class);
 
         try {
             $response = $stack->handle($request);
@@ -112,7 +110,7 @@ class Application
      */
     public function getContainer(): Container
     {
-        return $this->treasureChest;
+        return $this->container;
     }
 
     /**
