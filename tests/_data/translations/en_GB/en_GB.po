@@ -15,7 +15,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: tests/unit\n"
 
-#: tests/unit/BoneMvcControllerTest.php:238
-#: tests/unit/BoneMvcControllerTest.php:240
+#: tests/unit/BoneControllerTest.php:238
+#: tests/unit/BoneControllerTest.php:240
 msgid "greeting"
 msgstr "Hello"

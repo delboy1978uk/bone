@@ -2,6 +2,6 @@
 
 return [
     'views' => [
-        'bonemvcuser' => 'src/App/View/bone-user',
+        'boneuser' => 'src/App/View/bone-user',
     ],
 ];

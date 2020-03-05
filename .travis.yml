@@ -23,4 +23,4 @@ after_script:
   - php ocular.phar code-coverage:upload --format=php-clover tests/_output/coverage.xml
 
 notifications:
-  irc: "irc.freenode.org#bonemvc"
+  irc: "irc.freenode.org#boneframework"

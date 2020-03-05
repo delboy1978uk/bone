@@ -2,14 +2,14 @@
 
 
 use Bone\Application;
-use BoneMvc\Module\App\AppPackage;
-use BoneMvc\Module\BoneMvcDoctrine\BoneMvcDoctrinePackage;
-use BoneMvc\Module\BoneMvcUser\BoneMvcUserPackage;
+use Bone\App\AppPackage;
+use Bone\BoneDoctrine\BoneDoctrinePackage;
+use Bone\User\BoneUserPackage;
 use BoneTest\TestPackage\TestPackagePackage;
 use Codeception\TestCase\Test;
 use Laminas\Diactoros\Response;
 
-class BoneMvcApplicationTest extends Test
+class BoneApplicationTest extends Test
 {
     /**
      * @var \UnitTester

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BoneMVC\n"
+"Project-Id-Version: Bone\n"
 "POT-Creation-Date: 2018-11-06 18:48+0100\n"
 "PO-Revision-Date: 2018-11-06 19:39+0100\n"
 "Last-Translator: Derek McLean <delboy1978uk@gmail.com>\n"
