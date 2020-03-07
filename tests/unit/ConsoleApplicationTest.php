@@ -1,6 +1,6 @@
 <?php
 
-use Bone\ConsoleApplication;
+use Bone\Console\ConsoleApplication;
 use Codeception\TestCase\Test;
 
 class ConsoleApplicationTest extends Test
