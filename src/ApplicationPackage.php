@@ -62,6 +62,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupDownloadController($c);
         $this->setupRouteFirewall($c);
         $this->setupMiddlewareStack($c);
+        $this->setupConsoleApp($c);
     }
 
     /**
@@ -89,11 +90,113 @@ class ApplicationPackage implements RegistrationInterface
     private function setupPackages(Container $c)
     {
         // set up the modules and vendor package modules
+        $c['consoleCommands'] = [];
         $packages = $c->get('packages');
+        $this->addEntityPathsFromPackages($packages, $c);
+
+        reset($packages);
+
+        foreach ($packages as $packageName) {
+            if (class_exists($packageName)) {
+                $this->registerPackage($packageName, $c);
+            }
+        }
+    }
+
+    /**
+     * @param string $packageName
+     * @param Container $c
+     */
+    private function registerPackage(string $packageName, Container $c): void
+    {
+        /** @var RegistrationInterface $package */
+        $package = new $packageName();
+        $package->addToContainer($c);
+        $this->registerRoutes($package, $c);
+        $this->registerTranslations($package, $c);
+        $this->registerMiddleware($package, $c);
+        $this->registerConsoleCommands($package, $c);
+    }
+
+    /**
+     * @param RegistrationInterface $package
+     */
+    private function registerConsoleCommands(RegistrationInterface $package, Container $c): void
+    {
+        $consoleCommands = $c->get('consoleCommands');
+
+        if ($package instanceof CommandRegistrationInterface) {
+            $commands = $package->registerConsoleCommands($c);
+
+            foreach ($commands as $command) {
+                $consoleCommands[] = $command;
+            }
+        }
+
+        $c['consoleCommands'] = $consoleCommands;
+    }
+
+    /**
+     * @param RegistrationInterface $package
+     */
+    private function registerMiddleware(RegistrationInterface $package, Container $c): void
+    {
+        if ($package instanceof MiddlewareAwareInterface) {
+            $stack = $c->get(Stack::class);
+            $package->addMiddleware($stack, $c);
+        }
+    }
+
+    /**
+     * @param RegistrationInterface $package
+     */
+    private function registerRoutes(RegistrationInterface $package, Container $c): void
+    {
+        if ($package instanceof RouterConfigInterface) {
+            $package->addRoutes($c, $this->router);
+        }
+    }
+
+    /**
+     * @param RegistrationInterface $package
+     */
+    private function registerTranslations(RegistrationInterface $package, Container $c): void 
+    {
         $i18n = $c->get('i18n');
         /** @var Translator $translator */
         $translator = $c->get(Translator::class);
 
+        if ($package instanceof I18nRegistrationInterface) {
+            foreach ($i18n['supported_locales'] as $locale) {
+                $factory = new TranslatorFactory();
+                $factory->addPackageTranslations($translator, $package, $locale);
+            }
+        }
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setupConsoleApp(Container $c): void
+    {
+        $c[ConsoleApplication::class] = $c->factory(function(Container $c) {
+            $app = new ConsoleApplication();
+            $consoleCommands = $c->get('consoleCommands');
+
+            foreach($consoleCommands as $command) {
+                $app->addCommands($consoleCommands);
+            }
+
+            return $app;
+        });
+    }
+
+    /**
+     * @param array $packages
+     * @param Container $c
+     */
+    private function addEntityPathsFromPackages(array $packages, Container $c): void
+    {
         foreach ($packages as $packageName) {
             if (class_exists($packageName)) {
                 /** @var RegistrationInterface $package */
@@ -106,54 +209,6 @@ class ApplicationPackage implements RegistrationInterface
                 }
             }
         }
-
-        reset($packages);
-        $consoleCommands = [];
-
-        foreach ($packages as $packageName) {
-            if (class_exists($packageName)) {
-                /** @var RegistrationInterface $package */
-                $package = new $packageName();
-                $package->addToContainer($c);
-
-                if ($package instanceof RouterConfigInterface) {
-                    $package->addRoutes($c, $this->router);
-                }
-
-                if ($package instanceof I18nRegistrationInterface) {
-                    foreach ($i18n['supported_locales'] as $locale) {
-                        $factory = new TranslatorFactory();
-                        $factory->addPackageTranslations($translator, $package, $locale);
-                    }
-                }
-
-                if ($package instanceof MiddlewareAwareInterface) {
-                    $stack = $c->get(Stack::class);
-                    $package->addMiddleware($stack, $c);
-                }
-
-                if ($package instanceof CommandRegistrationInterface) {
-                    $stack = $c->get(Stack::class);
-                    $commands = $package->registerConsoleCommands($c);
-
-                    foreach ($commands as $command) {
-                        $consoleCommands[] = $command;
-                    }
-                }
-            }
-        }
-
-        $c['consoleCommands'] = $consoleCommands;
-
-        $c[ConsoleApplication::class] = $c->factory(function(Container $c) {
-            $app = new ConsoleApplication();
-            $consoleCommands = $c->get('consoleCommands');
-            foreach($consoleCommands as $command) {
-                $app->addCommands($consoleCommands);
-            }
-
-            return $app;
-        });
     }
 
     /**
