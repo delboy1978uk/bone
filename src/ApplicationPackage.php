@@ -4,6 +4,8 @@ namespace Bone;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\Console\CommandRegistrationInterface;
+use Bone\Console\ConsoleApplication;
 use Bone\Db\DbPackage;
 use Bone\Firewall\FirewallPackage;
 use Bone\Http\Middleware\Stack;
@@ -104,7 +106,10 @@ class ApplicationPackage implements RegistrationInterface
                 }
             }
         }
+
         reset($packages);
+        $consoleCommands = [];
+
         foreach ($packages as $packageName) {
             if (class_exists($packageName)) {
                 /** @var RegistrationInterface $package */
@@ -126,8 +131,29 @@ class ApplicationPackage implements RegistrationInterface
                     $stack = $c->get(Stack::class);
                     $package->addMiddleware($stack, $c);
                 }
+
+                if ($package instanceof CommandRegistrationInterface) {
+                    $stack = $c->get(Stack::class);
+                    $commands = $package->registerConsoleCommands($c);
+
+                    foreach ($commands as $command) {
+                        $consoleCommands[] = $command;
+                    }
+                }
             }
         }
+
+        $c['consoleCommands'] = $consoleCommands;
+
+        $c[ConsoleApplication::class] = $c->factory(function(Container $c) {
+            $app = new ConsoleApplication();
+            $consoleCommands = $c->get('consoleCommands');
+            foreach($consoleCommands as $command) {
+                $app->addCommands($consoleCommands);
+            }
+
+            return $app;
+        });
     }
 
     /**
