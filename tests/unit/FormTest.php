@@ -19,7 +19,7 @@ class FormTest extends Test
     public function testForm()
     {
         $translator = $this->getMockBuilder(\Laminas\I18n\Translator\Translator::class)->getMock();
-        $form = new \Bone\Form('testform', $translator);
+        $form = new \Bone\I18n\Form('testform', $translator);
         $form->init();
         $this->assertInstanceOf(\Laminas\I18n\Translator\Translator::class, $form->getTranslator());
     }
