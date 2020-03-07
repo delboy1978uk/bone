@@ -227,8 +227,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param string $view
      * @param string $folder
-     * @param array $registeredViews
-     * @param ViewEngine $viewEngine
+     * @param Folders $registeredViews
      */
     private function overrideViewFolder(string $view, string $folder, Folders $registeredViews): void
     {

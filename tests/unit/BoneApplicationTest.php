@@ -1,9 +1,10 @@
 <?php
 
-
+use Barnacle\Container;
 use Bone\Application;
 use Bone\App\AppPackage;
 use Bone\BoneDoctrine\BoneDoctrinePackage;
+use Bone\Console\ConsoleApplication;
 use Bone\User\BoneUserPackage;
 use BoneTest\TestPackage\TestPackagePackage;
 use Codeception\TestCase\Test;
@@ -34,7 +35,6 @@ class BoneApplicationTest extends Test
         $this->assertInstanceOf(Application::class, $app);
     }
 
-
     /**
      * @throws Exception
      */
@@ -42,7 +42,19 @@ class BoneApplicationTest extends Test
     {
         $application = Application::ahoy();
         $container = $application->getContainer();
-        $this->assertInstanceOf('Barnacle\Container', $container);
+        $this->assertInstanceOf(Container::class, $container);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testBootstrap()
+    {
+        $application = Application::ahoy();
+        $application->setConfigFolder('tests/_data/config');
+        $application->bootstrap();
+        $consoleApp = $application->getContainer()->get(ConsoleApplication::class);
+        $this->assertInstanceOf(ConsoleApplication::class, $consoleApp);
     }
 
     /**

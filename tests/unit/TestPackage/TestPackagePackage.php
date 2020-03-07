@@ -6,17 +6,21 @@ namespace BoneTest\TestPackage;
 
 use Barnacle\Container;
 use Barnacle\RegistrationInterface;
+use Bone\Console\CommandRegistrationInterface;
+use Bone\Http\Middleware\Stack;
+use Bone\Http\MiddlewareAwareInterface;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Router\Router;
 use Bone\Router\RouterConfigInterface;
 use Bone\View\ViewEngine;
+use BoneTest\TestPackage\Command\TestCommand;
 use BoneTest\TestPackage\Controller\TestPackageApiController;
 use BoneTest\TestPackage\Controller\TestPackageController;
 use League\Route\RouteGroup;
 use League\Route\Strategy\JsonStrategy;
 use Laminas\Diactoros\ResponseFactory;
 
-class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface
+class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface, MiddlewareAwareInterface, CommandRegistrationInterface
 {
     /**
      * @param Container $c
@@ -83,4 +87,16 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
 
         return $router;
     }
+
+    public function addMiddleware(Stack $stack, Container $container): void
+    {
+        // do nothing, it's only a test!
+    }
+
+    public function registerConsoleCommands(Container $container): array
+    {
+        return [new TestCommand()];
+    }
+
+
 }
