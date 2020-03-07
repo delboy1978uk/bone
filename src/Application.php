@@ -90,15 +90,7 @@ class Application
         $request = ServerRequestFactory::fromGlobals($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
         /** @var RequestHandlerInterface $stack */
         $stack = $this->container->get(Stack::class);
-
-        try {
-            $response = $stack->handle($request);
-        } catch (NotFoundException $e) {
-            $response = new RedirectResponse($e->getMessage());
-            if ($e->getRequest()->getMethod() !== 'GET') {
-                $response = $stack->handle($request);
-            }
-        }
+        $response = $stack->handle($request);
 
         (new SapiEmitter)->emit($response);
 
