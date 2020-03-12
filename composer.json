@@ -13,7 +13,7 @@
     "delboy1978uk/barnacle": "^2.2",
     "delboy1978uk/bone-db": "^1.0",
     "delboy1978uk/bone-console": "^1.0",
-    "delboy1978uk/bone-controller": "^1.0",
+    "delboy1978uk/bone-controller": "^1.1",
     "delboy1978uk/bone-firewall": "^1.1",
     "delboy1978uk/bone-http": "^1.0",
     "delboy1978uk/bone-i18n": "^1.1",
@@ -25,10 +25,7 @@
     "delboy1978uk/icon": "^1.0",
     "delboy1978uk/session": "^1.1",
     "laminas/laminas-diactoros": "2.*",
-    "laminas/laminas-httphandlerrunner": "^1.1",
-    "laminas/laminas-mail": "^2.10",
-    "laminas/laminas-servicemanager": "^3.3",
-    "league/route": "dev-master"
+    "laminas/laminas-httphandlerrunner": "^1.1"
   },
   "require-dev": {
     "codeception/codeception": "^2.2",
