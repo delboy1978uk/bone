@@ -2,6 +2,7 @@
 
 namespace BoneTest\Mvc\Controller;
 
+use Bone\Controller\ControllerException;
 use Bone\Exception;
 use Bone\Controller\DownloadController;
 use Codeception\TestCase\Test;
@@ -24,16 +25,16 @@ class DownloadControllerTest extends Test
 
     public function testControllerThrows404()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ControllerException::class);
         $controller = new DownloadController('tests/_data');
         $request = new ServerRequest();
         $request = $request->withQueryParams(['file' => '/nothing.png']);
         $controller->downloadAction($request, []);
     }
 
-    public function testDownloadActionThrows4009()
+    public function testDownloadActionThrows400()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ControllerException::class);
         $controller = new DownloadController('tests/_data');
         $request = new ServerRequest();
         $request = $request->withQueryParams(['oops' => '/nothing.png']);
