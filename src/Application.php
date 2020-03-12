@@ -5,7 +5,6 @@ namespace Bone;
 use Barnacle\Container;
 use Bone\Http\Middleware\Stack;
 use Bone\Router\Router;
-use Bone\Router\NotFoundException;
 use Bone\Server\Environment;
 use Bone\Server\SiteConfig;
 use Del\SessionManager;

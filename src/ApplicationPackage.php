@@ -6,6 +6,7 @@ use Barnacle\Container;
 use Barnacle\RegistrationInterface;
 use Bone\Console\CommandRegistrationInterface;
 use Bone\Console\ConsoleApplication;
+use Bone\Console\ConsolePackage;
 use Bone\Db\DbPackage;
 use Bone\Firewall\FirewallPackage;
 use Bone\Http\Middleware\Stack;
@@ -16,6 +17,7 @@ use Bone\Log\LogPackage;
 use Bone\Controller\DownloadController;
 use Bone\Router\Router;
 use Bone\Router\RouterConfigInterface;
+use Bone\Router\RouterPackage;
 use Bone\View\ViewEngine;
 use Bone\I18n\Service\TranslatorFactory;
 use Bone\View\ViewPackage;
@@ -55,6 +57,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupLogs($c);
         $this->setupPdoConnection($c);
         $this->setupViewEngine($c);
+        $this->setupRouter($c);
         $this->initMiddlewareStack($c);
         $this->setupTranslator($c);
         $this->setupPackages($c);
@@ -81,6 +84,15 @@ class ApplicationPackage implements RegistrationInterface
     private function setupViewEngine(Container $c)
     {
         $package = new ViewPackage();
+        $package->addToContainer($c);
+    }
+
+    /**
+     * @param Container $c
+     */
+    private function setupRouter(Container $c)
+    {
+        $package = new RouterPackage();
         $package->addToContainer($c);
     }
 
@@ -179,16 +191,8 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setupConsoleApp(Container $c): void
     {
-        $c[ConsoleApplication::class] = $c->factory(function(Container $c) {
-            $app = new ConsoleApplication();
-            $consoleCommands = $c->get('consoleCommands');
-
-            foreach($consoleCommands as $command) {
-                $app->addCommands($consoleCommands);
-            }
-
-            return $app;
-        });
+        $package = new ConsolePackage();
+        $package->addToContainer($c);
     }
 
     /**

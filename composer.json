@@ -28,8 +28,7 @@
     "laminas/laminas-httphandlerrunner": "^1.1",
     "laminas/laminas-mail": "^2.10",
     "laminas/laminas-servicemanager": "^3.3",
-    "league/route": "dev-master",
-    "monolog/monolog": "^1.23"
+    "league/route": "dev-master"
   },
   "require-dev": {
     "codeception/codeception": "^2.2",
