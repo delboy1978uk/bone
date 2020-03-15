@@ -1,6 +1,6 @@
 <?php
 
-use Bone\View\Traits\HasViewTrait;
+use Bone\Traits\HasViewTrait;
 use Bone\View\ViewEngine;
 use Codeception\TestCase\Test;
 

@@ -2,7 +2,7 @@
 
 use Bone\Server\Environment;
 use Bone\Server\SiteConfig;
-use Bone\Server\Traits\HasSiteConfigTrait;
+use Bone\Traits\HasSiteConfigTrait;
 use Codeception\TestCase\Test;
 use Del\SessionManager;
 
