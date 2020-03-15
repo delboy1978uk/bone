@@ -8,7 +8,7 @@ use Bone\Controller\Init;
 use Bone\View\ViewEngine;
 use Bone\Server\SessionAwareInterface;
 use Bone\Server\SiteConfig;
-use Bone\Traits\HasSessionTrait;
+use Bone\Server\Traits\HasSessionTrait;
 use Codeception\TestCase\Test;
 use Del\SessionManager;
 use Laminas\I18n\Translator\Translator;

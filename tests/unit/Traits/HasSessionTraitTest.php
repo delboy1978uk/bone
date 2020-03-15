@@ -1,6 +1,6 @@
 <?php
 
-use Bone\Traits\HasSessionTrait;
+use Bone\Server\Traits\HasSessionTrait;
 use Codeception\TestCase\Test;
 use Del\SessionManager;
 
