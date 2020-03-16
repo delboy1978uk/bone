@@ -1,6 +1,6 @@
 <?php
 
-use Bone\Traits\HasLayoutTrait;
+use Bone\Router\Traits\HasLayoutTrait;
 use Codeception\TestCase\Test;
 
 class HasLayoutTraitTest extends Test
