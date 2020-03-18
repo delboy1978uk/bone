@@ -8,7 +8,7 @@
 composer create-project delboy1978uk/bonemvc your/path/here ^3.0
 ```
 
-These are the Bone MVC Framework vendor library files.
+These are the core Bone Framework vendor library files.
 The default project is the Bone Skeleton App at https://github.com/delboy1978uk/bonemvc
 Running the above command will clone the skeleton app and install this repository in the vendor folder.
 

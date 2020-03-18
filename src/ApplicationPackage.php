@@ -3,6 +3,7 @@
 namespace Bone;
 
 use Barnacle\Container;
+use Barnacle\EntityRegistrationInterface;
 use Barnacle\RegistrationInterface;
 use Bone\Console\CommandRegistrationInterface;
 use Bone\Console\ConsoleApplication;
@@ -206,7 +207,7 @@ class ApplicationPackage implements RegistrationInterface
                 /** @var RegistrationInterface $package */
                 $package = new $packageName();
 
-                if ($package->hasEntityPath()) {
+                if ($package instanceof EntityRegistrationInterface) {
                     $paths = $c['entity_paths'];
                     $paths[] = $package->getEntityPath();
                     $c['entity_paths'] = $paths;
