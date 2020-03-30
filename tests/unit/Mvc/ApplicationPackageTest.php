@@ -36,8 +36,6 @@ class ApplicationPackageTest extends Test
         $config = $env->fetchConfig('tests/_data/config', getenv('APPLICATION_ENV'));
         $router = $container[Router::class] = new Router();
         $package = new ApplicationPackage($config, $router);
-        $this->assertEquals('', $package->getEntityPath());
-        $this->assertFalse($package->hasEntityPath());
         $package->addToContainer($container);
         $pdo = $container->get(PDO::class);
         $this->assertInstanceOf(PDO::class, $pdo);
