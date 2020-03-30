@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BoneTest\TestPackage;
 
 use Barnacle\Container;
+use Barnacle\EntityRegistrationInterface;
 use Barnacle\RegistrationInterface;
 use Bone\Console\CommandRegistrationInterface;
 use Bone\Http\Middleware\Stack;
@@ -20,7 +21,7 @@ use League\Route\RouteGroup;
 use League\Route\Strategy\JsonStrategy;
 use Laminas\Diactoros\ResponseFactory;
 
-class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface, MiddlewareAwareInterface, CommandRegistrationInterface
+class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface, MiddlewareAwareInterface, CommandRegistrationInterface, EntityRegistrationInterface
 {
     /**
      * @param Container $c
@@ -55,14 +56,6 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
     public function getEntityPath(): string
     {
         return 'TestPackage/Entity';
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasEntityPath(): bool
-    {
-        return true;
     }
 
     /**
