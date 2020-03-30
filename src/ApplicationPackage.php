@@ -60,6 +60,7 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupViewEngine($c);
         $this->setupRouter($c);
         $this->initMiddlewareStack($c);
+        $this->initConsoleApp($c);
         $this->setupTranslator($c);
         $this->setupPackages($c);
         $this->setupVendorViewOverrides($c);
@@ -190,6 +191,14 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param Container $c
      */
+    private function initConsoleApp(Container $c): void
+    {
+        $c[ConsoleApplication::class] = new ConsoleApplication();
+    }
+
+    /**
+     * @param Container $c
+     */
     private function setupConsoleApp(Container $c): void
     {
         $package = new ConsolePackage();
@@ -296,22 +305,6 @@ class ApplicationPackage implements RegistrationInterface
             $currentFolder = $registeredViews->get($view);
             $currentFolder->setPath($folder);
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityPath(): string
-    {
-        return '';
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasEntityPath(): bool
-    {
-        return false;
     }
 
     /**
