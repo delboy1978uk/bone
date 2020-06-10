@@ -29,7 +29,8 @@ class Application
      *  There be nay copyin' o' th'ship either
      *  This ship is a singleton!
      */
-    private function __construct(){}
+    private function __construct(){
+    }
     private function __clone(){}
 
 
@@ -44,10 +45,14 @@ class Application
         static $inst = null;
         if ($inst === null) {
             $inst = new Application();
+
+            $factories = require './factories.php';
+            $inst->container = new Container($factories);
+
             $session = SessionManager::getInstance();
             SessionManager::sessionStart('app');
-            $inst->container = new Container();
             $inst->container[SessionManager::class] = $session;
+
             $env = getenv('APPLICATION_ENV');
 
             if ($env) {
@@ -68,6 +73,10 @@ class Application
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $config[Environment::class] = $env;
         $config[SiteConfig::class] = new SiteConfig($config, $env);
+
+        $packageManager = $this->container->get(PackageManager::class);
+
+
         $package = new ApplicationPackage($config, $router);
         $package->addToContainer($this->container);
 
