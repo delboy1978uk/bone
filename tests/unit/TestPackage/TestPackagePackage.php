@@ -14,6 +14,7 @@ use Bone\I18n\I18nRegistrationInterface;
 use Bone\Router\Router;
 use Bone\Router\RouterConfigInterface;
 use Bone\View\ViewEngine;
+use Bone\View\ViewRegistrationInterface;
 use BoneTest\TestPackage\Command\TestCommand;
 use BoneTest\TestPackage\Controller\TestPackageApiController;
 use BoneTest\TestPackage\Controller\TestPackageController;
@@ -21,17 +22,13 @@ use League\Route\RouteGroup;
 use League\Route\Strategy\JsonStrategy;
 use Laminas\Diactoros\ResponseFactory;
 
-class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface, MiddlewareAwareInterface, CommandRegistrationInterface, EntityRegistrationInterface
+class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface, MiddlewareAwareInterface, CommandRegistrationInterface, EntityRegistrationInterface, ViewRegistrationInterface
 {
     /**
      * @param Container $c
      */
     public function addToContainer(Container $c)
     {
-        /** @var ViewEngine $viewEngine */
-        $viewEngine = $c->get(ViewEngine::class);
-        $viewEngine->addFolder('testpackage', __DIR__ . '/View/TestPackage/');
-
         $c[TestPackageController::class] = $c->factory(function (Container $c) {
             /** @var ViewEngine $viewEngine */
             $viewEngine = $c->get(ViewEngine::class);
@@ -43,6 +40,17 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
             return new TestPackageApiController();
         });
     }
+
+    /**
+     * @return array
+     */
+    public function addViews(): array
+    {
+        return [
+            'testpackage' => __DIR__ . '/View/testpackage/'
+        ];
+    }
+
 
     public function getTranslationsDirectory(): string
     {

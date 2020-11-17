@@ -184,7 +184,7 @@ class ApplicationPackage implements RegistrationInterface
             $engine = $c->get(ViewEngine::class);
 
             foreach ($views as $name => $folder) {
-                $engine->addFolder( $name, $folder);
+                $engine->addFolder($name, $folder);
             }
         }
     }
