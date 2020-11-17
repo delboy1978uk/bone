@@ -22,6 +22,7 @@ use Bone\Router\RouterPackage;
 use Bone\View\ViewEngine;
 use Bone\I18n\Service\TranslatorFactory;
 use Bone\View\ViewPackage;
+use Bone\View\ViewRegistrationInterface;
 use League\Plates\Template\Folders;
 use League\Route\Strategy\JsonStrategy;
 use Laminas\Diactoros\ResponseFactory;
@@ -127,6 +128,7 @@ class ApplicationPackage implements RegistrationInterface
         $package = new $packageName();
         $package->addToContainer($c);
         $this->registerRoutes($package, $c);
+        $this->registerViews($package, $c);
         $this->registerTranslations($package, $c);
         $this->registerMiddleware($package, $c);
         $this->registerConsoleCommands($package, $c);
@@ -168,6 +170,22 @@ class ApplicationPackage implements RegistrationInterface
     {
         if ($package instanceof RouterConfigInterface) {
             $package->addRoutes($c, $this->router);
+        }
+    }
+
+    /**
+     * @param RegistrationInterface $package
+     */
+    private function registerViews(RegistrationInterface $package, Container $c): void
+    {
+        if ($package instanceof ViewRegistrationInterface) {
+            $views = $package->addViews();
+            /** @var ViewEngine $engine */
+            $engine = $c->get(ViewEngine::class);
+
+            foreach ($views as $name => $folder) {
+                $engine->addFolder( $name, $folder);
+            }
         }
     }
 
