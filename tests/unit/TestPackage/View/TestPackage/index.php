@@ -1,1 +1,0 @@
-<h1>TestPackage</h1><p class="lead">Lorem ipsum dolor sit amet</p>

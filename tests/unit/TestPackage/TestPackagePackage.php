@@ -47,7 +47,7 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
     public function addViews(): array
     {
         return [
-            'testpackage' => __DIR__ . '/View/testpackage/'
+            'testpackage' => __DIR__ . '/View/test/'
         ];
     }
 
