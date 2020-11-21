@@ -64,7 +64,6 @@ class Application
     public function bootstrap(): Container
     {
         $env = new Environment($_SERVER);
-        $router = $this->container[Router::class] = new Router();
         $config = $env->fetchConfig($this->configFolder, $this->environment);
         $config[Environment::class] = $env;
         $config[SiteConfig::class] = new SiteConfig($config, $env);

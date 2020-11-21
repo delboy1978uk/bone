@@ -42,10 +42,9 @@ class ApplicationPackage implements RegistrationInterface
      * @param array $config
      * @param Router $router
      */
-    public function __construct(array $config, Router $router)
+    public function __construct(array $config)
     {
         $this->config = $config;
-        $this->router = $router;
     }
 
     /**
@@ -58,9 +57,9 @@ class ApplicationPackage implements RegistrationInterface
         $this->setConfigArray($c);
         $this->setupLogs($c);
         $this->setupPdoConnection($c);
-        $this->setupViewEngine($c);
         $this->setupRouter($c);
         $this->initMiddlewareStack($c);
+        $this->setupViewEngine($c);
         $this->initConsoleApp($c);
         $this->setupTranslator($c);
         $this->setupPackages($c);
@@ -88,6 +87,7 @@ class ApplicationPackage implements RegistrationInterface
     {
         $package = new ViewPackage();
         $package->addToContainer($c);
+        $package->addMiddleware($c->get(Stack::class), $c);
     }
 
     /**
@@ -97,6 +97,7 @@ class ApplicationPackage implements RegistrationInterface
     {
         $package = new RouterPackage();
         $package->addToContainer($c);
+        $this->router = $c->get(Router::class);
     }
 
     /**
@@ -180,11 +181,16 @@ class ApplicationPackage implements RegistrationInterface
     {
         if ($package instanceof ViewRegistrationInterface) {
             $views = $package->addViews();
+            $extensions = $package->addViewExtensions($c);
             /** @var ViewEngine $engine */
             $engine = $c->get(ViewEngine::class);
 
             foreach ($views as $name => $folder) {
                 $engine->addFolder($name, $folder);
+            }
+
+            foreach ($extensions as $extension) {
+                $engine->loadExtension($extension);
             }
         }
     }
@@ -284,6 +290,7 @@ class ApplicationPackage implements RegistrationInterface
     {
         $pckage = new FirewallPackage();
         $pckage->addToContainer($c);
+        $pckage->addMiddleware($c->get(Stack::class), $c);
     }
 
     /**
@@ -330,8 +337,7 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function initMiddlewareStack(Container $c): void
     {
-        $router = $c->get(Router::class);
-        $c[Stack::class] = new Stack($router);
+        $c[Stack::class] = new Stack($this->router);
     }
 
     /**
