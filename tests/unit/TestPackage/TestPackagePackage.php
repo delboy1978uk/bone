@@ -89,26 +89,41 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
         return $router;
     }
 
-    public function getMiddleware(Stack $stack, Container $container): void
+    /**
+     * @param Stack $stack
+     * @param Container $container
+     * @return array
+     */
+    public function getMiddleware(Stack $stack, Container $container): array
     {
         return [];
     }
 
+    /**
+     * @param Container $c
+     * @return array
+     */
     public function getGlobalMiddleware(Container $c): array
     {
         return [];
     }
 
+    /**
+     * @param Container $c
+     * @return array
+     */
     public function addViewExtensions(Container $c): array
     {
         return [];
     }
 
 
+    /**
+     * @param Container $container
+     * @return array
+     */
     public function registerConsoleCommands(Container $container): array
     {
         return [new TestCommand()];
     }
-
-
 }
