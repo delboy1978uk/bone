@@ -5,7 +5,7 @@
 
 #### install:
 ```
-composer create-project delboy1978uk/bonemvc your/path/here ^3.0
+composer create-project delboy1978uk/boneframework your/path/here
 ```
 
 These are the core Bone Framework vendor library files.
