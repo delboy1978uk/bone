@@ -10,8 +10,9 @@ use Bone\Console\ConsoleApplication;
 use Bone\Console\ConsolePackage;
 use Bone\Db\DbPackage;
 use Bone\Firewall\FirewallPackage;
+use Bone\Http\GlobalMiddlewareRegistrationInterface;
 use Bone\Http\Middleware\Stack;
-use Bone\Http\MiddlewareAwareInterface;
+use Bone\Http\MiddlewareRegistrationInterface;
 use Bone\I18n\I18nPackage;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Log\LogPackage;
@@ -87,7 +88,8 @@ class ApplicationPackage implements RegistrationInterface
     {
         $package = new ViewPackage();
         $package->addToContainer($c);
-        $package->addMiddleware($c->get(Stack::class), $c);
+        $this->addMiddlewaresToContainer($package, $c);
+        $this->addMiddlewaresToStack($package, $c);
     }
 
     /**
@@ -158,9 +160,41 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function registerMiddleware(RegistrationInterface $package, Container $c): void
     {
-        if ($package instanceof MiddlewareAwareInterface) {
-            $stack = $c->get(Stack::class);
-            $package->addMiddleware($stack, $c);
+        if ($package instanceof MiddlewareRegistrationInterface) {
+            $this->addMiddlewaresToContainer($package, $c);
+        }
+
+        if ($package instanceof GlobalMiddlewareRegistrationInterface) {
+            $this->addMiddlewaresToStack($package, $c);
+        }
+    }
+
+    /**
+     * @param MiddlewareRegistrationInterface $package
+     * @param Container $c
+     */
+    private function addMiddlewaresToContainer(MiddlewareRegistrationInterface $package, Container $c): void
+    {
+        $middlewares = $package->getMiddleware($c);
+        
+        foreach ($middlewares as $middleware) {
+            $className = get_class($middleware);
+            $c[$className] = $middleware;
+        }
+    }
+
+    /**
+     * @param GlobalMiddlewareRegistrationInterface $package
+     * @param Container $c
+     */
+    private function addMiddlewaresToStack(GlobalMiddlewareRegistrationInterface $package, Container $c): void
+    {
+        /** @var Stack $stack */
+        $stack = $c->get(Stack::class);
+        $middlewares = $package->getGlobalMiddleware($c);
+
+        foreach ($middlewares as $middleware) {
+            $stack->addMiddleWare($c->get($middleware));
         }
     }
 
@@ -257,7 +291,8 @@ class ApplicationPackage implements RegistrationInterface
     {
         $package = new I18nPackage();
         $package->addToContainer($c);
-        $package->addMiddleware($c->get(Stack::class), $c);
+        $this->addMiddlewaresToContainer($package, $c);
+        $this->addMiddlewaresToStack($package, $c);
     }
 
 
@@ -288,9 +323,10 @@ class ApplicationPackage implements RegistrationInterface
      */
     private function setupRouteFirewall(Container $c): void
     {
-        $pckage = new FirewallPackage();
-        $pckage->addToContainer($c);
-        $pckage->addMiddleware($c->get(Stack::class), $c);
+        $package = new FirewallPackage();
+        $package->addToContainer($c);
+        $this->addMiddlewaresToContainer($package, $c);
+        $this->addMiddlewaresToStack($package, $c);
     }
 
     /**

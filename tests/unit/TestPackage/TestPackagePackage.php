@@ -8,8 +8,8 @@ use Barnacle\Container;
 use Barnacle\EntityRegistrationInterface;
 use Barnacle\RegistrationInterface;
 use Bone\Console\CommandRegistrationInterface;
+use Bone\Http\GlobalMiddlewareRegistrationInterface;
 use Bone\Http\Middleware\Stack;
-use Bone\Http\MiddlewareAwareInterface;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Router\Router;
 use Bone\Router\RouterConfigInterface;
@@ -22,7 +22,7 @@ use League\Route\RouteGroup;
 use League\Route\Strategy\JsonStrategy;
 use Laminas\Diactoros\ResponseFactory;
 
-class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface, MiddlewareAwareInterface, CommandRegistrationInterface, EntityRegistrationInterface, ViewRegistrationInterface
+class TestPackagePackage implements RegistrationInterface, RouterConfigInterface, I18nRegistrationInterface, GlobalMiddlewareRegistrationInterface, CommandRegistrationInterface, EntityRegistrationInterface, ViewRegistrationInterface
 {
     /**
      * @param Container $c
@@ -89,10 +89,21 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
         return $router;
     }
 
-    public function addMiddleware(Stack $stack, Container $container): void
+    public function getMiddleware(Stack $stack, Container $container): void
     {
-        // do nothing, it's only a test!
+        return [];
     }
+
+    public function getGlobalMiddleware(Container $c): array
+    {
+        return [];
+    }
+
+    public function addViewExtensions(Container $c): array
+    {
+        return [];
+    }
+
 
     public function registerConsoleCommands(Container $container): array
     {
