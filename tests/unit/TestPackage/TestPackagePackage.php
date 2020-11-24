@@ -47,7 +47,9 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
     public function addViews(): array
     {
         return [
-            'testpackage' => __DIR__ . '/View/test/'
+            'testpackage' => __DIR__ . '/View/test/',
+            'error' => __DIR__ . '/View/error/',
+            'layouts' => __DIR__ . '/View/layouts/',
         ];
     }
 
@@ -90,11 +92,10 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
     }
 
     /**
-     * @param Stack $stack
      * @param Container $container
      * @return array
      */
-    public function getMiddleware(Stack $stack, Container $container): array
+    public function getMiddleware(Container $container): array
     {
         return [];
     }
