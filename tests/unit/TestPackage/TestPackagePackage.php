@@ -13,11 +13,14 @@ use Bone\Http\Middleware\Stack;
 use Bone\I18n\I18nRegistrationInterface;
 use Bone\Router\Router;
 use Bone\Router\RouterConfigInterface;
+use Bone\View\Extension\Plates\AlertBox;
 use Bone\View\ViewEngine;
 use Bone\View\ViewRegistrationInterface;
 use BoneTest\TestPackage\Command\TestCommand;
 use BoneTest\TestPackage\Controller\TestPackageApiController;
 use BoneTest\TestPackage\Controller\TestPackageController;
+use League\Plates\Engine;
+use League\Plates\Extension\ExtensionInterface;
 use League\Route\RouteGroup;
 use League\Route\Strategy\JsonStrategy;
 use Laminas\Diactoros\ResponseFactory;
@@ -115,7 +118,20 @@ class TestPackagePackage implements RegistrationInterface, RouterConfigInterface
      */
     public function addViewExtensions(Container $c): array
     {
-        return [];
+        $x = new class implements ExtensionInterface {
+
+            public function register(Engine $engine)
+            {
+                $engine->registerFunction('test', [$this, 'test']);
+            }
+
+            public function test(): string
+            {
+                return 'Whatever, it\' a test.';
+            }
+        };
+
+        return [$x];
     }
 
 

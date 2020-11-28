@@ -4,6 +4,7 @@ use Barnacle\Container;
 use Bone\ApplicationPackage;
 use Bone\Router\Router;
 use Bone\View\ViewEngine;
+use Bone\Server\SiteConfig;
 use Bone\Server\Environment;
 use Bone\I18n\Http\Middleware\I18nHandler;
 use Bone\I18n\Service\TranslatorFactory;
@@ -34,6 +35,7 @@ class ApplicationPackageTest extends Test
         $container = new Container();
         $env = new Environment($_SERVER);
         $config = $env->fetchConfig('tests/_data/config', getenv('APPLICATION_ENV'));
+        $container[SiteConfig::class] = new SiteConfig($config, $env);
         $router = $container[Router::class] = new Router();
         $package = new ApplicationPackage($config, $router);
         $package->addToContainer($container);
