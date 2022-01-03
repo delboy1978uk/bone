@@ -4,6 +4,7 @@ env:
   DB_DATABASE: awesome
   DB_USER: root
   DB_PASSWORD: 'root'
+  APPLICATION_ENV: ci
 
 on:
   push:
