@@ -2,8 +2,8 @@ name: main
 
 env:
   DB_DATABASE: awesome
-  DB_USER: dbuser
-  DB_PASSWORD: '[123456]'
+  DB_USER: root
+  DB_PASSWORD: 'root'
 
 on:
   push:
