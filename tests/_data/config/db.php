@@ -3,7 +3,7 @@
 return [
     'db' => [
         'driver' => 'pdo_mysql',
-        'host' => 'mariadb',
+        'host' => '127.0.0.1',
         'database' => 'awesome',
         'dbname' => 'awesome',
         'user' => 'dbuser',
