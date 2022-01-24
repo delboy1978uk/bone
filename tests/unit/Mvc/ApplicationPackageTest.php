@@ -24,17 +24,13 @@ class ApplicationPackageTest extends Test
     /** @var I18nHandler $middleware */
     private $middleware;
 
-    public function _before()
-    {
-
-    }
-
 
     public function testPackage()
     {
         $container = new Container();
         $env = new Environment($_SERVER);
         $config = $env->fetchConfig('tests/_data/config', getenv('APPLICATION_ENV'));
+        die(var_dump(get_env('APPLICATION_ENV')));
         $container[SiteConfig::class] = new SiteConfig($config, $env);
         $router = $container[Router::class] = new Router();
         $package = new ApplicationPackage($config, $router);
