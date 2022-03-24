@@ -42,19 +42,28 @@ class Application
     public static function ahoy()
     {
         static $inst = null;
+
         if ($inst === null) {
             $inst = new Application();
-            $session = SessionManager::getInstance();
-            SessionManager::sessionStart('app');
             $inst->container = new Container();
-            $inst->container[SessionManager::class] = $session;
+            $inst->initSession();
             $env = getenv('APPLICATION_ENV');
 
             if ($env) {
                 $inst->setEnvironment($env);
             }
         }
+
         return $inst;
+    }
+
+    private function initSession(): void
+    {
+        if (isset($_SERVER['SERVER_NAME'])) {
+            $session = SessionManager::getInstance();
+            SessionManager::sessionStart('app');
+            $this->container[SessionManager::class] = $session;
+        }
     }
 
     /**
