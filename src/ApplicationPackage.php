@@ -65,7 +65,6 @@ class ApplicationPackage implements RegistrationInterface
         $this->setupTranslator($c);
         $this->setupPackages($c);
         $this->setupVendorViewOverrides($c);
-        $this->setupDownloadController($c);
         $this->setupRouteFirewall($c);
         $this->setupMiddlewareStack($c);
         $this->setupConsoleApp($c);
@@ -176,7 +175,7 @@ class ApplicationPackage implements RegistrationInterface
     private function addMiddlewaresToContainer(MiddlewareRegistrationInterface $package, Container $c): void
     {
         $middlewares = $package->getMiddleware($c);
-        
+
         foreach ($middlewares as $middleware) {
             $className = get_class($middleware);
             $c[$className] = $middleware;
@@ -232,7 +231,7 @@ class ApplicationPackage implements RegistrationInterface
     /**
      * @param RegistrationInterface $package
      */
-    private function registerTranslations(RegistrationInterface $package, Container $c): void 
+    private function registerTranslations(RegistrationInterface $package, Container $c): void
     {
         $i18n = $c->get('i18n');
         /** @var Translator $translator */
@@ -304,18 +303,6 @@ class ApplicationPackage implements RegistrationInterface
     {
         $package = new DbPackage();
         $package->addToContainer($c);
-    }
-
-    /**
-     * @param Container $c
-     */
-    private function setupDownloadController(Container $c): void
-    {
-        $uploadDirectory = $c->get('uploads_dir');
-        $c[DownloadController::class] = new DownloadController($uploadDirectory);
-        $strategy = new JsonStrategy(new ResponseFactory());
-        $strategy->setContainer($c);
-        $this->router->map('GET', '/download', [DownloadController::class, 'downloadAction'])->setStrategy($strategy);
     }
 
     /**
