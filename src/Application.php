@@ -59,11 +59,13 @@ class Application
 
     private function initSession(): void
     {
+        $session = SessionManager::getInstance();
+
         if (isset($_SERVER['SERVER_NAME'])) {
-            $session = SessionManager::getInstance();
             SessionManager::sessionStart('app');
-            $this->container[SessionManager::class] = $session;
         }
+
+        $this->container[SessionManager::class] = $session;
     }
 
     /**
