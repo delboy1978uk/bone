@@ -29,6 +29,11 @@ jobs:
       - name: Create DB
         run: mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
