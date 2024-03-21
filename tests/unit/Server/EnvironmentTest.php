@@ -1,9 +1,9 @@
 <?php
 
 use Bone\Server\Environment;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class EnvironmentTest extends Test
+class EnvironmentTest extends Unit
 {
     const CONFIG_FOLDER = 'tests/_data/config';
 

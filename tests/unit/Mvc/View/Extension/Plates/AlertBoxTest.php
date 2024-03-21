@@ -3,9 +3,9 @@
 namespace BoneTest\Mvc\View\Extension\Plates;
 
 use Bone\View\Extension\Plates\AlertBox;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class AlertBoxTest extends Test
+class AlertBoxTest extends Unit
 {
     /**
      * @var \UnitTester

@@ -3,12 +3,12 @@
 use Bone\I18n\Http\Middleware\I18nMiddleware;
 use Bone\I18n\Service\TranslatorFactory;
 use BoneTest\Http\RequestHandler\I18nTestHandler;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;
 use Laminas\I18n\Translator\Loader\Gettext;
 
-class I18HandlerTest extends Test
+class I18HandlerTest extends Unit
 {
     /**
      * @var \UnitTester

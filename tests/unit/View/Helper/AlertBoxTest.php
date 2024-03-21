@@ -1,9 +1,9 @@
 <?php
 
 use Bone\View\Helper\AlertBox;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class AlertBoxTest extends Test
+class AlertBoxTest extends Unit
 {
     /**
      * @throws Exception

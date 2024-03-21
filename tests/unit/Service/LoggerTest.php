@@ -1,9 +1,9 @@
 <?php
 
 use Bone\Log\LoggerFactory;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class LoggerTest extends Test
+class LoggerTest extends Unit
 {
     /**
      * @throws Exception

@@ -2,9 +2,9 @@
 
 use Bone\View\Traits\HasViewTrait;
 use Bone\View\ViewEngine;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class HasViewTraitTest extends Test
+class HasViewTraitTest extends Unit
 {
     /**
      * @var \UnitTester

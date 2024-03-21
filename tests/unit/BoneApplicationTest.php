@@ -7,10 +7,10 @@ use Bone\BoneDoctrine\BoneDoctrinePackage;
 use Bone\Console\ConsoleApplication;
 use Bone\User\BoneUserPackage;
 use BoneTest\TestPackage\TestPackagePackage;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Laminas\Diactoros\Response;
 
-class BoneApplicationTest extends Test
+class BoneApplicationTest extends Unit
 {
     /**
      * @var \UnitTester
@@ -110,6 +110,7 @@ class BoneApplicationTest extends Test
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER['REQUEST_URI'] = '/en_GB/api/testpackage';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_clean();
@@ -139,6 +140,7 @@ class BoneApplicationTest extends Test
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER['REQUEST_URI'] = '/en_GB/another';
+
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_clean();

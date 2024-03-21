@@ -6,10 +6,10 @@ use Bone\App\AppPackage;
 use Bone\BoneDoctrine\BoneDoctrinePackage;
 use Bone\User\BoneUserPackage;
 use BoneTest\TestPackage\TestPackagePackage;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Laminas\Diactoros\Response;
 
-class FormTest extends Test
+class FormTest extends Unit
 {
     /**
      * @var \UnitTester

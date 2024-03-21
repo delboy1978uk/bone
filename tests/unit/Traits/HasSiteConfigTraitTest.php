@@ -3,9 +3,9 @@
 use Bone\Server\Environment;
 use Bone\Server\SiteConfig;
 use Bone\Server\Traits\HasSiteConfigTrait;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class HasSiteConfigTraitTest extends Test
+class HasSiteConfigTraitTest extends Unit
 {
     /**
      * @var \UnitTester
