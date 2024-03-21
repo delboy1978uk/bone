@@ -7,10 +7,10 @@ use Bone\BoneDoctrine\BoneDoctrinePackage;
 use Bone\Console\ConsoleApplication;
 use Bone\User\BoneUserPackage;
 use BoneTest\TestPackage\TestPackagePackage;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Laminas\Diactoros\Response;
 
-class BoneApplicationTest extends Test
+class BoneApplicationTest extends Unit
 {
     /**
      * @var \UnitTester

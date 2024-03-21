@@ -2,9 +2,9 @@
 
 use Bone\View\Helper\Exception\PaginatorException;
 use Bone\View\Helper\Paginator;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class PaginatorTest extends Test
+class PaginatorTest extends Unit
 {
     /**
      * @throws Exception

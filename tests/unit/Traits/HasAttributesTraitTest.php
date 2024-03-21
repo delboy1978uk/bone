@@ -1,9 +1,9 @@
 <?php
 
 use Bone\Server\Environment;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class HasAttributesTraitTest extends Test
+class HasAttributesTraitTest extends Unit
 {
     /**
      * @var \UnitTester

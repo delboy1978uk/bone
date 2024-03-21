@@ -2,11 +2,11 @@
 
 use Bone\I18n\View\Extension\LocaleLink;
 use Bone\I18n\Service\TranslatorFactory;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Laminas\I18n\Translator\Loader\Gettext;
 use Laminas\I18n\Translator\Translator;
 
-class LocaleLinkTest extends Test
+class LocaleLinkTest extends Unit
 {
     /**
      * @var \UnitTester

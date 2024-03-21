@@ -1,9 +1,9 @@
 <?php
 
 use Bone\Console\ConsoleApplication;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 
-class ConsoleApplicationTest extends Test
+class ConsoleApplicationTest extends Unit
 {
 
     public function testGetLongVersion()

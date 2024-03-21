@@ -3,7 +3,7 @@
 namespace BoneTest\Http\Middleware;
 
 use Bone\Http\Middleware\HalCollection;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -11,7 +11,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;
 
-class HalCollectionTest extends Test
+class HalCollectionTest extends Unit
 {
     private $fakeRequestHandler;
 

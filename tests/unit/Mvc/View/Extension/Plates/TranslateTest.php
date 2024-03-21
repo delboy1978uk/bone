@@ -2,11 +2,11 @@
 
 use Bone\I18n\View\Extension\Translate;
 use Bone\I18n\Service\TranslatorFactory;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Laminas\I18n\Translator\Loader\Gettext;
 use Laminas\I18n\Translator\Translator;
 
-class TranslateTest extends Test
+class TranslateTest extends Unit
 {
     /**
      * @var \UnitTester

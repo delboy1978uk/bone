@@ -9,12 +9,12 @@ use Bone\Server\Environment;
 use Bone\I18n\Http\Middleware\I18nHandler;
 use Bone\I18n\Service\TranslatorFactory;
 use Codeception\Coverage\Subscriber\Local;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;
 use Laminas\I18n\Translator\Loader\Gettext;
 
-class ApplicationPackageTest extends Test
+class ApplicationPackageTest extends Unit
 {
     /**
      * @var \UnitTester

@@ -1,10 +1,10 @@
 <?php
 
 use Bone\Server\Traits\HasSessionTrait;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Del\SessionManager;
 
-class HasSessionTraitTest extends Test
+class HasSessionTraitTest extends Unit
 {
     /**
      * @var \UnitTester

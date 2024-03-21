@@ -9,11 +9,11 @@ use Bone\View\ViewEngine;
 use Bone\Server\SessionAwareInterface;
 use Bone\Server\SiteConfig;
 use Bone\Server\Traits\HasSessionTrait;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Del\SessionManager;
 use Laminas\I18n\Translator\Translator;
 
-class InitTest extends Test
+class InitTest extends Unit
 {
     /**
      * @var \UnitTester
