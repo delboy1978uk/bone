@@ -22,7 +22,7 @@
     "delboy1978uk/bone-server": "^1.2",
     "delboy1978uk/bone-view": "^1.8",
     "delboy1978uk/icon": "^1.2",
-    "delboy1978uk/session": "v1.6",
+    "delboy1978uk/session": "^1.6",
     "laminas/laminas-diactoros": "^3.3",
     "laminas/laminas-httphandlerrunner": "^2.10"
   },
