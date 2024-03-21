@@ -110,6 +110,7 @@ class BoneApplicationTest extends Unit
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER['REQUEST_URI'] = '/en_GB/api/testpackage';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_clean();
@@ -139,6 +140,7 @@ class BoneApplicationTest extends Unit
         $application = Application::ahoy();
         $application->setConfigFolder('tests/_data/config');
         $_SERVER['REQUEST_URI'] = '/en_GB/another';
+
         ob_start();
         $this->assertTrue($application->setSail());
         $contents = ob_get_clean();
