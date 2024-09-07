@@ -36,5 +36,6 @@
       "Bone\\": "src/",
       "BoneTest\\": "tests/unit"
     }
-  }
+  },
+  "abandoned": "boneframework/bone"
 }
